@@ -10,6 +10,16 @@ const TRANSITIONS: Record<OrderStatus, readonly OrderStatus[]> = {
   returned: [],
 };
 
+/** Admin-facing English labels. */
+export const STATUS_LABELS: Record<OrderStatus, string> = {
+  new: 'New',
+  confirmed: 'Confirmed',
+  out_for_delivery: 'Out for delivery',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled',
+  returned: 'Returned',
+};
+
 export function nextStatuses(from: OrderStatus): OrderStatus[] {
   return [...TRANSITIONS[from]];
 }
