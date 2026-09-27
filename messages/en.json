@@ -1,0 +1,51 @@
+{
+  "common": {
+    "brand": "IBADA",
+    "homeLabel": "IBADA home",
+    "skipToContent": "Skip to content",
+    "cashOnDelivery": "Cash on delivery",
+    "free": "FREE",
+    "loading": "Loading…",
+    "backHome": "Back to home"
+  },
+  "header": {
+    "shop": "Shop",
+    "howItWorks": "How it works",
+    "reviews": "Reviews",
+    "menu": "Menu",
+    "switchLanguage": "عربي",
+    "switchLanguageLabel": "Switch to Arabic",
+    "cart": "Cart"
+  },
+  "footer": {
+    "tagline": "Pest free living. One device, a calmer home.",
+    "shop": "Shop",
+    "help": "Help",
+    "trackOrder": "Track my order",
+    "contact": "Contact us",
+    "shipping": "Shipping & delivery",
+    "returns": "60-day money-back guarantee",
+    "privacy": "Privacy policy",
+    "terms": "Terms of service",
+    "codNote": "💵 Cash on delivery all over Lebanon",
+    "rights": "© {year} IBADA. All rights reserved.",
+    "followUs": "Follow us"
+  },
+  "seo": {
+    "defaultTitle": "IBADA — Pest free living",
+    "defaultDescription": "Chemical-free ultrasonic pest protection for every room in your home. Delivery all over Lebanon, pay cash on delivery.",
+    "shopTitle": "Shop",
+    "shopDescription": "All IBADA products — ultrasonic pest protection with cash on delivery in Lebanon."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you are looking for doesn't exist or has moved."
+  },
+  "shop": {
+    "title": "Shop IBADA",
+    "subtitle": "Chemical-free protection for every room.",
+    "from": "From {price}",
+    "view": "View product",
+    "soldOut": "Sold out"
+  }
+}
