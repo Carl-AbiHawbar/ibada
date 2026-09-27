@@ -3,7 +3,7 @@ import { spawn } from 'node:child_process';
 import { rmSync } from 'node:fs';
 import webpush from 'web-push';
 import { e2eFixtures } from './e2e-fixtures';
-import { startLocalPg } from './lib/embedded-pg';
+import { startLocalPg, stopStaleCluster } from './lib/embedded-pg';
 import { runMigrations } from './migrate';
 import { runSeed } from './seed';
 
@@ -17,6 +17,7 @@ function run(cmd: string, env: NodeJS.ProcessEnv): Promise<void> {
 }
 
 async function main() {
+  stopStaleCluster('.data/pg-e2e');
   rmSync('.data/pg-e2e', { recursive: true, force: true });
   const pg = await startLocalPg({ dataDir: '.data/pg-e2e', port: 54330, database: 'ibada_e2e' });
   const vapid = webpush.generateVAPIDKeys();

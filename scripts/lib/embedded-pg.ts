@@ -1,6 +1,21 @@
+import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import EmbeddedPostgres from 'embedded-postgres';
+
+/** Stop a cluster left running by a killed process (safe to call when nothing runs). */
+export function stopStaleCluster(dataDir: string): void {
+  const databaseDir = path.resolve(process.cwd(), dataDir);
+  if (!existsSync(path.join(databaseDir, 'postmaster.pid'))) return;
+  const platform = process.platform === 'win32' ? 'windows' : process.platform;
+  const pkg = path.dirname(require.resolve(`@embedded-postgres/${platform}-${process.arch}/package.json`));
+  const pgCtl = path.join(pkg, 'native', 'bin', process.platform === 'win32' ? 'pg_ctl.exe' : 'pg_ctl');
+  try {
+    execFileSync(pgCtl, ['stop', '-D', databaseDir, '-m', 'immediate', '-w'], { stdio: 'ignore' });
+  } catch {
+    // Not running (stale pid file) — nothing to stop.
+  }
+}
 
 export type LocalPg = { url: string; stop: () => Promise<void> };
 
