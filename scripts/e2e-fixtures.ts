@@ -1,5 +1,6 @@
 // Extra rows the browser tests rely on, on top of the normal seed.
 import { createDb } from '../src/server/db/client';
+import { discounts } from '../src/server/db/schema';
 
 export const E2E = {
   ownerEmail: 'owner@ibada.test',
@@ -10,7 +11,7 @@ export const E2E = {
 export async function e2eFixtures(url: string): Promise<void> {
   const { db, close } = createDb(url, 1);
   try {
-    void db; // Later tasks add discount codes and the owner account here.
+    await db.insert(discounts).values({ code: 'WELCOME10', type: 'percent', value: 10 }).onConflictDoNothing();
   } finally {
     await close();
   }
