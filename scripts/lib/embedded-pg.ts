@@ -8,8 +8,9 @@ export function stopStaleCluster(dataDir: string): void {
   const databaseDir = path.resolve(process.cwd(), dataDir);
   if (!existsSync(path.join(databaseDir, 'postmaster.pid'))) return;
   const platform = process.platform === 'win32' ? 'windows' : process.platform;
-  const pkg = path.dirname(require.resolve(`@embedded-postgres/${platform}-${process.arch}/package.json`));
+  const pkg = path.join(process.cwd(), 'node_modules', '@embedded-postgres', `${platform}-${process.arch}`);
   const pgCtl = path.join(pkg, 'native', 'bin', process.platform === 'win32' ? 'pg_ctl.exe' : 'pg_ctl');
+  if (!existsSync(pgCtl)) return;
   try {
     execFileSync(pgCtl, ['stop', '-D', databaseDir, '-m', 'immediate', '-w'], { stdio: 'ignore' });
   } catch {
