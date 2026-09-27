@@ -1,6 +1,6 @@
 // Tables used by Better Auth (core + twoFactor plugin). Model keys must stay
 // `user`, `session`, `account`, `verification`, `twoFactor` for the adapter.
-import { boolean, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const staffRole = pgEnum('staff_role', ['owner', 'staff']);
 
@@ -71,4 +71,8 @@ export const twoFactor = pgTable('two_factor', {
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
+  verified: boolean('verified').notNull().default(true),
+  // Built-in TOTP lockout (twoFactor accountLockout option).
+  failedVerificationCount: integer('failed_verification_count').notNull().default(0),
+  lockedUntil: timestamp('locked_until', { withTimezone: true }),
 });
