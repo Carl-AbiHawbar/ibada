@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createTestDb, type TestDb } from '../helpers/db';
 import { seeded } from '../helpers/fixtures';
 import { insertStaff, placeTestOrder } from '../helpers/orders';
-import { getOrderDetail, getOrdersForExport, listOrders } from '@/server/orders/admin-query';
+import { getOrderDetail, getOrdersForExport, listOrders, orderStatusCounts } from '@/server/orders/admin-query';
 import { addOrderNote, changeOrderStatus } from '@/server/orders/manage';
 import type { SeededCatalog } from '@/server/db/seed';
 
@@ -35,6 +35,22 @@ it('filters by status and date and summarizes items', async () => {
   expect(confirmed.total).toBe(1);
   expect(confirmed.rows[0]).toMatchObject({ status: 'confirmed', itemsSummary: 'Multi-Room Protection ×1', totalCents: 3600 });
   expect((await listOrders(t.db, { from: new Date('2030-01-01'), page: 1 })).total).toBe(0);
+});
+
+it('counts orders per status for the tabs', async () => {
+  const userId = await insertStaff(t.db);
+  const a = await placeTestOrder(t.db, s.bundleIds.double, { phone: '70 000 001' });
+  await placeTestOrder(t.db, s.bundleIds.single, { phone: '70 000 002' });
+  await changeOrderStatus(t.db, { orderId: a.orderId, to: 'cancelled', userId, now: new Date() });
+  expect(await orderStatusCounts(t.db)).toEqual({
+    all: 2,
+    new: 1,
+    confirmed: 0,
+    out_for_delivery: 0,
+    delivered: 0,
+    cancelled: 1,
+    returned: 0,
+  });
 });
 
 it('paginates 25 per page, newest first', async () => {

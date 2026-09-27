@@ -50,6 +50,25 @@ async function itemSummaries(db: Db, orderIds: string[], sep: string, times: str
   return new Map([...map].map(([k, v]) => [k, v.join(sep)]));
 }
 
+/** Order count per status (plus `all`) for the list's tabs. */
+export async function orderStatusCounts(db: Db): Promise<Record<OrderStatus | 'all', number>> {
+  const rows = await db.select({ status: orders.status, n: count() }).from(orders).groupBy(orders.status);
+  const out: Record<OrderStatus | 'all', number> = {
+    all: 0,
+    new: 0,
+    confirmed: 0,
+    out_for_delivery: 0,
+    delivered: 0,
+    cancelled: 0,
+    returned: 0,
+  };
+  for (const r of rows) {
+    out[r.status] = r.n;
+    out.all += r.n;
+  }
+  return out;
+}
+
 export async function listOrders(db: Db, f: OrderFilter & { page: number }): Promise<{ rows: OrderRow[]; total: number }> {
   const where = whereFor(f);
   const page = Math.max(1, Math.floor(f.page) || 1);
