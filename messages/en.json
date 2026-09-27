@@ -1,0 +1,313 @@
+{
+  "common": {
+    "brand": "IBADA",
+    "homeLabel": "IBADA home",
+    "skipToContent": "Skip to content",
+    "cashOnDelivery": "Cash on delivery",
+    "free": "FREE",
+    "loading": "Loading…",
+    "backHome": "Back to home"
+  },
+  "header": {
+    "shop": "Shop",
+    "howItWorks": "How it works",
+    "reviews": "Reviews",
+    "menu": "Menu",
+    "switchLanguage": "عربي",
+    "switchLanguageLabel": "Switch to Arabic",
+    "cart": "Cart"
+  },
+  "footer": {
+    "tagline": "Pest free living. One device, a calmer home.",
+    "shop": "Shop",
+    "help": "Help",
+    "trackOrder": "Track my order",
+    "contact": "Contact us",
+    "shipping": "Shipping & delivery",
+    "returns": "60-day money-back guarantee",
+    "privacy": "Privacy policy",
+    "terms": "Terms of service",
+    "codNote": "💵 Cash on delivery all over Lebanon",
+    "rights": "© {year} IBADA. All rights reserved.",
+    "followUs": "Follow us"
+  },
+  "seo": {
+    "defaultTitle": "IBADA — Pest free living",
+    "defaultDescription": "Chemical-free ultrasonic pest protection for every room in your home. Delivery all over Lebanon, pay cash on delivery.",
+    "shopTitle": "Shop",
+    "shopDescription": "All IBADA products — ultrasonic pest protection with cash on delivery in Lebanon."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you are looking for doesn't exist or has moved."
+  },
+  "shop": {
+    "title": "Shop IBADA",
+    "subtitle": "Chemical-free protection for every room.",
+    "from": "From {price}",
+    "view": "View product",
+    "soldOut": "Sold out",
+    "empty": "New products are coming soon."
+  },
+  "hero": {
+    "eyebrow": "Ultrasonic pest repeller",
+    "headline": "PEST FREE LIVING",
+    "subheadline": "One device. A calmer home.",
+    "ratingLabel": "{average} out of 5",
+    "reviewCount": "{count, plural, one {# review} other {# reviews}}",
+    "onTrustpilot": "on Trustpilot",
+    "benefits": {
+      "coverage": "Up to 50m² coverage per device",
+      "allDay": "24/7 continuous protection",
+      "noChemicals": "No chemicals. No odor.",
+      "safe": "Safe for kids & pets",
+      "plugIn": "Plug in & forget"
+    },
+    "previousImage": "Previous image",
+    "nextImage": "Next image",
+    "showImage": "Show image {n}"
+  },
+  "bundles": {
+    "title": "Choose your protection",
+    "mostPopular": "MOST POPULAR",
+    "bestValue": "BEST VALUE",
+    "perUnit": "{price} / unit",
+    "save": "Save {percent}%",
+    "devices": "{count, plural, one {# device} other {# devices}}"
+  },
+  "purchase": {
+    "addToCart": "ADD TO CART",
+    "soldOut": "SOLD OUT",
+    "guarantee": "60-day money back guarantee",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "or": "or {price} / unit"
+  },
+  "trust": {
+    "cod": "Pay cash on delivery",
+    "freeDelivery": "Free delivery in Lebanon",
+    "delivery": "Delivery all over Lebanon",
+    "guarantee": "60-day money-back",
+    "chemicalFree": "100% chemical-free"
+  },
+  "steps": {
+    "eyebrow": "How it works",
+    "title": "Easy to use",
+    "subtitle": "Protection in two simple steps. No sprays, no refills, no hassle.",
+    "step": "Step {n}",
+    "step1Title": "Plug it in",
+    "step1": "Plug IBADA into a socket in the room you want to protect.",
+    "step2Title": "Relax",
+    "step2": "Sit back — IBADA works 24/7, silently and chemical-free.",
+    "science": "IBADA emits high-frequency sound waves, inaudible to people, that disrupt pests and drive them away from your space over time."
+  },
+  "pests": {
+    "title": "Effective against 40+ common house pests",
+    "subtitle": "Including:",
+    "items": {
+      "cockroaches": "Cockroaches",
+      "rodents": "Rodents",
+      "bedBugs": "Bed bugs",
+      "spiders": "Spiders",
+      "mosquitoes": "Mosquitoes",
+      "flies": "Flies",
+      "ants": "Ants",
+      "fleas": "Fleas",
+      "termites": "Termites"
+    }
+  },
+  "comparison": {
+    "eyebrow": "Us vs. them",
+    "title": "IBADA vs other pesticide solutions",
+    "ibada": "IBADA",
+    "others": "Sprays & poisons",
+    "rows": {
+      "r1": {
+        "ibada": "One solution for all",
+        "others": "Only targets one kind of pest"
+      },
+      "r2": {
+        "ibada": "Easy setup. Plug in & forget",
+        "others": "Constant renewal & hassle"
+      },
+      "r3": {
+        "ibada": "No chemicals. No odors",
+        "others": "Filled with harmful substances"
+      },
+      "r4": {
+        "ibada": "Safe for family & pets",
+        "others": "Might harm or kill pets"
+      }
+    }
+  },
+  "reviews": {
+    "title": "What our customers say",
+    "basedOn": "Based on {count, plural, one {# review} other {# reviews}}",
+    "loadMore": "Load more reviews",
+    "stars": "{rating} out of 5 stars"
+  },
+  "cta": {
+    "title": "Ready for a calmer home?",
+    "subtitle": "Pay cash on delivery · 60-day money-back guarantee",
+    "button": "Choose your pack"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "items": {
+      "safe": {
+        "q": "Is IBADA safe for kids and pets?",
+        "a": "Yes. IBADA uses no chemicals, sprays or poisons — nothing to touch, inhale or swallow, and the sound it makes is inaudible to people. As with any ultrasonic device, we don't recommend using it in the same room as pet rodents such as hamsters, guinea pigs or rabbits."
+      },
+      "coverage": {
+        "q": "How much area does one device cover?",
+        "a": "Each device covers up to 50m² of open space. Ultrasound doesn't pass through walls or closed doors, so we recommend one device per room — that's why our packs protect 2, 3 or 4 rooms."
+      },
+      "results": {
+        "q": "How long until I notice a difference?",
+        "a": "IBADA drives pests away gradually. Keep it plugged in continuously, day and night, and let it work over time."
+      },
+      "payment": {
+        "q": "How do I pay?",
+        "a": "You pay in cash when your order arrives. No card needed and nothing to pay online."
+      },
+      "delivery": {
+        "q": "How long does delivery take?",
+        "a": "Orders are typically delivered in 2–4 business days anywhere in Lebanon. We call you to confirm your order before it ships."
+      },
+      "guarantee": {
+        "q": "What if it doesn't work for me?",
+        "a": "You're covered by our 60-day money-back guarantee. Contact us and we'll arrange the return and your refund."
+      },
+      "power": {
+        "q": "What does it plug into?",
+        "a": "Any standard 220V wall socket, indoors. There is nothing to install or set up."
+      }
+    }
+  },
+  "cart": {
+    "title": "Your cart",
+    "button": "Cart, {count, plural, =0 {empty} one {# item} other {# items}}",
+    "close": "Close cart",
+    "empty": "Your cart is empty",
+    "emptyHint": "Pick a pack to protect your home.",
+    "continue": "Continue shopping",
+    "subtotal": "Subtotal",
+    "delivery": "Delivery",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "itemsRemoved": "Some items are no longer available and were removed from your cart.",
+    "codNote": "💵 You pay cash when your order arrives"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "secure": "Secure checkout",
+    "contact": "Contact details",
+    "delivery": "Delivery address",
+    "name": "Full name",
+    "phone": "Phone",
+    "phoneHint": "Lebanese mobile number, e.g. 03 123 456. We call you to confirm.",
+    "governorate": "Governorate",
+    "district": "District",
+    "choose": "Choose…",
+    "town": "Town / city",
+    "address": "Address details",
+    "addressHint": "Street, building, floor",
+    "landmark": "Nearby landmark (optional)",
+    "landmarkHint": "Helps the courier find you",
+    "notes": "Delivery notes (optional)",
+    "summary": "Order summary",
+    "showSummary": "Show order summary",
+    "discount": "Discount code",
+    "apply": "Apply",
+    "removeDiscount": "Remove",
+    "discountApplied": "Code {code} applied",
+    "subtotal": "Subtotal",
+    "discountLine": "Discount",
+    "delivery_fee": "Delivery",
+    "total": "Total",
+    "payment": "Payment",
+    "cod": "Cash on delivery",
+    "codHint": "Pay in cash when your order arrives. No card needed.",
+    "placeOrder": "PLACE ORDER",
+    "placing": "Placing your order…",
+    "verifying": "Checking you are human…",
+    "emptyTitle": "Your cart is empty",
+    "emptyBody": "Add a pack to your cart to check out.",
+    "backToShop": "Back to the shop",
+    "agree": "By placing your order you agree to our terms and privacy policy."
+  },
+  "errors": {
+    "invalid_name": "Enter your full name",
+    "invalid_phone": "Enter a valid Lebanese mobile number",
+    "invalid_governorate": "Choose your governorate",
+    "invalid_district": "Choose your district",
+    "invalid_town": "Enter your town or city",
+    "invalid_address": "Enter your street, building and floor",
+    "invalid_landmark": "Landmark is too long",
+    "invalid_notes": "Notes are too long",
+    "invalid_discount": "Discount code is too long",
+    "invalid_cart": "Your cart is not valid",
+    "form": "Please check the highlighted fields",
+    "captcha": "We couldn't verify you are human. Please try again.",
+    "rate_limited": "Too many attempts. Please wait a little and try again.",
+    "blocked": "We couldn't place this order. Please contact us.",
+    "cart_changed": "Your cart changed because some items are no longer available. Please review it.",
+    "out_of_stock": "Sorry, {name} just sold out in that quantity. Please choose a smaller pack.",
+    "discount_invalid": "This discount code can no longer be used.",
+    "unexpected": "Something went wrong. Please try again.",
+    "discount": {
+      "not_found": "This code isn't valid",
+      "inactive": "This code isn't active",
+      "not_started": "This code isn't active yet",
+      "expired": "This code has expired",
+      "min_subtotal": "Your order doesn't reach this code's minimum",
+      "usage_limit": "This code has reached its usage limit",
+      "already_used": "You already used this code",
+      "rate_limited": "Too many attempts. Please wait a little."
+    }
+  },
+  "thankYou": {
+    "title": "Thank you, {name}!",
+    "order": "Order #{number}",
+    "confirmCall": "We'll call you to confirm your order before delivery.",
+    "payOnDelivery": "Pay {total} in cash when it arrives.",
+    "items": "Your order",
+    "total": "Total",
+    "track": "Track your order",
+    "continue": "Continue shopping"
+  },
+  "track": {
+    "title": "Track your order",
+    "subtitle": "Enter your order number and the phone number you ordered with.",
+    "number": "Order number",
+    "phone": "Phone",
+    "submit": "Track order",
+    "notFound": "We couldn't find an order with those details. Check the number and phone.",
+    "placed": "Placed on {date}",
+    "items": "Items",
+    "total": "Total",
+    "status": {
+      "new": "Order received",
+      "confirmed": "Confirmed",
+      "out_for_delivery": "Out for delivery",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "returned": "Returned"
+    }
+  },
+  "contact": {
+    "title": "Contact us",
+    "subtitle": "Questions about your order or our products? We're happy to help.",
+    "phone": "Call us",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "social": "Follow us",
+    "none": "Contact details will be added soon."
+  },
+  "policies": {
+    "draft": "Draft — please review before launch",
+    "updated": "Last updated {date}"
+  }
+}
