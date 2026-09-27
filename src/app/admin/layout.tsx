@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: { default: 'IBADA Admin', template: '%s · IBADA Admin' },
   robots: { index: false, follow: false },
   formatDetection: { telephone: false },
+  manifest: '/admin/manifest.webmanifest',
+  appleWebApp: { capable: true, title: 'IBADA', statusBarStyle: 'default' },
+  icons: { apple: '/admin/icons/apple-touch-icon.png' },
 };
 
 export const viewport: Viewport = { themeColor: '#012755', width: 'device-width', initialScale: 1 };
