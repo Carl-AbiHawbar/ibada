@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Plus, Star } from 'lucide-react';
 import { toast } from 'sonner';
 import { deleteReviewAction, saveReviewAction, setReviewVisibleAction } from '@/app/admin/(dashboard)/reviews/actions';
+import { AsyncSwitch } from '@/components/admin/async-switch';
 import { ConfirmDialog } from '@/components/admin/confirm-dialog';
 import { AdminButton, AdminField, AdminInput, AdminSelect, AdminTextarea } from '@/components/admin/ui';
 import { cn } from '@/lib/utils';
@@ -149,18 +150,16 @@ export function ReviewsManager({ rows, products, today }: { rows: ReviewRow[]; p
                 </p>
               </div>
               <div className="flex shrink-0 flex-col items-end gap-2">
-                <label className="flex items-center gap-2 text-xs font-medium text-slate-600">
-                  <input
-                    type="checkbox"
-                    role="switch"
-                    aria-label="Visible"
-                    className="size-4 accent-navy"
-                    checked={r.visible}
-                    disabled={pending}
-                    onChange={(e) => start(async () => { await setReviewVisibleAction(r.id, e.target.checked); router.refresh(); })}
-                  />
-                  Visible
-                </label>
+                <AsyncSwitch
+                  className="text-xs"
+                  checked={r.visible}
+                  label="Visible"
+                  onChange={async (next) => {
+                    await setReviewVisibleAction(r.id, next);
+                    router.refresh();
+                    return true;
+                  }}
+                />
                 <div className="flex gap-1">
                   <AdminButton size="sm" variant="secondary" onClick={() => setEditing(r.id)} disabled={editing !== null}>
                     Edit

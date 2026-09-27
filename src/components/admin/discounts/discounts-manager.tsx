@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { saveDiscountAction, toggleDiscountAction, type DiscountFormValues } from '@/app/admin/(dashboard)/discounts/actions';
+import { AsyncSwitch } from '@/components/admin/async-switch';
 import { AdminButton, AdminField, AdminInput, AdminSelect } from '@/components/admin/ui';
 import { formatUsd } from '@/lib/money';
 import { cn } from '@/lib/utils';
@@ -122,7 +123,6 @@ function DiscountForm({ id, initial, onDone }: { id: string | null; initial: Dis
 export function DiscountsManager({ rows }: { rows: DiscountRow[] }) {
   const router = useRouter();
   const [editing, setEditing] = useState<string | 'new' | null>(null);
-  const [pending, start] = useTransition();
 
   return (
     <div className="space-y-4">
@@ -148,18 +148,17 @@ export function DiscountsManager({ rows }: { rows: DiscountRow[] }) {
                 {d.oncePerPhone ? ' · once per phone' : ''}
                 {d.startsOn || d.endsOn ? ` · ${d.startsOn || '…'} → ${d.endsOn || '…'}` : ''}
               </span>
-              <label className="ms-auto flex items-center gap-2 text-sm font-medium text-slate-600">
-                <input
-                  type="checkbox"
-                  role="switch"
-                  aria-label={`${d.code} active`}
-                  className="size-4 accent-navy"
-                  checked={d.active}
-                  disabled={pending}
-                  onChange={(e) => start(async () => { await toggleDiscountAction(d.id, e.target.checked); router.refresh(); })}
-                />
-                Active
-              </label>
+              <AsyncSwitch
+                className="ms-auto"
+                checked={d.active}
+                label="Active"
+                ariaLabel={`${d.code} active`}
+                onChange={async (next) => {
+                  await toggleDiscountAction(d.id, next);
+                  router.refresh();
+                  return true;
+                }}
+              />
               <AdminButton size="sm" variant="secondary" onClick={() => setEditing(d.id)} disabled={editing !== null}>
                 Edit
               </AdminButton>
