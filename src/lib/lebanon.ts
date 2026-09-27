@@ -1,6 +1,6 @@
 export type Locale = 'en' | 'ar';
 
-export const GOVERNORATES = [
+const RAW = [
   { id: 'beirut', en: 'Beirut', ar: 'بيروت', districts: [{ id: 'beirut', en: 'Beirut', ar: 'بيروت' }] },
   {
     id: 'mount-lebanon',
@@ -71,8 +71,17 @@ export const GOVERNORATES = [
   },
 ] as const;
 
-export type GovernorateId = (typeof GOVERNORATES)[number]['id'];
-export type DistrictId = (typeof GOVERNORATES)[number]['districts'][number]['id'];
+export type GovernorateId = (typeof RAW)[number]['id'];
+export type DistrictId = (typeof RAW)[number]['districts'][number]['id'];
+export type District = { readonly id: DistrictId; readonly en: string; readonly ar: string };
+export type Governorate = {
+  readonly id: GovernorateId;
+  readonly en: string;
+  readonly ar: string;
+  readonly districts: readonly District[];
+};
+
+export const GOVERNORATES: readonly Governorate[] = RAW;
 
 export const GOVERNORATE_IDS = GOVERNORATES.map((g) => g.id) as [GovernorateId, ...GovernorateId[]];
 
