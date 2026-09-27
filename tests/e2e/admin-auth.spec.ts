@@ -27,7 +27,7 @@ test('owner signs in with password then authenticator code', async ({ page }) =>
   await signInWithPassword(page, OWNER.email, OWNER.password);
   await enterCode(page, await freshCode(secret!));
   await expect(page).toHaveURL(/\/admin$/);
-  await expect(page.getByRole('heading', { name: /Welcome/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^Hi, / })).toBeVisible();
 });
 
 test('a wrong authenticator code is refused', async ({ page }) => {

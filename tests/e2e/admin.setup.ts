@@ -27,6 +27,6 @@ setup('owner signs in with two-step verification', async ({ page }) => {
   }
 
   await expect(page).toHaveURL(/\/admin$/);
-  await expect(page.getByRole('heading', { name: /Welcome/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^Hi, / })).toBeVisible();
   await page.context().storageState({ path: OWNER_STATE });
 });
