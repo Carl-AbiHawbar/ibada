@@ -1,24 +1,7 @@
-import { expect, test, type Page } from '@playwright/test';
-import { OWNER_STATE } from './helpers';
+import { expect, test } from '@playwright/test';
+import { OWNER_STATE, placeStorefrontOrder as placeOrder } from './helpers';
 
 test.use({ storageState: OWNER_STATE });
-
-/** Place a real order through the storefront with a unique buyer name. */
-async function placeOrder(page: Page, name: string, phone: string) {
-  await page.goto('/en');
-  await page.getByRole('button', { name: 'ADD TO CART' }).first().click();
-  await page.getByRole('dialog').getByRole('link', { name: 'Checkout' }).click();
-  await page.getByLabel('Full name').fill(name);
-  await page.getByLabel('Phone').fill(phone);
-  await page.getByLabel('Governorate').selectOption('beirut');
-  await page.getByLabel('District').selectOption('beirut');
-  await page.getByLabel('Town / city').fill('Hamra');
-  await page.getByLabel('Address details').fill('Bliss st, Bldg 7, 4th floor');
-  await page.getByLabel('Nearby landmark (optional)').fill('Opposite the bakery');
-  await page.getByRole('button', { name: 'PLACE ORDER' }).click();
-  await expect(page).toHaveURL(/\/en\/order\/\d+$/, { timeout: 20_000 });
-  return page.url().split('/').pop()!;
-}
 
 test.describe.serial('orders', () => {
   const tag = `${Date.now() % 100000}${Math.floor(Math.random() * 90 + 10)}`;

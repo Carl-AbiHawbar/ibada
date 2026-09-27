@@ -34,3 +34,25 @@ export async function enterCode(page: Page, code: string) {
   await expect(page).toHaveURL(/\/admin\/two-factor$/);
   await page.getByLabel('Authenticator code').fill(code);
 }
+
+/** A random Lebanese mobile number, so runs sharing a database never collide. */
+export function randomPhone(prefix = '71'): string {
+  return `${prefix} ${String(Math.floor(100000 + Math.random() * 899999))}`;
+}
+
+/** Place a real Multi-Room order through the storefront; returns the order number. */
+export async function placeStorefrontOrder(page: Page, name: string, phone: string): Promise<string> {
+  await page.goto('/en');
+  await page.getByRole('button', { name: 'ADD TO CART' }).first().click();
+  await page.getByRole('dialog').getByRole('link', { name: 'Checkout' }).click();
+  await page.getByLabel('Full name').fill(name);
+  await page.getByLabel('Phone').fill(phone);
+  await page.getByLabel('Governorate').selectOption('beirut');
+  await page.getByLabel('District').selectOption('beirut');
+  await page.getByLabel('Town / city').fill('Hamra');
+  await page.getByLabel('Address details').fill('Bliss st, Bldg 7, 4th floor');
+  await page.getByLabel('Nearby landmark (optional)').fill('Opposite the bakery');
+  await page.getByRole('button', { name: 'PLACE ORDER' }).click();
+  await expect(page).toHaveURL(/\/en\/order\/\d+$/, { timeout: 20_000 });
+  return page.url().split('/').pop()!;
+}
