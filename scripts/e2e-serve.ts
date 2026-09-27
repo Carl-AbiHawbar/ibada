@@ -19,6 +19,8 @@ function run(cmd: string, env: NodeJS.ProcessEnv): Promise<void> {
 async function main() {
   stopStaleCluster('.data/pg-e2e');
   rmSync('.data/pg-e2e', { recursive: true, force: true });
+  // The database is recreated each run, so cached pages/data from the last build are stale.
+  rmSync('.next-e2e', { recursive: true, force: true });
   const pg = await startLocalPg({ dataDir: '.data/pg-e2e', port: 54330, database: 'ibada_e2e' });
   const vapid = webpush.generateVAPIDKeys();
   const env: NodeJS.ProcessEnv = {

@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { AnnouncementBar } from '@/components/shop/announcement-bar';
+import { CartButton } from '@/components/shop/cart/cart-button';
+import { CartDrawer } from '@/components/shop/cart/cart-drawer';
+import { CartProvider } from '@/components/shop/cart/cart-provider';
 import { ShopFooter } from '@/components/shop/footer';
 import { ShopHeader } from '@/components/shop/header';
 import { getEnv } from '@/env';
@@ -53,18 +56,21 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
     <html lang={locale} dir={dirOf(locale)} className={cn(jakarta.variable, plexArabic.variable, 'antialiased')}>
       <body className={cn('flex min-h-dvh flex-col bg-white text-ink', locale === 'ar' && 'font-arabic')}>
         <NextIntlClientProvider>
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
-          >
-            {t('skipToContent')}
-          </a>
-          <AnnouncementBar locale={locale} />
-          <ShopHeader locale={locale} />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <ShopFooter locale={locale} />
+          <CartProvider>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
+            >
+              {t('skipToContent')}
+            </a>
+            <AnnouncementBar locale={locale} />
+            <ShopHeader locale={locale} actions={<CartButton />} />
+            <main id="main" className="flex-1">
+              {children}
+            </main>
+            <ShopFooter locale={locale} />
+            <CartDrawer />
+          </CartProvider>
         </NextIntlClientProvider>
       </body>
     </html>

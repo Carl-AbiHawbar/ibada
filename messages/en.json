@@ -123,10 +123,22 @@
     "ibada": "IBADA",
     "others": "Sprays & poisons",
     "rows": {
-      "r1": { "ibada": "One solution for all", "others": "Only targets one kind of pest" },
-      "r2": { "ibada": "Easy setup. Plug in & forget", "others": "Constant renewal & hassle" },
-      "r3": { "ibada": "No chemicals. No odors", "others": "Filled with harmful substances" },
-      "r4": { "ibada": "Safe for family & pets", "others": "Might harm or kill pets" }
+      "r1": {
+        "ibada": "One solution for all",
+        "others": "Only targets one kind of pest"
+      },
+      "r2": {
+        "ibada": "Easy setup. Plug in & forget",
+        "others": "Constant renewal & hassle"
+      },
+      "r3": {
+        "ibada": "No chemicals. No odors",
+        "others": "Filled with harmful substances"
+      },
+      "r4": {
+        "ibada": "Safe for family & pets",
+        "others": "Might harm or kill pets"
+      }
     }
   },
   "reviews": {
@@ -172,5 +184,20 @@
         "a": "Any standard 220V wall socket, indoors. There is nothing to install or set up."
       }
     }
+  },
+  "cart": {
+    "title": "Your cart",
+    "button": "Cart, {count, plural, =0 {empty} one {# item} other {# items}}",
+    "close": "Close cart",
+    "empty": "Your cart is empty",
+    "emptyHint": "Pick a pack to protect your home.",
+    "continue": "Continue shopping",
+    "subtotal": "Subtotal",
+    "delivery": "Delivery",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "itemsRemoved": "Some items are no longer available and were removed from your cart.",
+    "codNote": "💵 You pay cash when your order arrives"
   }
 }
