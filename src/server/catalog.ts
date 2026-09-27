@@ -132,7 +132,12 @@ export async function listActiveProducts(db: Db): Promise<ProductView[]> {
  * Lines whose bundle is unknown/inactive, whose product is not active, or that no
  * longer fit in stock are returned in `removed` instead of being priced.
  */
-export async function quoteCart(db: Db, lines: CartLine[]): Promise<CartQuote> {
+export async function quoteCart(
+  db: Db,
+  lines: CartLine[],
+  opts: { checkStock?: boolean } = {},
+): Promise<CartQuote> {
+  const checkStock = opts.checkStock ?? true;
   const merged = new Map<string, number>();
   for (const l of lines) merged.set(l.bundleId, (merged.get(l.bundleId) ?? 0) + l.quantity);
   const ids = [...merged.keys()];
@@ -159,7 +164,7 @@ export async function quoteCart(db: Db, lines: CartLine[]): Promise<CartQuote> {
     const quantity = Math.min(Math.max(rawQty, 1), MAX_LINE_QUANTITY);
     const units = row.bundle.units * quantity;
     const used = unitsUsed.get(row.product.id) ?? 0;
-    if (used + units > row.product.stockUnits) {
+    if (checkStock && used + units > row.product.stockUnits) {
       removed.push(bundleId);
       continue;
     }
