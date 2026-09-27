@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import { connection } from 'next/server';
 import { Toaster } from '@/components/ui/sonner';
 import { cn } from '@/lib/utils';
 import '../globals.css';
@@ -17,7 +18,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: '#012755', width: 'device-width', initialScale: 1 };
 
-export default function AdminRootLayout({ children }: LayoutProps<'/admin'>) {
+export default async function AdminRootLayout({ children }: LayoutProps<'/admin'>) {
+  // Admin pages carry a per-request nonce CSP; a pre-rendered page would have un-nonced scripts that the CSP blocks.
+  await connection();
   return (
     <html lang="en" dir="ltr" className={cn(jakarta.variable, 'antialiased')}>
       <body className="min-h-dvh bg-slate-50 text-ink">

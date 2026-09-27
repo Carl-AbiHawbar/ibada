@@ -58,6 +58,11 @@ test('announcement changes appear on the shop', async ({ page }) => {
 
   await page.goto('/en');
   await expect(page.getByTestId('announcement')).toHaveText(text);
+  // Every pre-rendered page that shows the announcement is regenerated, not turned into a 404.
+  for (const path of ['/en/policies/returns', '/en/contact', '/en/products/ibada-one']) {
+    expect((await page.goto(path))?.status(), path).toBe(200);
+    await expect(page.getByTestId('announcement')).toHaveText(text);
+  }
 
   await page.goto('/admin/settings');
   await page.getByLabel('Announcement (English)').fill(original);

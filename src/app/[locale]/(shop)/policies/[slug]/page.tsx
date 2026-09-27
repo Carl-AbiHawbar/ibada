@@ -4,8 +4,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { POLICIES, POLICY_SLUGS, type PolicySlug } from '@/content/policies';
 import { getEnv } from '@/env';
 
-export const dynamicParams = false;
-
+// Unknown slugs 404 via notFound() below. Not `dynamicParams = false`: that also 404s the
+// pre-rendered pages once a settings change (announcement bar) marks them stale.
 export function generateStaticParams() {
   return POLICY_SLUGS.map((slug) => ({ slug }));
 }
