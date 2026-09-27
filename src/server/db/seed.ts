@@ -2,7 +2,7 @@ import path from 'node:path';
 import { eq } from 'drizzle-orm';
 import sharp from 'sharp';
 import type { Db } from './client';
-import { bundles, inventoryMovements, productImages, products, settings } from './schema';
+import { bundles, inventoryMovements, productImages, products } from './schema';
 
 const PRODUCT_SLUG = 'ibada-one';
 const INITIAL_STOCK_UNITS = 100;
@@ -36,21 +36,7 @@ const BUNDLES = [
 type BundleKey = (typeof BUNDLES)[number]['key'];
 export type SeededCatalog = { productId: string; bundleIds: Record<BundleKey, string> };
 
-/** Insert the single settings row if it does not exist yet. */
-export async function seedSettings(db: Db): Promise<void> {
-  await db
-    .insert(settings)
-    .values({
-      storeName: 'IBADA',
-      announcementEn: 'Free delivery · Cash on delivery · 60-day money-back guarantee',
-      announcementAr: 'توصيل مجاني · الدفع عند الاستلام · ضمان استرداد المال لمدة 60 يومًا',
-      announcementEnabled: true,
-      deliveryFeeCents: 0,
-      deliveryTimeEn: 'Orders are typically delivered in 2–4 business days',
-      deliveryTimeAr: 'يتم توصيل الطلبات عادةً خلال 2–4 أيام عمل',
-    })
-    .onConflictDoNothing({ target: settings.singleton });
-}
+export { seedSettings } from './settings-defaults';
 
 async function imageSize(file: string): Promise<{ width: number; height: number }> {
   const meta = await sharp(path.resolve(process.cwd(), 'public/images/products', `ibada-one-${file}.webp`)).metadata();
