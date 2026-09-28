@@ -48,10 +48,24 @@ const envSchema = z
 export type Env = z.infer<typeof envSchema>;
 export type AppEnv = Env['APP_ENV'];
 
+/**
+ * The Postgres URL: DATABASE_URL, or POSTGRES_URL as set by Vercel's Supabase integration.
+ * The integration's `supa` query marker is dropped: postgres-js would send it to the server as a setting.
+ */
+export function databaseUrlFrom(raw: Record<string, string | undefined>): string | undefined {
+  const value = raw.DATABASE_URL || raw.POSTGRES_URL;
+  if (!value?.includes('supa=')) return value || undefined;
+  const url = new URL(value);
+  url.searchParams.delete('supa');
+  return url.toString();
+}
+
 /** Parse and validate raw environment variables; throws listing every bad key. */
 export function parseEnv(raw: Record<string, string | undefined>): Env {
   // Treat empty strings as unset so `KEY=` lines in .env files fall back to defaults.
   const cleaned = Object.fromEntries(Object.entries(raw).filter(([, v]) => v !== undefined && v !== ''));
+  const databaseUrl = databaseUrlFrom(cleaned);
+  if (databaseUrl) cleaned.DATABASE_URL = databaseUrl;
   const result = envSchema.safeParse(cleaned);
   if (!result.success) {
     const lines = result.error.issues.map((i) => `- ${i.path.join('.') || '(root)'}: ${i.message}`);
