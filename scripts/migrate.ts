@@ -1,6 +1,7 @@
 // Apply SQL migrations in ./drizzle to DATABASE_URL.
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { createDb } from '../src/server/db/client';
+import { databaseUrlFrom } from '../src/env';
 import { loadLocalEnv } from './lib/env-file';
 
 export async function runMigrations(url: string): Promise<void> {
@@ -15,7 +16,7 @@ export async function runMigrations(url: string): Promise<void> {
 
 if (require.main === module) {
   loadLocalEnv();
-  const url = process.env.DATABASE_URL;
+  const url = databaseUrlFrom(process.env);
   if (!url) throw new Error('DATABASE_URL is not set');
   runMigrations(url)
     .then(() => console.log('Migrations applied.'))

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { parseEnv } from '@/env';
+import { databaseUrlFrom, parseEnv } from '@/env';
 
 const base = {
   DATABASE_URL: 'postgres://x',
@@ -47,6 +47,24 @@ describe('parseEnv', () => {
 
   test('secret must be at least 32 chars', () => {
     expect(() => parseEnv({ ...base, BETTER_AUTH_SECRET: 'short' })).toThrow(/BETTER_AUTH_SECRET/);
+  });
+
+  test('falls back to POSTGRES_URL from the Vercel Supabase integration', () => {
+    const { DATABASE_URL: _, ...rest } = base;
+    expect(parseEnv({ ...rest, POSTGRES_URL: 'postgres://u:p@pooler:6543/postgres' }).DATABASE_URL).toBe(
+      'postgres://u:p@pooler:6543/postgres',
+    );
+  });
+
+  test('DATABASE_URL wins over POSTGRES_URL', () => {
+    expect(parseEnv({ ...base, POSTGRES_URL: 'postgres://other' }).DATABASE_URL).toBe('postgres://x');
+  });
+
+  test('drops the integration-only supa parameter but keeps sslmode', () => {
+    expect(databaseUrlFrom({ POSTGRES_URL: 'postgres://u:p@h:6543/postgres?sslmode=require&supa=base-pooler.x' })).toBe(
+      'postgres://u:p@h:6543/postgres?sslmode=require',
+    );
+    expect(databaseUrlFrom({})).toBeUndefined();
   });
 
   test('missing DATABASE_URL is reported', () => {

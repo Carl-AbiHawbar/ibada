@@ -4,6 +4,7 @@ import { parseArgs } from 'node:util';
 import { createAuth } from '../src/server/auth/auth';
 import { createOwnerIfNone } from '../src/server/auth/users';
 import { createDb } from '../src/server/db/client';
+import { databaseUrlFrom } from '../src/env';
 import { loadLocalEnv } from './lib/env-file';
 
 function askHidden(question: string): Promise<string> {
@@ -46,7 +47,7 @@ async function main() {
     const again = await askHidden('Repeat password: ');
     if (password !== again) throw new Error('Passwords do not match');
   }
-  const url = process.env.DATABASE_URL;
+  const url = databaseUrlFrom(process.env);
   if (!url) throw new Error('DATABASE_URL is not set');
   const { db, close } = createDb(url, 1);
   try {
