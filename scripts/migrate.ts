@@ -2,6 +2,7 @@
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { createDb } from '../src/server/db/client';
 import { databaseUrlFrom } from '../src/env';
+import { withMigrationRetry } from '../src/server/db/migration-retry';
 import { loadLocalEnv } from './lib/env-file';
 
 export async function runMigrations(url: string): Promise<void> {
@@ -18,7 +19,8 @@ if (require.main === module) {
   loadLocalEnv();
   const url = databaseUrlFrom(process.env);
   if (!url) throw new Error('DATABASE_URL is not set');
-  runMigrations(url)
+  // Vercel may build two commits at once against the same database.
+  withMigrationRetry(() => runMigrations(url))
     .then(() => console.log('Migrations applied.'))
     .catch((err) => {
       console.error(err);

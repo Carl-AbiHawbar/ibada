@@ -2,6 +2,7 @@
 import { createDb } from '../src/server/db/client';
 import { seedCatalog, seedSettings } from '../src/server/db/seed';
 import { databaseUrlFrom } from '../src/env';
+import { withMigrationRetry } from '../src/server/db/migration-retry';
 import { loadLocalEnv } from './lib/env-file';
 
 export async function runSeed(url: string): Promise<void> {
@@ -19,7 +20,7 @@ if (require.main === module) {
   loadLocalEnv();
   const url = databaseUrlFrom(process.env);
   if (!url) throw new Error('DATABASE_URL is not set');
-  runSeed(url).catch((err) => {
+  withMigrationRetry(() => runSeed(url)).catch((err) => {
     console.error(err);
     process.exit(1);
   });
