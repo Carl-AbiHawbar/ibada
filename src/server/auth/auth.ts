@@ -3,7 +3,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { APIError, createAuthMiddleware, isAPIError } from 'better-auth/api';
 import { nextCookies } from 'better-auth/next-js';
 import { twoFactor } from 'better-auth/plugins';
-import { getEnv } from '@/env';
+import { getEnv, requireAuthSecret } from '@/env';
 import { getClientIp, hashIp } from '../crypto';
 import { getDb, type Db } from '../db/client';
 import { account, session, twoFactor as twoFactorTable, user, verification } from '../db/schema';
@@ -33,7 +33,7 @@ export function createAuth(db: Db) {
     appName: 'IBADA Admin',
     baseURL: env.SITE_URL,
     basePath: '/api/auth',
-    secret: env.BETTER_AUTH_SECRET,
+    secret: requireAuthSecret(env),
     trustedOrigins: [env.SITE_URL],
     database: drizzleAdapter(db, {
       provider: 'pg',

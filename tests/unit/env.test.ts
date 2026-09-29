@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { databaseUrlFrom, parseEnv } from '@/env';
+import { databaseUrlFrom, parseEnv, requireAuthSecret } from '@/env';
 
 const base = {
   DATABASE_URL: 'postgres://x',
@@ -43,6 +43,13 @@ describe('parseEnv', () => {
       parseEnv({ ...prod, TURNSTILE_SECRET_KEY: '1x0000000000000000000000000000000AA' }),
     ).toThrow(/TURNSTILE/);
     expect(() => parseEnv({ ...prod, RATE_LIMIT_MULTIPLIER: '100' })).toThrow(/RATE_LIMIT_MULTIPLIER/);
+  });
+
+  test('the shop runs without BETTER_AUTH_SECRET; admin sign-in and checkout refuse to', () => {
+    const { BETTER_AUTH_SECRET: _, ...noSecret } = prod;
+    const env = parseEnv(noSecret);
+    expect(() => requireAuthSecret(env)).toThrow(/BETTER_AUTH_SECRET/);
+    expect(requireAuthSecret(parseEnv(prod))).toBe(prod.BETTER_AUTH_SECRET);
   });
 
   test('secret must be at least 32 chars', () => {

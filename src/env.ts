@@ -11,9 +11,8 @@ const envSchema = z
     APP_ENV: z.enum(['development', 'test', 'production']).default('development'),
     DATABASE_URL: z.string({ error: 'DATABASE_URL is required' }).min(1, 'DATABASE_URL is required'),
     SITE_URL: z.url({ error: 'SITE_URL must be a URL' }),
-    BETTER_AUTH_SECRET: z
-      .string({ error: 'BETTER_AUTH_SECRET is required' })
-      .min(32, 'BETTER_AUTH_SECRET must be at least 32 characters'),
+    // Optional here so the storefront renders without it; requireAuthSecret() guards its users.
+    BETTER_AUTH_SECRET: z.string().min(32, 'BETTER_AUTH_SECRET must be at least 32 characters').optional(),
     STORAGE_DRIVER: z.enum(['local', 'supabase']).default('local'),
     SUPABASE_URL: optional,
     SUPABASE_SERVICE_ROLE_KEY: optional,
@@ -58,6 +57,12 @@ export function databaseUrlFrom(raw: Record<string, string | undefined>): string
   const url = new URL(value);
   url.searchParams.delete('supa');
   return url.toString();
+}
+
+/** The auth/signing secret; admin sign-in, checkout rate limits and signed cookies refuse to run without it. */
+export function requireAuthSecret(env: Env): string {
+  if (!env.BETTER_AUTH_SECRET) throw new Error('BETTER_AUTH_SECRET is required (admin sign-in and checkout)');
+  return env.BETTER_AUTH_SECRET;
 }
 
 /** Parse and validate raw environment variables; throws listing every bad key. */

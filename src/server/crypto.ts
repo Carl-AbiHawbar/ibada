@@ -1,7 +1,7 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
-import { getEnv } from '@/env';
+import { getEnv, requireAuthSecret } from '@/env';
 
-const secret = () => getEnv().BETTER_AUTH_SECRET;
+const secret = () => requireAuthSecret(getEnv());
 
 /** Salted SHA-256 of an IP so raw addresses are never stored. */
 export function hashIp(ip: string | null): string {
