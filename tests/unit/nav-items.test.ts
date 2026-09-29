@@ -15,9 +15,9 @@ test('staff see only day-to-day areas', () => {
 });
 
 test('owners see everything', () => {
-  expect(navItemsFor('owner')).toHaveLength(12);
+  expect(navItemsFor('owner')).toHaveLength(13);
   expect(navItemsFor('owner').map((i) => i.area)).toEqual(
-    expect.arrayContaining(['discounts', 'settings', 'staff', 'activity']),
+    expect.arrayContaining(['discounts', 'settings', 'staff', 'activity', 'subscribers']),
   );
 });
 

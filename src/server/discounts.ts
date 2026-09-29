@@ -57,9 +57,15 @@ export async function evaluateDiscount(
 
 export type OrderTotals = { subtotalCents: number; discountCents: number; deliveryCents: number; totalCents: number };
 
-export function computeTotals(a: { subtotalCents: number; discountCents: number; settings: StoreSettings }): OrderTotals {
+/** `freeDelivery`: the shopper claimed the free-delivery offer (signed cookie). */
+export function computeTotals(a: {
+  subtotalCents: number;
+  discountCents: number;
+  settings: StoreSettings;
+  freeDelivery?: boolean;
+}): OrderTotals {
   const afterDiscount = a.subtotalCents - a.discountCents;
-  const deliveryCents = deliveryFeeFor(a.settings, afterDiscount);
+  const deliveryCents = a.freeDelivery ? 0 : deliveryFeeFor(a.settings, afterDiscount);
   return {
     subtotalCents: a.subtotalCents,
     discountCents: a.discountCents,

@@ -226,3 +226,9 @@ it('charges the delivery fee setting', async () => {
   await placeOrder(t.db, valid(), orderContext());
   expect((await t.db.select().from(orders))[0]).toMatchObject({ deliveryCents: 300, totalCents: 3900 });
 });
+
+it('a shopper who claimed free delivery pays no delivery fee', async () => {
+  await t.db.update(settings).set({ deliveryFeeCents: 300 });
+  await placeOrder(t.db, valid(), orderContext({ freeDelivery: true }));
+  expect((await t.db.select().from(orders))[0]).toMatchObject({ deliveryCents: 0, totalCents: 3600 });
+});

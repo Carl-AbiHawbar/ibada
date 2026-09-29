@@ -36,6 +36,8 @@ export type PlaceOrderContext = {
   now: Date;
   verifyTurnstile: TurnstileVerifier;
   notify: (n: NewOrderNotice) => Promise<void>;
+  /** The shopper claimed the free-delivery offer. */
+  freeDelivery?: boolean;
 };
 
 export type PlaceOrderError =
@@ -133,6 +135,7 @@ export async function placeOrder(db: Db, input: unknown, ctx: PlaceOrderContext)
         subtotalCents: quote.subtotalCents,
         discountCents: discount?.ok ? discount.amountCents : 0,
         settings: storeSettings,
+        freeDelivery: ctx.freeDelivery,
       });
 
       // Take stock atomically: the WHERE clause refuses to go below zero.

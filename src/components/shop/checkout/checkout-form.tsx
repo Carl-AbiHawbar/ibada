@@ -12,6 +12,7 @@ import {
   type DiscountPreview,
 } from '@/app/[locale]/(shop)/actions';
 import { useCart } from '@/components/shop/cart/cart-provider';
+import { useFreeDelivery } from '@/components/shop/free-delivery/free-delivery-provider';
 import { Turnstile, type TurnstileHandle } from '@/components/shop/turnstile';
 import { Link } from '@/i18n/navigation';
 import { GOVERNORATES } from '@/lib/lebanon';
@@ -42,6 +43,8 @@ export function CheckoutForm({ siteKey }: { siteKey: string }) {
   const locale = useLocale() as 'en' | 'ar';
   const isClient = useIsClient();
   const { lines, replace } = useCart();
+  const freeDelivery = useFreeDelivery();
+  const tf = useTranslations('freeDelivery');
 
   const [quote, setQuote] = useState<CartQuoteResult | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
@@ -74,7 +77,7 @@ export function CheckoutForm({ siteKey }: { siteKey: string }) {
     return () => {
       cancelled = true;
     };
-  }, [isClient, lines, replace, te]);
+  }, [isClient, lines, replace, te, freeDelivery.version]);
 
   const set = (key: keyof FormState) => (value: string) => {
     setForm((f) => ({ ...f, [key]: value, ...(key === 'governorate' ? { district: '' } : {}) }));
@@ -356,6 +359,16 @@ export function CheckoutForm({ siteKey }: { siteKey: string }) {
               {totals.deliveryCents > 0 ? formatUsd(totals.deliveryCents) : tc('free')}
             </dd>
           </div>
+          {totals.deliveryCents > 0 && !quote?.freeDelivery && (
+            <button
+              type="button"
+              data-testid="summary-get-free-delivery"
+              onClick={freeDelivery.openForm}
+              className="text-sm font-bold text-blue underline underline-offset-2 hover:text-navy"
+            >
+              {tf('getItFree')}
+            </button>
+          )}
           <div className="flex items-baseline justify-between border-t border-line pt-3">
             <dt className="text-base font-bold text-navy">{t('total')}</dt>
             <dd data-testid="summary-total" className="text-2xl font-extrabold text-navy">

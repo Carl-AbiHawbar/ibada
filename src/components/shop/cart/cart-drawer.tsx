@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { AlertTriangle, ShoppingBag, Trash2, X } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { quoteCartAction, type CartQuoteResult } from '@/app/[locale]/(shop)/actions';
+import { useFreeDelivery } from '../free-delivery/free-delivery-provider';
 import { QuantityStepper } from '@/components/shop/product/purchase-panel';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { Link } from '@/i18n/navigation';
@@ -16,6 +17,8 @@ export function CartDrawer() {
   const tc = useTranslations('common');
   const locale = useLocale() as 'en' | 'ar';
   const { open, setOpen, lines, setQuantity, remove, replace } = useCart();
+  const freeDelivery = useFreeDelivery();
+  const tf = useTranslations('freeDelivery');
   const [quote, setQuote] = useState<CartQuoteResult | null>(null);
   const [notice, setNotice] = useState(false);
   const request = useRef(0);
@@ -34,7 +37,7 @@ export function CartDrawer() {
       setQuote(q);
     }, 120);
     return () => clearTimeout(timer);
-  }, [open, lines, replace]);
+  }, [open, lines, replace, freeDelivery.version]);
 
   const qty = new Map(lines.map((l) => [l.bundleId, l.quantity]));
   const shown = (quote?.lines ?? []).filter((l) => qty.has(l.bundleId));
@@ -127,6 +130,19 @@ export function CartDrawer() {
                     {quote && quote.deliveryCents > 0 ? formatUsd(quote.deliveryCents) : tc('free')}
                   </dd>
                 </div>
+                {quote && quote.deliveryCents > 0 && !quote.freeDelivery && (
+                  <button
+                    type="button"
+                    data-testid="cart-get-free-delivery"
+                    onClick={() => {
+                      setOpen(false);
+                      freeDelivery.openForm();
+                    }}
+                    className="text-sm font-bold text-blue underline underline-offset-2 hover:text-navy"
+                  >
+                    {tf('getItFree')}
+                  </button>
+                )}
               </dl>
               <p className="text-center text-xs font-medium text-navy/80">{t('codNote')}</p>
               <Link

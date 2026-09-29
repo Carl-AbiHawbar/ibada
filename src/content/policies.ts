@@ -5,7 +5,7 @@ export type PolicySlug = (typeof POLICY_SLUGS)[number];
 type Section = { heading: string; paragraphs: string[] };
 export type Policy = { title: string; updated: string; sections: Section[] };
 
-const UPDATED = '2026-09-27';
+const UPDATED = '2026-09-30';
 
 export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
   shipping: {
@@ -20,7 +20,9 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
         },
         {
           heading: 'Delivery fee',
-          paragraphs: ['Delivery is currently free. If a delivery fee ever applies, it is shown clearly at checkout before you place your order.'],
+          paragraphs: [
+            'A delivery fee applies and is shown clearly in your cart and at checkout before you place your order. Delivery is free when you claim our free-delivery offer: tap “Free delivery” and leave your name, email and phone.',
+          ],
         },
         {
           heading: 'Order confirmation',
@@ -40,7 +42,9 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
         { heading: 'مدة التوصيل', paragraphs: ['يتم توصيل الطلبات عادةً خلال 2–4 أيام عمل بعد تأكيدها معك هاتفيًا.'] },
         {
           heading: 'رسوم التوصيل',
-          paragraphs: ['التوصيل مجاني حاليًا. وإذا طُبّقت أي رسوم توصيل مستقبلًا، ستظهر بوضوح عند إتمام الطلب قبل تأكيده.'],
+          paragraphs: [
+            'تُطبَّق رسوم توصيل تظهر بوضوح في سلتك وعند إتمام الطلب قبل تأكيده. ويصبح التوصيل مجانيًا عند الاستفادة من عرض التوصيل المجاني: اضغط على «توصيل مجاني» واترك اسمك وبريدك الإلكتروني ورقم هاتفك.',
+          ],
         },
         {
           heading: 'تأكيد الطلب',
@@ -99,11 +103,17 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
       sections: [
         {
           heading: 'What we collect',
-          paragraphs: ['When you order we collect your name, phone number, delivery address, any notes you add, and what you ordered. We never ask for card details.'],
+          paragraphs: [
+            'When you order we collect your name, phone number, delivery address, any notes you add, and what you ordered. We never ask for card details.',
+            'When you claim the free-delivery offer we collect your name, email address and phone number, and whether you agreed to receive offers by email.',
+          ],
         },
         {
           heading: 'Why we collect it',
-          paragraphs: ['To deliver your order, confirm it with you by phone, give support and honour our guarantee, and meet our legal obligations.'],
+          paragraphs: [
+            'To deliver your order, confirm it with you by phone, give support and honour our guarantee, and meet our legal obligations.',
+            'Free-delivery details are used to apply free delivery to your orders. We send offers and news by email only if you ticked the box, and you can ask us to stop at any time.',
+          ],
         },
         {
           heading: 'Cookies and analytics',
@@ -130,11 +140,17 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
       sections: [
         {
           heading: 'ما الذي نجمعه',
-          paragraphs: ['عند الطلب نجمع اسمك ورقم هاتفك وعنوان التوصيل وأي ملاحظات تضيفها وتفاصيل طلبك. لا نطلب أبدًا معلومات بطاقتك.'],
+          paragraphs: [
+            'عند الطلب نجمع اسمك ورقم هاتفك وعنوان التوصيل وأي ملاحظات تضيفها وتفاصيل طلبك. لا نطلب أبدًا معلومات بطاقتك.',
+            'عند الاستفادة من عرض التوصيل المجاني نجمع اسمك وبريدك الإلكتروني ورقم هاتفك، وما إذا كنت قد وافقت على تلقي العروض عبر البريد الإلكتروني.',
+          ],
         },
         {
           heading: 'لماذا نجمعه',
-          paragraphs: ['لتوصيل طلبك وتأكيده معك هاتفيًا وتقديم الدعم والالتزام بضماننا، وللوفاء بالتزاماتنا القانونية.'],
+          paragraphs: [
+            'لتوصيل طلبك وتأكيده معك هاتفيًا وتقديم الدعم والالتزام بضماننا، وللوفاء بالتزاماتنا القانونية.',
+            'نستخدم معلومات عرض التوصيل المجاني لتطبيق التوصيل المجاني على طلباتك. ولا نرسل العروض والأخبار عبر البريد الإلكتروني إلا إذا اخترت ذلك، ويمكنك أن تطلب منا التوقف في أي وقت.',
+          ],
         },
         {
           heading: 'ملفات تعريف الارتباط والإحصاءات',

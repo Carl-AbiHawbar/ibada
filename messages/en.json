@@ -65,7 +65,10 @@
     },
     "previousImage": "Previous image",
     "nextImage": "Next image",
-    "showImage": "Show image {n}"
+    "showImage": "Show image {n}",
+    "ratedExcellent": "Rated Excellent",
+    "ratedGreat": "Rated Great",
+    "ratedGood": "Rated Good"
   },
   "bundles": {
     "title": "Choose your protection",
@@ -82,7 +85,8 @@
     "quantity": "Quantity",
     "decrease": "Decrease quantity",
     "increase": "Increase quantity",
-    "or": "or {price} / unit"
+    "or": "or {price} / unit",
+    "packLabel": "Choose your pack"
   },
   "trust": {
     "cod": "Pay cash on delivery",
@@ -309,5 +313,34 @@
   "policies": {
     "draft": "Draft — please review before launch",
     "updated": "Last updated {date}"
+  },
+  "freeDelivery": {
+    "button": "Free delivery",
+    "title": "Get free delivery",
+    "subtitle": "Leave your details and delivery on your order is on us.",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "phoneHint": "Lebanese mobile or landline",
+    "optIn": "Send me offers and news by email (optional)",
+    "privacy": "We use these details for your orders and, only if you tick the box, for offers.",
+    "submit": "Get free delivery",
+    "submitting": "Sending…",
+    "successTitle": "Free delivery unlocked",
+    "successBody": "It is applied automatically at checkout.",
+    "done": "Continue shopping",
+    "getItFree": "Get it free",
+    "close": "Close",
+    "errors": {
+      "required": "Please fill this in",
+      "too_long": "Too long",
+      "invalid_email": "Enter a valid email address",
+      "invalid_phone": "Enter a Lebanese number, e.g. 03 123 456",
+      "captcha": "Please try again",
+      "rate_limited": "Too many attempts. Please try again later.",
+      "failed": "Something went wrong. Please try again."
+    },
+    "privacyLink": "Privacy policy",
+    "verifying": "One moment…"
   }
 }

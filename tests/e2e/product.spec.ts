@@ -33,6 +33,31 @@ test('sticky add-to-cart bar appears after scrolling past the button', async ({ 
   await expect(sticky).toContainText('$36');
 });
 
+test('the sticky bar switches packs and stays in sync with the picker', async ({ page }) => {
+  await page.goto('/en');
+  await page.locator('#how-it-works').scrollIntoViewIfNeeded();
+  const sticky = page.getByTestId('sticky-atc');
+  await expect(sticky).toBeVisible();
+  await sticky.getByTestId('sticky-pack').selectOption({ label: 'Single Room Protection · $20' });
+  await expect(sticky.locator('p').filter({ hasText: '$20' })).toBeVisible();
+  await expect(page.getByRole('radio', { name: /Single Room Protection/ })).toBeChecked();
+  await expect(page.getByTestId('price-block')).toContainText('$20');
+});
+
+test('the gallery shows the chosen pack, not the other packs', async ({ page }) => {
+  await page.goto('/en');
+  // Seeded photos are all pack shots, so there is nothing else to page through.
+  await expect(page.getByRole('button', { name: /Show image/ })).toHaveCount(0);
+  await page.getByTestId('bundle-option').filter({ hasText: 'Family Pack' }).click();
+  await expect(page.getByTestId('gallery').getByRole('img', { name: /pack of 3/ })).toBeVisible();
+});
+
+test('a mosquito lands on the comparison badge', async ({ page }) => {
+  await page.goto('/en');
+  await page.getByText('IBADA vs other pesticide solutions').scrollIntoViewIfNeeded();
+  await expect(page.getByTestId('mosquito')).toBeVisible();
+});
+
 test('page sections render', async ({ page }) => {
   await page.goto('/en');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('PEST FREE LIVING');

@@ -8,10 +8,12 @@ import { CartButton } from '@/components/shop/cart/cart-button';
 import { CartDrawer } from '@/components/shop/cart/cart-drawer';
 import { CartProvider } from '@/components/shop/cart/cart-provider';
 import { ShopFooter } from '@/components/shop/footer';
+import { FreeDeliveryProvider } from '@/components/shop/free-delivery/free-delivery-provider';
 import { ShopHeader } from '@/components/shop/header';
 import { getEnv } from '@/env';
 import { dirOf, routing } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
+import { getSettingsCached } from '@/server/next/storefront-data';
 import '../globals.css';
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta', display: 'swap' });
@@ -50,13 +52,14 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: 'common' });
+  const [t, settings] = await Promise.all([getTranslations({ locale, namespace: 'common' }), getSettingsCached()]);
 
   return (
     <html lang={locale} dir={dirOf(locale)} className={cn(jakarta.variable, plexArabic.variable, 'antialiased')}>
       <body className={cn('flex min-h-dvh flex-col bg-white text-ink', locale === 'ar' && 'font-arabic')}>
         <NextIntlClientProvider>
           <CartProvider>
+            <FreeDeliveryProvider feeCents={settings.deliveryFeeCents} siteKey={getEnv().TURNSTILE_SITE_KEY}>
             <a
               href="#main"
               className="sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
@@ -70,6 +73,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
             </main>
             <ShopFooter locale={locale} />
             <CartDrawer />
+            </FreeDeliveryProvider>
           </CartProvider>
         </NextIntlClientProvider>
       </body>

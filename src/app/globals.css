@@ -139,3 +139,55 @@
     @apply font-sans;
   }
 }
+/* Mosquito that flies in and lands on the comparison badge (see mosquito-landing.tsx). */
+.mosquito {
+  --mx: 1;
+  animation: mosquito-flight 3.4s ease-in-out both;
+}
+[dir='rtl'] .mosquito {
+  --mx: -1;
+}
+.mosquito-wings {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: mosquito-wings 70ms linear 48;
+}
+@keyframes mosquito-flight {
+  0% {
+    transform: translate(calc(var(--mx) * -320px), -140px) rotate(10deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  18% {
+    transform: translate(calc(var(--mx) * -200px), -40px) rotate(-15deg);
+  }
+  36% {
+    transform: translate(calc(var(--mx) * -240px), -170px) rotate(20deg);
+  }
+  55% {
+    transform: translate(calc(var(--mx) * -90px), -110px) rotate(-10deg);
+  }
+  72% {
+    transform: translate(calc(var(--mx) * -130px), -30px) rotate(15deg);
+  }
+  88% {
+    transform: translate(calc(var(--mx) * -20px), -40px) rotate(-5deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+}
+@keyframes mosquito-wings {
+  50% {
+    transform: scaleY(0.35);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mosquito,
+  .mosquito-wings {
+    animation: none;
+  }
+}

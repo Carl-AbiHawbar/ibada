@@ -46,9 +46,8 @@ export async function ProductTemplate({
 
       <section className="relative overflow-hidden bg-[radial-gradient(90%_60%_at_50%_0%,var(--color-ice)_0%,#ffffff_70%)]">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-16 pt-6 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:pt-12">
-          <Gallery />
+          <Gallery header={<RatingSummary locale={locale} summary={summary} trustpilotUrl={settings.trustpilotUrl} />} />
           <div id="buy" className="scroll-mt-24">
-            <RatingSummary locale={locale} summary={summary} trustpilotUrl={settings.trustpilotUrl} />
             <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-navy/70">
               <LogoMark className="h-3.5" /> {product.name[locale]} · {t('eyebrow')}
             </p>

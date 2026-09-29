@@ -3,6 +3,7 @@ import { CircleCheck, CircleX, SprayCan } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { LogoMark } from '@/components/brand/logo';
 import type { Locale } from '@/i18n/routing';
+import { MosquitoLanding } from './mosquito-landing';
 
 const ROWS = ['r1', 'r2', 'r3', 'r4'] as const;
 
@@ -12,9 +13,11 @@ export async function Comparison({ locale, imageUrl }: { locale: Locale; imageUr
     <section className="bg-linear-to-b from-white to-ice py-20">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <div className="text-center">
-          <p className="inline-block rounded-full bg-blue px-3 py-1 text-xs font-bold uppercase tracking-widest text-white">
-            {t('eyebrow')}
-          </p>
+          <MosquitoLanding>
+            <p className="inline-block rounded-full bg-blue px-3 py-1 text-xs font-bold uppercase tracking-widest text-white">
+              {t('eyebrow')}
+            </p>
+          </MosquitoLanding>
           <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">{t('title')}</h2>
         </div>
 

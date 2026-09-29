@@ -105,3 +105,13 @@ test('totals: discount then delivery threshold on the discounted subtotal', asyn
     }),
   ).toEqual({ subtotalCents: 3600, discountCents: 360, deliveryCents: 300, totalCents: 3540 });
 });
+
+test('totals: a claimed free-delivery offer removes the fee', async () => {
+  const s = { ...(await getSettings(t.db)), deliveryFeeCents: 300 };
+  expect(computeTotals({ subtotalCents: 3600, discountCents: 0, settings: s, freeDelivery: true })).toEqual({
+    subtotalCents: 3600,
+    discountCents: 0,
+    deliveryCents: 0,
+    totalCents: 3600,
+  });
+});

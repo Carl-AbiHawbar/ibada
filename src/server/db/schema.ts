@@ -379,3 +379,20 @@ export const staffInvites = pgTable('staff_invites', {
   invitedBy: staffRef('invited_by'),
   createdAt: createdAt(),
 });
+
+/** Shoppers who filled in the free-delivery form (their browser then gets free delivery). */
+export const deliverySignups = pgTable(
+  'delivery_signups',
+  {
+    id: id(),
+    email: text('email').notNull().unique(),
+    name: text('name').notNull(),
+    phone: text('phone').notNull(),
+    marketingOptIn: boolean('marketing_opt_in').notNull().default(false),
+    locale: text('locale').notNull().default('en'),
+    ipHash: text('ip_hash'),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index('delivery_signups_created_idx').on(t.createdAt)],
+);

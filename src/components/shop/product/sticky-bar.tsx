@@ -11,7 +11,7 @@ import { useSelectedBundle } from './selection-context';
 export function StickyBar() {
   const t = useTranslations('purchase');
   const locale = useLocale() as 'en' | 'ar';
-  const { product, bundle, addToCart, mainButton } = useSelectedBundle();
+  const { product, bundle, select, addToCart, mainButton } = useSelectedBundle();
   const [show, setShow] = useState(false);
 
   // A scroll check (not IntersectionObserver): anchor jumps can move the button from
@@ -22,7 +22,10 @@ export function StickyBar() {
     let frame = 0;
     const update = () => {
       frame = 0;
-      setShow(el.getBoundingClientRect().bottom < 0);
+      const visible = el.getBoundingClientRect().bottom < 0;
+      setShow(visible);
+      // Lets other fixed elements (the free-delivery button) sit above the bar.
+      document.body.dataset.stickyAtc = visible ? 'on' : 'off';
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -32,6 +35,7 @@ export function StickyBar() {
     window.addEventListener('resize', schedule, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
+      delete document.body.dataset.stickyAtc;
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
     };
@@ -53,8 +57,24 @@ export function StickyBar() {
           </span>
         )}
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-bold text-navy">{bundle.name[locale]}</p>
-          <p className="text-sm">
+          <label htmlFor="sticky-pack" className="sr-only">
+            {t('packLabel')}
+          </label>
+          <select
+            id="sticky-pack"
+            data-testid="sticky-pack"
+            value={bundle.id}
+            onChange={(e) => select(e.target.value)}
+            tabIndex={show ? 0 : -1}
+            className="block w-full max-w-72 truncate rounded-lg border border-line bg-white py-1 ps-2 pe-7 text-sm font-bold text-navy focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue/20"
+          >
+            {product.bundles.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name[locale]} · {formatUsd(b.priceCents)}
+              </option>
+            ))}
+          </select>
+          <p className="mt-0.5 text-sm">
             <span className="font-extrabold text-navy">{formatUsd(bundle.priceCents)}</span>
             {bundle.compareAtCents !== null && (
               <s className="ms-2 text-muted-ink">{formatUsd(bundle.compareAtCents)}</s>
