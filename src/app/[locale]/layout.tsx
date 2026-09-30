@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { IBM_Plex_Sans_Arabic, Plus_Jakarta_Sans } from 'next/font/google';
+import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -52,7 +53,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const [t, settings] = await Promise.all([getTranslations({ locale, namespace: 'common' }), getSettingsCached()]);
+  const [t, settings, draft] = await Promise.all([
+    getTranslations({ locale, namespace: 'common' }),
+    getSettingsCached(),
+    draftMode(),
+  ]);
 
   return (
     <html lang={locale} dir={dirOf(locale)} className={cn(jakarta.variable, plexArabic.variable, 'antialiased')}>
@@ -66,6 +71,14 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
             >
               {t('skipToContent')}
             </a>
+            {draft.isEnabled && (
+              <div data-testid="preview-banner" className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-amber-400 px-4 py-2 text-center text-sm font-semibold text-navy">
+                <span>{t('previewBanner')}</span>
+                <a href={`/api/preview/exit?locale=${locale}`} className="underline underline-offset-2">
+                  {t('exitPreview')}
+                </a>
+              </div>
+            )}
             <AnnouncementBar locale={locale} />
             <ShopHeader locale={locale} actions={<CartButton />} />
             <main id="main" className="flex-1">

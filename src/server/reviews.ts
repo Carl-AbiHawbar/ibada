@@ -11,6 +11,8 @@ export type ReviewView = {
   locale: 'en' | 'ar';
   photoUrl: string | null;
   reviewDate: string;
+  /** Private-preview sample (never stored or shown to shoppers). */
+  sample?: boolean;
 };
 
 export type ReviewSummary = { count: number; average: number; distribution: Record<1 | 2 | 3 | 4 | 5, number> };

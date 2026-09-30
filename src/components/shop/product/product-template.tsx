@@ -1,5 +1,7 @@
+import { draftMode } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 import { LogoMark } from '@/components/brand/logo';
+import { SAMPLE_REVIEWS, sampleReviewSummary } from '@/content/sample-reviews';
 import type { Locale } from '@/i18n/routing';
 import type { ProductView } from '@/server/catalog';
 import type { ReviewSummary, ReviewView } from '@/server/reviews';
@@ -39,6 +41,10 @@ export async function ProductTemplate({
   const tc = await getTranslations({ locale, namespace: 'cta' });
   const singleImage = product.bundles.find((b) => b.units === 1)?.imageUrl ?? product.images[0]?.url ?? null;
   const ld = productJsonLd(product, { locale, url, rating: summary });
+  // Private preview (Draft Mode): sample reviews stand in until real ones exist. Search data keeps real ones only.
+  const showSamples = (await draftMode()).isEnabled && summary.count === 0;
+  const shownSummary = showSamples ? sampleReviewSummary() : summary;
+  const shownReviews = showSamples ? SAMPLE_REVIEWS : reviews;
 
   return (
     <ProductSelectionProvider product={product}>
@@ -46,7 +52,7 @@ export async function ProductTemplate({
 
       <section className="relative overflow-hidden bg-[radial-gradient(90%_60%_at_50%_0%,var(--color-ice)_0%,#ffffff_70%)]">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-16 pt-6 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:pt-12">
-          <Gallery header={<RatingSummary locale={locale} summary={summary} trustpilotUrl={settings.trustpilotUrl} />} />
+          <Gallery header={<RatingSummary locale={locale} summary={shownSummary} trustpilotUrl={settings.trustpilotUrl} sample={showSamples} />} />
           <div id="buy" className="scroll-mt-24">
             <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-navy/70">
               <LogoMark className="h-3.5" /> {product.name[locale]} · {t('eyebrow')}
@@ -68,7 +74,7 @@ export async function ProductTemplate({
       <Steps locale={locale} imageUrl={singleImage} />
       <Pests locale={locale} />
       <Comparison locale={locale} imageUrl={singleImage} />
-      <ReviewsSection locale={locale} productId={product.id} summary={summary} reviews={reviews} />
+      <ReviewsSection locale={locale} productId={product.id} summary={shownSummary} reviews={shownReviews} />
       <Faq locale={locale} />
 
       <section className="bg-navy py-16 text-white">

@@ -18,6 +18,7 @@ export async function ReviewsSection({
 }) {
   if (summary.count === 0) return null;
   const t = await getTranslations({ locale, namespace: 'reviews' });
+  const tc = await getTranslations({ locale, namespace: 'common' });
   return (
     <section id="reviews" className="scroll-mt-20 py-20">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-[280px_1fr]">
@@ -45,7 +46,7 @@ export async function ReviewsSection({
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {reviews.map((r) => (
-            <ReviewCard key={r.id} review={r} locale={locale} starsLabel={t('stars', { rating: r.rating })} />
+            <ReviewCard key={r.id} review={r} locale={locale} starsLabel={t('stars', { rating: r.rating })} sampleLabel={tc('sample')} />
           ))}
           <ReviewsMore productId={productId} initialCount={reviews.length} total={summary.count} />
         </div>
