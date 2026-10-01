@@ -97,26 +97,30 @@ export function CartDrawer() {
                       {l.imageUrl && <Image src={l.imageUrl} alt="" fill sizes="80px" className="object-contain p-1.5" />}
                     </span>
                     <div className="flex min-w-0 flex-1 flex-col">
-                      <p className="font-bold leading-tight text-navy">{l.bundleName[locale]}</p>
-                      <p className="text-sm text-muted-ink">{l.productName[locale]}</p>
-                      <div className="mt-auto flex items-center justify-between gap-2 pt-2">
-                        <QuantityStepper size="sm" value={q} onChange={(n) => setQuantity(l.bundleId, n)} />
-                        <span className="text-end leading-tight">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="font-bold leading-tight text-navy">{l.bundleName[locale]}</p>
+                          <p className="text-sm text-muted-ink">{l.productName[locale]}</p>
+                        </div>
+                        <span className="shrink-0 text-end leading-tight">
                           <span className="block font-extrabold text-navy">{formatUsd(l.unitPriceCents * q)}</span>
                           {l.compareAtCents !== null && l.compareAtCents > l.unitPriceCents && (
                             <s className="block text-xs text-muted-ink">{formatUsd(l.compareAtCents * q)}</s>
                           )}
                         </span>
                       </div>
+                      <div className="mt-auto flex items-center justify-between gap-2 pt-2">
+                        <QuantityStepper size="sm" value={q} onChange={(n) => setQuantity(l.bundleId, n)} />
+                        <button
+                          type="button"
+                          onClick={() => remove(l.bundleId)}
+                          aria-label={t('remove')}
+                          className="flex size-8 shrink-0 items-center justify-center rounded-full text-muted-ink hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => remove(l.bundleId)}
-                      aria-label={t('remove')}
-                      className="flex size-8 shrink-0 items-center justify-center self-start rounded-full text-muted-ink hover:bg-red-50 hover:text-red-600"
-                    >
-                      <Trash2 className="size-4" />
-                    </button>
                   </li>
                 );
               })}

@@ -71,7 +71,7 @@ export function StickyBar() {
             value={bundle.id}
             onChange={(e) => select(e.target.value)}
             tabIndex={show ? 0 : -1}
-            className="block w-full max-w-72 truncate rounded-lg border border-line bg-white py-1 ps-2 pe-7 text-sm font-bold text-navy focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue/20"
+            className="block w-full max-w-72 truncate rounded-lg border border-line bg-white py-1 ps-2 pe-6 text-[13px] font-bold text-navy sm:pe-7 sm:text-sm focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue/20"
           >
             {product.bundles.map((b) => (
               <option key={b.id} value={b.id}>
@@ -91,7 +91,7 @@ export function StickyBar() {
           onClick={addToCart}
           disabled={!product.inStock}
           tabIndex={show ? 0 : -1}
-          className="h-11 shrink-0 rounded-full bg-navy px-5 text-sm font-extrabold tracking-wide text-white transition hover:bg-navy-700 disabled:bg-slate-300"
+          className="h-11 shrink-0 rounded-full bg-navy px-4 text-[13px] font-extrabold tracking-wide text-white sm:px-5 sm:text-sm transition hover:bg-navy-700 disabled:bg-slate-300"
         >
           {product.inStock ? t('addToCart') : t('soldOut')}
         </button>

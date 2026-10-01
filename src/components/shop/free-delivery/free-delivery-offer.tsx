@@ -74,12 +74,12 @@ export function FreeDeliveryOffer({
           type="button"
           data-testid="free-delivery-button"
           onClick={() => onOpenChange(true)}
-          className="fd-button fixed bottom-4 start-4 z-30 flex items-center gap-2 rounded-full bg-blue px-4 py-3 text-sm font-extrabold uppercase tracking-wide text-white shadow-[0_12px_30px_-10px_rgba(6,147,230,0.7)] transition-colors hover:bg-navy focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue/30 [body[data-sticky-atc=on]_&]:bottom-24"
+          className="fd-button fixed bottom-3 start-3 z-30 flex items-center gap-1.5 rounded-full bg-blue px-3 py-2 text-xs font-extrabold uppercase tracking-wide text-white sm:bottom-4 sm:start-4 sm:gap-2 sm:px-4 sm:py-3 sm:text-sm shadow-[0_12px_30px_-10px_rgba(6,147,230,0.7)] transition-colors hover:bg-navy focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue/30 [body[data-sticky-atc=on]_&]:bottom-[5.5rem] sm:[body[data-sticky-atc=on]_&]:bottom-24"
         >
           {/* Waves like the IBADA device emits: subtle, and off for reduced motion. */}
           <span className="fd-wave" aria-hidden />
           <span className="fd-wave fd-wave-late" aria-hidden />
-          <Truck className="relative size-5" aria-hidden />
+          <Truck className="relative size-4 sm:size-5" aria-hidden />
           <span className="relative">{t('button')}</span>
         </button>
       )}

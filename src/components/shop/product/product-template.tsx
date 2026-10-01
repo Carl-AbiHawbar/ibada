@@ -50,7 +50,7 @@ export async function ProductTemplate({
     <ProductSelectionProvider product={product}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(ld) }} />
 
-      <section className="relative overflow-hidden bg-[radial-gradient(90%_60%_at_50%_0%,var(--color-ice)_0%,#ffffff_70%)]">
+      <section className="relative overflow-x-clip bg-[radial-gradient(90%_60%_at_50%_0%,var(--color-ice)_0%,#ffffff_70%)]">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-16 pt-6 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:pt-12">
           <Gallery header={<RatingSummary locale={locale} summary={shownSummary} trustpilotUrl={settings.trustpilotUrl} sample={showSamples} />} />
           <div id="buy" className="scroll-mt-24">

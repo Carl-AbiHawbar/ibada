@@ -14,6 +14,8 @@ test('the free-delivery form removes the delivery fee', async ({ browser }) => {
   await setDeliveryFee(adminPage, '3');
   try {
     const shopper = await (await browser.newContext()).newPage();
+    // The automatic popup is covered by its own test.
+    await shopper.addInitScript(() => localStorage.setItem('ibada:free-delivery-popup', '1'));
     await shopper.goto('/en');
     await shopper.getByRole('button', { name: 'ADD TO CART' }).first().click();
     const drawer = shopper.getByRole('dialog');
@@ -50,6 +52,8 @@ test('the floating button opens the form and shows field errors', async ({ brows
   await setDeliveryFee(adminPage, '3');
   try {
     const shopper = await (await browser.newContext()).newPage();
+    // The automatic popup is covered by its own test.
+    await shopper.addInitScript(() => localStorage.setItem('ibada:free-delivery-popup', '1'));
     await shopper.goto('/en/shop');
     await shopper.getByTestId('free-delivery-button').click();
     const form = shopper.getByRole('dialog', { name: 'Get free delivery forever!' });
@@ -69,4 +73,24 @@ test('no free-delivery button while delivery is free for everyone', async ({ pag
   await page.goto('/en/shop');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   await expect(page.getByTestId('free-delivery-button')).toHaveCount(0);
+});
+
+test('the form opens by itself after 5 seconds, only once', async ({ browser }) => {
+  const admin = await browser.newContext({ storageState: OWNER_STATE });
+  const adminPage = await admin.newPage();
+  await setDeliveryFee(adminPage, '3');
+  try {
+    const shopper = await (await browser.newContext()).newPage();
+    await shopper.goto('/en/shop');
+    const form = shopper.getByRole('dialog', { name: 'Get free delivery forever!' });
+    await expect(form).toBeVisible({ timeout: 10_000 });
+    await shopper.keyboard.press('Escape');
+    await expect(form).toHaveCount(0);
+    await shopper.reload();
+    await shopper.waitForTimeout(7000);
+    await expect(form).toHaveCount(0);
+  } finally {
+    await setDeliveryFee(adminPage, '0');
+    await admin.close();
+  }
 });
