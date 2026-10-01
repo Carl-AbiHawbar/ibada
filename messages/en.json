@@ -53,9 +53,7 @@
     "empty": "New products are coming soon."
   },
   "hero": {
-    "eyebrow": "Ultrasonic pest repeller",
     "headline": "PEST FREE LIVING",
-    "subheadline": "One device. A calmer home.",
     "ratingLabel": "{average} out of 5",
     "reviewCount": "{count, plural, one {# review} other {# reviews}}",
     "onTrustpilot": "on Trustpilot",

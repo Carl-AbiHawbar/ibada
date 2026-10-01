@@ -53,9 +53,7 @@
     "empty": "منتجات جديدة قريبًا."
   },
   "hero": {
-    "eyebrow": "طارد الحشرات بالموجات فوق الصوتية",
     "headline": "حياة بلا حشرات",
-    "subheadline": "جهاز واحد. منزل أكثر هدوءًا.",
     "ratingLabel": "{average} من 5",
     "reviewCount": "{count, plural, zero {لا تقييمات} one {تقييم واحد} two {تقييمان} few {# تقييمات} many {# تقييمًا} other {# تقييم}}",
     "onTrustpilot": "على Trustpilot",
