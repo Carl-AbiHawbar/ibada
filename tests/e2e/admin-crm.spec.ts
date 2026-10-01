@@ -51,7 +51,7 @@ test.describe.serial('customers, discounts and reviews', () => {
     await page.goto(`/admin/customers?q=${encodeURIComponent(buyer)}`);
     await page.getByTestId('customer-row').filter({ hasText: buyer }).getByRole('link').first().click();
     await expect(page.getByRole('heading', { level: 1 })).toContainText(buyer);
-    await expect(page.getByTestId('customer-orders')).toContainText('$36');
+    await expect(page.getByTestId('customer-orders')).toContainText('$35.99');
 
     await page.getByRole('button', { name: 'Block customer' }).click();
     await page.getByLabel('Reason').fill('Test block');

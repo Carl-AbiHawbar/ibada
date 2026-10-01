@@ -21,7 +21,7 @@ test('seedCatalog is idempotent and matches the pricing sheet', async () => {
 
   const bs = await t.db.select().from(bundles).orderBy(bundles.position);
   expect(bs.map((b) => b.units)).toEqual([1, 2, 3, 4]);
-  expect(bs.map((b) => b.priceCents)).toEqual([2000, 3600, 5100, 6000]);
+  expect(bs.map((b) => b.priceCents)).toEqual([1999, 3599, 5099, 5999]);
   expect(bs.map((b) => b.compareAtCents)).toEqual([3000, 6000, 9000, 12000]);
   expect(bs.map((b) => b.badge)).toEqual(['none', 'most_popular', 'none', 'best_value']);
   expect(bs.filter((b) => b.isDefault).map((b) => b.nameEn)).toEqual(['Multi-Room Protection']);
@@ -34,6 +34,11 @@ test('seedCatalog is idempotent and matches the pricing sheet', async () => {
     '/images/products/ibada-one-double.webp',
     '/images/products/ibada-one-triple.webp',
     '/images/products/ibada-one-full.webp',
+    '/images/products/gallery-box-en.webp',
+    '/images/products/gallery-how-en.webp',
+    '/images/products/gallery-family-en.webp',
+    '/images/products/gallery-home-en.webp',
+    '/images/products/gallery-settings-en.webp',
   ]);
   expect(imgs.every((i) => i.width > 0 && i.height > 0)).toBe(true);
 

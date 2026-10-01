@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { CircleCheck, CircleX, SprayCan } from 'lucide-react';
+import { CircleCheck, CircleX } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { LogoMark } from '@/components/brand/logo';
 import type { Locale } from '@/i18n/routing';
@@ -32,11 +32,10 @@ export async function Comparison({ locale, imageUrl }: { locale: Locale; imageUr
             )}
             <span className="text-lg font-extrabold tracking-wide">{t('ibada')}</span>
           </div>
-          <div className="flex flex-col items-center gap-3 bg-slate-100 px-4 py-6 text-slate-600">
-            <span className="flex size-20 items-center justify-center rounded-2xl bg-white">
-              <SprayCan className="size-10 text-slate-400" aria-hidden />
-            </span>
-            <span className="text-lg font-bold">{t('others')}</span>
+          <div data-testid="comparison-others" className="relative flex min-h-40 items-end justify-center overflow-hidden px-4 py-5 text-white">
+            <Image src="/images/comparison/sprays-poisons.webp" alt="" fill sizes="(min-width: 896px) 448px, 50vw" className="object-cover" />
+            <span className="absolute inset-0 bg-linear-to-t from-black/70 via-black/25 to-black/10" aria-hidden />
+            <span className="relative text-lg font-bold drop-shadow-md">{t('others')}</span>
           </div>
 
           {ROWS.map((r) => (

@@ -5,7 +5,7 @@ export type PolicySlug = (typeof POLICY_SLUGS)[number];
 type Section = { heading: string; paragraphs: string[] };
 export type Policy = { title: string; updated: string; sections: Section[] };
 
-const UPDATED = '2026-09-30';
+const UPDATED = '2026-10-01';
 
 export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
   shipping: {
@@ -21,7 +21,7 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
         {
           heading: 'Delivery fee',
           paragraphs: [
-            'A delivery fee applies and is shown clearly in your cart and at checkout before you place your order. Delivery is free when you claim our free-delivery offer: tap “Free delivery” and leave your name, email and phone.',
+            'A delivery fee applies and is shown clearly in your cart and at checkout before you place your order. Delivery is free when you claim our free-delivery offer: tap “Free delivery” and leave your first name, email and phone.',
           ],
         },
         {
@@ -105,14 +105,14 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
           heading: 'What we collect',
           paragraphs: [
             'When you order we collect your name, phone number, delivery address, any notes you add, and what you ordered. We never ask for card details.',
-            'When you claim the free-delivery offer we collect your name, email address and phone number, and whether you agreed to receive offers by email.',
+            'When you claim the free-delivery offer we collect your first name, email address and phone number, the pests you tell us you deal with, and whether you agreed to receive offers on WhatsApp.',
           ],
         },
         {
           heading: 'Why we collect it',
           paragraphs: [
             'To deliver your order, confirm it with you by phone, give support and honour our guarantee, and meet our legal obligations.',
-            'Free-delivery details are used to apply free delivery to your orders. We send offers and news by email only if you ticked the box, and you can ask us to stop at any time.',
+            'Free-delivery details are used to apply free delivery to your orders and to understand which pests our customers face. We send offers on WhatsApp only if you ticked the box, and you can ask us to stop at any time.',
           ],
         },
         {
@@ -142,14 +142,14 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
           heading: 'ما الذي نجمعه',
           paragraphs: [
             'عند الطلب نجمع اسمك ورقم هاتفك وعنوان التوصيل وأي ملاحظات تضيفها وتفاصيل طلبك. لا نطلب أبدًا معلومات بطاقتك.',
-            'عند الاستفادة من عرض التوصيل المجاني نجمع اسمك وبريدك الإلكتروني ورقم هاتفك، وما إذا كنت قد وافقت على تلقي العروض عبر البريد الإلكتروني.',
+            'عند الاستفادة من عرض التوصيل المجاني نجمع اسمك الأول وبريدك الإلكتروني ورقم هاتفك والحشرات التي تخبرنا أنها تزعجك، وما إذا كنت قد وافقت على تلقي العروض عبر واتساب.',
           ],
         },
         {
           heading: 'لماذا نجمعه',
           paragraphs: [
             'لتوصيل طلبك وتأكيده معك هاتفيًا وتقديم الدعم والالتزام بضماننا، وللوفاء بالتزاماتنا القانونية.',
-            'نستخدم معلومات عرض التوصيل المجاني لتطبيق التوصيل المجاني على طلباتك. ولا نرسل العروض والأخبار عبر البريد الإلكتروني إلا إذا اخترت ذلك، ويمكنك أن تطلب منا التوقف في أي وقت.',
+            'نستخدم معلومات عرض التوصيل المجاني لتطبيق التوصيل المجاني على طلباتك ولمعرفة الحشرات التي يواجهها زبائننا. ولا نرسل العروض عبر واتساب إلا إذا اخترت ذلك، ويمكنك أن تطلب منا التوقف في أي وقت.',
           ],
         },
         {

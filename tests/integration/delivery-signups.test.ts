@@ -15,6 +15,7 @@ const input = (over: Record<string, unknown> = {}) => ({
   email: '  Maya@Example.com ',
   phone: '03 123 456',
   marketingOptIn: true,
+  pests: ['cockroaches', 'mosquitoes'],
   locale: 'en',
   ...over,
 });
@@ -28,6 +29,7 @@ test('stores a normalized signup', async () => {
     email: 'maya@example.com',
     phone: '+9613123456',
     marketingOptIn: true,
+    pests: ['cockroaches', 'mosquitoes'],
     locale: 'en',
     ipHash: 'h',
   });
@@ -40,6 +42,17 @@ test('the same email signs up once; later details win', async () => {
   const rows = await t.db.select().from(deliverySignups);
   expect(rows).toHaveLength(1);
   expect(rows[0]).toMatchObject({ name: 'Maya K.', marketingOptIn: false });
+});
+
+test('pests are optional, deduplicated and limited to the known choices', async () => {
+  await saveDeliverySignup(t.db, input({ email: 'p@x.com', pests: ['ants', 'ants'] }), ctx());
+  await saveDeliverySignup(t.db, input({ email: 'q@x.com', pests: undefined }), ctx());
+  const rows = await t.db.select().from(deliverySignups);
+  expect(rows.map((r) => r.pests)).toEqual([['ants'], []]);
+  expect(await saveDeliverySignup(t.db, input({ email: 'r@x.com', pests: ['dragons'] }), ctx())).toEqual({
+    ok: false,
+    fieldErrors: { pests: 'invalid_pests' },
+  });
 });
 
 test('rejects a bad email, phone or name', async () => {
@@ -65,8 +78,8 @@ test('lists newest first and exports CSV without spreadsheet formulas', async ()
   expect(rows.map((r) => r.email)).toEqual(['b@x.com', 'a@x.com']);
 
   const csv = deliverySignupsToCsv(rows).split('\r\n');
-  expect(csv[0]).toBe('Date,Name,Email,Phone,Offers OK,Language');
-  expect(csv[1]).toContain(',b@x.com,03 123 456,No,en');
+  expect(csv[0]).toBe('Date,Name,Email,Phone,Pests,WhatsApp offers,Language');
+  expect(csv[1]).toContain(',b@x.com,03 123 456,Cockroaches; Mosquitoes,No,en');
   expect(csv[2]).toContain(`"'=HYPERLINK(""x"")"`);
   expect(csv[2]).toContain(',Yes,');
 });

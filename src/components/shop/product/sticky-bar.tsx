@@ -7,6 +7,11 @@ import { formatUsd } from '@/lib/money';
 import { cn } from '@/lib/utils';
 import { useSelectedBundle } from './selection-context';
 
+/** "50m²" from a pack subtitle such as "Up to 50m² coverage" (or the Arabic "50 م²"). */
+function coverageOf(subtitle: string): string | null {
+  return subtitle.match(/\d+\s*(?:m²|m2|م²)/)?.[0] ?? null;
+}
+
 /** Add-to-cart bar that slides in once the main button has scrolled out of view. */
 export function StickyBar() {
   const t = useTranslations('purchase');
@@ -70,7 +75,7 @@ export function StickyBar() {
           >
             {product.bundles.map((b) => (
               <option key={b.id} value={b.id}>
-                {b.name[locale]} · {formatUsd(b.priceCents)}
+                {b.name[locale]} · {coverageOf(b.subtitle[locale]) ?? formatUsd(b.priceCents)}
               </option>
             ))}
           </select>

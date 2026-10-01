@@ -20,7 +20,8 @@ export type BundleView = {
   perUnitCents: number;
 };
 
-export type ImageView = { id: string; url: string; alt: L10n; width: number; height: number };
+/** `urlAr`: Arabic version of a photo with text in it (null = use `url`). */
+export type ImageView = { id: string; url: string; urlAr: string | null; alt: L10n; width: number; height: number };
 
 export type ProductView = {
   id: string;
@@ -44,7 +45,21 @@ export type QuotedLine = {
   units: number;
   quantity: number;
   unitPriceCents: number;
+  compareAtCents: number | null;
   lineTotalCents: number;
+  imageUrl: string | null;
+};
+
+/** "Upgrade & save": swap a cart line for the next pack up of the same product. */
+export type UpgradeSuggestion = {
+  fromBundleId: string;
+  toBundleId: string;
+  fromName: L10n;
+  toName: L10n;
+  toUnits: number;
+  extraCents: number;
+  fromPerUnitCents: number;
+  toPerUnitCents: number;
   imageUrl: string | null;
 };
 
@@ -78,7 +93,14 @@ async function buildViews(db: Db, rows: ProductRow[]): Promise<ProductView[]> {
       seoDescription: { en: p.seoDescriptionEn, ar: p.seoDescriptionAr },
       images: imgs
         .filter((i) => i.productId === p.id)
-        .map((i) => ({ id: i.id, url: i.url, alt: { en: i.altEn, ar: i.altAr }, width: i.width, height: i.height })),
+        .map((i) => ({
+          id: i.id,
+          url: i.url,
+          urlAr: i.urlAr,
+          alt: { en: i.altEn, ar: i.altAr },
+          width: i.width,
+          height: i.height,
+        })),
       bundles: productBundles.map((b) => ({
         id: b.id,
         name: { en: b.nameEn, ar: b.nameAr },
@@ -177,10 +199,48 @@ export async function quoteCart(
       units: row.bundle.units,
       quantity,
       unitPriceCents: row.bundle.priceCents,
+      compareAtCents: row.bundle.compareAtCents,
       lineTotalCents: row.bundle.priceCents * quantity,
       imageUrl: row.imageUrl ?? null,
     });
   }
 
   return { lines: quoted, removed, subtotalCents: quoted.reduce((sum, l) => sum + l.lineTotalCents, 0) };
+}
+
+/**
+ * The first single-quantity cart line that has a bigger active pack of the same product with a
+ * lower price per device: suggest swapping it for that next pack up. Null when nothing qualifies.
+ */
+export async function suggestUpgrade(db: Db, lines: QuotedLine[]): Promise<UpgradeSuggestion | null> {
+  const candidates = lines.filter((l) => l.quantity === 1);
+  if (candidates.length === 0) return null;
+  const productIds = [...new Set(candidates.map((l) => l.productId))];
+  const rows = await db
+    .select({ bundle: bundles, imageUrl: productImages.url })
+    .from(bundles)
+    .leftJoin(productImages, eq(productImages.id, bundles.imageId))
+    .where(and(inArray(bundles.productId, productIds), eq(bundles.active, true)))
+    .orderBy(asc(bundles.units), asc(bundles.position));
+  const inCart = new Set(lines.map((l) => l.bundleId));
+
+  for (const line of candidates) {
+    const next = rows.find((r) => r.bundle.productId === line.productId && r.bundle.units > line.units);
+    if (!next || inCart.has(next.bundle.id)) continue;
+    const fromPerUnitCents = perUnitCents(line.unitPriceCents, line.units);
+    const toPerUnitCents = perUnitCents(next.bundle.priceCents, next.bundle.units);
+    if (toPerUnitCents >= fromPerUnitCents) continue;
+    return {
+      fromBundleId: line.bundleId,
+      toBundleId: next.bundle.id,
+      fromName: line.bundleName,
+      toName: { en: next.bundle.nameEn, ar: next.bundle.nameAr },
+      toUnits: next.bundle.units,
+      extraCents: next.bundle.priceCents - line.unitPriceCents,
+      fromPerUnitCents,
+      toPerUnitCents,
+      imageUrl: next.imageUrl ?? null,
+    };
+  }
+  return null;
 }

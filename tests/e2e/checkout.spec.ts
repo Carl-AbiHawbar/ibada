@@ -40,7 +40,7 @@ test.describe.serial('checkout', () => {
     await addDefaultBundle(page);
     await fillAddress(page, EN);
     await expect(page.getByTestId('summary-delivery')).toHaveText('FREE');
-    await expect(page.getByTestId('summary-total')).toHaveText('$36');
+    await expect(page.getByTestId('summary-total')).toHaveText('$35.99');
     await expect(page.getByTestId('summary-payment')).toContainText('Cash on delivery');
     await page.getByRole('button', { name: 'PLACE ORDER' }).click();
 
@@ -92,7 +92,7 @@ test('discount code', async ({ page }) => {
   await page.getByLabel('Discount code').fill('welcome10');
   await page.getByRole('button', { name: 'Apply' }).click();
   await expect(page.getByTestId('summary-discount')).toHaveText('-$3.60');
-  await expect(page.getByTestId('summary-total')).toHaveText('$32.40');
+  await expect(page.getByTestId('summary-total')).toHaveText('$32.39');
   await page.getByLabel('Discount code').fill('NOPE');
   await page.getByRole('button', { name: 'Apply' }).click();
   await expect(page.getByText("This code isn't valid")).toBeVisible();

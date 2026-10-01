@@ -125,7 +125,7 @@ describe('images', () => {
   it('adds, reorders and deletes images, unlinking bundles', async () => {
     const { id } = await addImage(t.db, { productId: s.productId, url: '/uploads/products/x.webp', width: 10, height: 10 });
     const imgs = await t.db.select().from(productImages).where(eq(productImages.productId, s.productId));
-    expect(imgs).toHaveLength(5);
+    expect(imgs).toHaveLength(10); // 9 seeded + the new one
     await reorderImages(t.db, s.productId, [id, ...imgs.filter((i) => i.id !== id).map((i) => i.id)]);
     expect((await getProductAdmin(t.db, s.productId))!.images[0]!.id).toBe(id);
 

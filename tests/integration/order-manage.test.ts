@@ -38,7 +38,7 @@ it('walks the happy path and records events', async () => {
 
   const [o] = await t.db.select().from(orders);
   expect(o).toMatchObject({ status: 'delivered', paymentStatus: 'paid' });
-  expect(await customer()).toMatchObject({ totalSpentCents: 3600, orderCount: 1 });
+  expect(await customer()).toMatchObject({ totalSpentCents: 3599, orderCount: 1 });
   const evs = await t.db.select().from(orderEvents).where(eq(orderEvents.orderId, orderId));
   expect(evs).toHaveLength(4);
   expect(evs.filter((e) => e.type === 'status_changed').map((e) => [e.fromStatus, e.toStatus, e.userId])).toEqual([
@@ -120,7 +120,7 @@ it('tracks by number and any phone format, hiding notes', async () => {
   expect(v).toMatchObject({
     number: orderNumber,
     status: 'confirmed',
-    totalCents: 3600,
+    totalCents: 3599,
     items: [{ bundleName: { en: 'Multi-Room Protection', ar: 'حماية عدة غرف' }, quantity: 1 }],
   });
   expect(v!.timeline.map((e) => e.status)).toEqual(['new', 'confirmed']);

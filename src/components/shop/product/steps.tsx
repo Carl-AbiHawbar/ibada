@@ -3,7 +3,9 @@ import { PlugZap, Sofa, Volume2 } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import type { Locale } from '@/i18n/routing';
 
-export async function Steps({ locale, imageUrl }: { locale: Locale; imageUrl: string | null }) {
+const STEP_IMAGES = { 1: '/images/steps/step1-plug-in.webp', 2: '/images/steps/step2-relax.webp' } as const;
+
+export async function Steps({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'steps' });
   const steps = [
     { n: 1, Icon: PlugZap, title: t('step1Title'), body: t('step1') },
@@ -31,19 +33,9 @@ export async function Steps({ locale, imageUrl }: { locale: Locale; imageUrl: st
               </div>
               <h3 className="mt-6 text-2xl font-extrabold text-navy">{title}</h3>
               <p className="mt-2 max-w-sm text-lg text-ink/80">{body}</p>
-              {n === 1 && imageUrl && (
-                <div className="relative mt-6 h-40">
-                  <Image src={imageUrl} alt="" fill sizes="(min-width: 768px) 40vw, 90vw" className="object-contain" />
-                </div>
-              )}
-              {n === 2 && (
-                <div className="mt-6 flex h-40 items-center justify-center rounded-3xl bg-linear-to-br from-ice to-ice-2">
-                  <span className="relative flex size-20 items-center justify-center rounded-full bg-white shadow-inner">
-                    <span className="absolute inset-0 animate-ping rounded-full bg-blue/20 motion-reduce:animate-none" />
-                    <span className="size-4 rounded-full bg-blue" />
-                  </span>
-                </div>
-              )}
+              <div className="relative mt-6 h-52 sm:h-60">
+                <Image src={STEP_IMAGES[n as 1 | 2]} alt="" fill sizes="(min-width: 768px) 40vw, 90vw" className="object-contain" />
+              </div>
             </article>
           ))}
         </div>

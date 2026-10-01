@@ -19,23 +19,25 @@ test('the free-delivery form removes the delivery fee', async ({ browser }) => {
     const drawer = shopper.getByRole('dialog');
     await expect(drawer.getByTestId('cart-delivery')).toHaveText('$3');
 
-    await drawer.getByTestId('cart-get-free-delivery').click();
-    const form = shopper.getByRole('dialog', { name: 'Get free delivery' });
-    await form.getByLabel('Full name', { exact: true }).fill('Rana Test');
+    await drawer.getByTestId('cart-delivery-get-free').click();
+    const form = shopper.getByRole('dialog', { name: 'Get free delivery forever!' });
+    await form.getByLabel('First name', { exact: true }).fill('Rana Test');
     await form.getByLabel('Email', { exact: true }).fill(`rana+${Date.now()}@example.com`);
-    await form.getByLabel('Phone', { exact: true }).fill('71 234 567');
-    await form.getByLabel(/offers and news/).check();
-    await form.getByRole('button', { name: 'Get free delivery' }).click();
+    await form.getByLabel('Phone Number', { exact: true }).fill('71 234 567');
+    await form.getByText('Cockroaches').click();
+    await form.getByLabel(/offers on WhatsApp/).check();
+    await form.getByRole('button', { name: 'Claim my free delivery' }).click();
     await expect(shopper.getByTestId('free-delivery-done')).toBeVisible();
     await shopper.getByRole('button', { name: 'Continue shopping' }).click();
 
     await shopper.goto('/en/checkout');
     await expect(shopper.getByTestId('summary-delivery')).toHaveText('FREE');
-    await expect(shopper.getByTestId('summary-total')).toHaveText('$36');
+    await expect(shopper.getByTestId('summary-total')).toHaveText('$35.99');
     await expect(shopper.getByTestId('free-delivery-button')).toHaveCount(0);
 
     await adminPage.goto('/admin/subscribers');
-    await expect(adminPage.getByTestId('subscriber-row').filter({ hasText: 'Rana Test' }).first()).toContainText('Offers OK');
+    await expect(adminPage.getByTestId('subscriber-row').filter({ hasText: 'Rana Test' }).first()).toContainText('WhatsApp OK');
+    await expect(adminPage.getByTestId('subscriber-row').filter({ hasText: 'Rana Test' }).first()).toContainText('Pests: Cockroaches');
   } finally {
     await setDeliveryFee(adminPage, '0');
     await admin.close();
@@ -50,11 +52,11 @@ test('the floating button opens the form and shows field errors', async ({ brows
     const shopper = await (await browser.newContext()).newPage();
     await shopper.goto('/en/shop');
     await shopper.getByTestId('free-delivery-button').click();
-    const form = shopper.getByRole('dialog', { name: 'Get free delivery' });
-    await form.getByLabel('Full name', { exact: true }).fill('Test');
+    const form = shopper.getByRole('dialog', { name: 'Get free delivery forever!' });
+    await form.getByLabel('First name', { exact: true }).fill('Test');
     await form.getByLabel('Email', { exact: true }).fill('nope');
-    await form.getByLabel('Phone', { exact: true }).fill('12');
-    await form.getByRole('button', { name: 'Get free delivery' }).click();
+    await form.getByLabel('Phone Number', { exact: true }).fill('12');
+    await form.getByRole('button', { name: 'Claim my free delivery' }).click();
     await expect(form.getByText('Enter a valid email address')).toBeVisible();
     await expect(form.getByText('Enter a Lebanese number, e.g. 03 123 456')).toBeVisible();
   } finally {

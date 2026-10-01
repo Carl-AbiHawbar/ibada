@@ -205,7 +205,11 @@
     "checkout": "Checkout",
     "remove": "Remove",
     "itemsRemoved": "Some items are no longer available and were removed from your cart.",
-    "codNote": "💵 You pay cash when your order arrives"
+    "codNote": "💵 You pay cash when your order arrives",
+    "upgradeEyebrow": "Upgrade & save",
+    "upgradeTitle": "Make it {name}",
+    "upgradeBody": "Swap {from} for {units, plural, one {# device} other {# devices}} for just +{extra}. That’s {perUnit} per device instead of {fromPerUnit}.",
+    "upgradeCta": "Upgrade for +{extra}"
   },
   "checkout": {
     "title": "Checkout",
@@ -319,15 +323,14 @@
   },
   "freeDelivery": {
     "button": "Free delivery",
-    "title": "Get free delivery",
-    "subtitle": "Leave your details and delivery on your order is on us.",
-    "name": "Full name",
+    "title": "Get free delivery forever!",
+    "subtitle": "Two quick details and one tap — delivery on your order is on us.",
+    "name": "First name",
     "email": "Email",
-    "phone": "Phone",
-    "phoneHint": "Lebanese mobile or landline",
-    "optIn": "Send me offers and news by email (optional)",
-    "privacy": "We use these details for your orders and, only if you tick the box, for offers.",
-    "submit": "Get free delivery",
+    "phone": "Phone Number",
+    "optIn": "Send me offers on WhatsApp (optional)",
+    "privacy": "We use these details for your order and, only if you tick the box, for offers. No spam — unsubscribe anytime.",
+    "submit": "Claim my free delivery",
     "submitting": "Sending…",
     "successTitle": "Free delivery unlocked",
     "successBody": "It is applied automatically at checkout.",
@@ -341,9 +344,27 @@
       "invalid_phone": "Enter a Lebanese number, e.g. 03 123 456",
       "captcha": "Please try again",
       "rate_limited": "Too many attempts. Please try again later.",
-      "failed": "Something went wrong. Please try again."
+      "failed": "Something went wrong. Please try again.",
+      "invalid_pests": "Please pick from the list"
     },
     "privacyLink": "Privacy policy",
-    "verifying": "One moment…"
+    "verifying": "One moment…",
+    "namePlaceholder": "What should we call you?",
+    "emailPlaceholder": "For your receipt and exclusive offers",
+    "phonePlaceholder": "71 123 456",
+    "pestsLabel": "Which pests do you usually deal with?",
+    "pestsHint": "Tap all that apply",
+    "pests": {
+      "cockroaches": "Cockroaches",
+      "mosquitoes": "Mosquitoes",
+      "ants": "Ants",
+      "rodents": "Mice / rats",
+      "flies": "Flies",
+      "bedBugs": "Bed bugs",
+      "spiders": "Spiders",
+      "flyingInsects": "Flying insects",
+      "crawlingBugs": "Crawling bugs",
+      "general": "General protection"
+    }
   }
 }

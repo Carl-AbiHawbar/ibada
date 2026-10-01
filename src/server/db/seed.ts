@@ -26,11 +26,20 @@ const IMAGES = [
   { file: 'full', altEn: 'IBADA ONE ultrasonic pest repeller — pack of 4', altAr: 'جهاز IBADA ONE لطرد الحشرات — عبوة من 4 أجهزة' },
 ] as const;
 
+/** Lifestyle shots after the pack shots; text is baked in, so each has an Arabic version. */
+const LIFESTYLE = [
+  { name: 'box', altEn: 'The IBADA ONE box: no scent, no insects', altAr: 'علبة IBADA ONE: بلا رائحة، بلا حشرات' },
+  { name: 'how', altEn: 'How IBADA works silently 24/7 with ultrasonic waves', altAr: 'كيف يعمل IBADA بصمت على مدار الساعة بالموجات فوق الصوتية' },
+  { name: 'family', altEn: 'Human and pet safe: a family at home with IBADA plugged in', altAr: 'آمن للإنسان والحيوان: عائلة في المنزل مع جهاز IBADA' },
+  { name: 'home', altEn: '24/7 protection on every floor of the home', altAr: 'حماية منزلك على مدار الساعة في كل طابق' },
+  { name: 'settings', altEn: 'For every setting: house, restaurant, café and office', altAr: 'مناسب لكل مكان: المنزل والمطعم والمقهى والمكتب' },
+] as const;
+
 const BUNDLES = [
-  { key: 'single', nameEn: 'Single Room Protection', nameAr: 'حماية غرفة واحدة', units: 1, m2: 50, price: 2000, compareAt: 3000, badge: 'none' },
-  { key: 'double', nameEn: 'Multi-Room Protection', nameAr: 'حماية عدة غرف', units: 2, m2: 100, price: 3600, compareAt: 6000, badge: 'most_popular' },
-  { key: 'triple', nameEn: 'Family Pack', nameAr: 'باقة العائلة', units: 3, m2: 150, price: 5100, compareAt: 9000, badge: 'none' },
-  { key: 'full', nameEn: 'Full Home Protection', nameAr: 'حماية المنزل بالكامل', units: 4, m2: 200, price: 6000, compareAt: 12000, badge: 'best_value' },
+  { key: 'single', nameEn: 'Single Room Protection', nameAr: 'حماية غرفة واحدة', units: 1, m2: 50, price: 1999, compareAt: 3000, badge: 'none' },
+  { key: 'double', nameEn: 'Multi-Room Protection', nameAr: 'حماية عدة غرف', units: 2, m2: 100, price: 3599, compareAt: 6000, badge: 'most_popular' },
+  { key: 'triple', nameEn: 'Family Pack', nameAr: 'باقة العائلة', units: 3, m2: 150, price: 5099, compareAt: 9000, badge: 'none' },
+  { key: 'full', nameEn: 'Full Home Protection', nameAr: 'حماية المنزل بالكامل', units: 4, m2: 200, price: 5999, compareAt: 12000, badge: 'best_value' },
 ] as const;
 
 type BundleKey = (typeof BUNDLES)[number]['key'];
@@ -39,7 +48,7 @@ export type SeededCatalog = { productId: string; bundleIds: Record<BundleKey, st
 export { seedSettings } from './settings-defaults';
 
 async function imageSize(file: string): Promise<{ width: number; height: number }> {
-  const meta = await sharp(path.resolve(process.cwd(), 'public/images/products', `ibada-one-${file}.webp`)).metadata();
+  const meta = await sharp(path.resolve(process.cwd(), 'public/images/products', file)).metadata();
   return { width: meta.width ?? 0, height: meta.height ?? 0 };
 }
 
@@ -52,7 +61,8 @@ export async function seedCatalog(db: Db): Promise<SeededCatalog> {
     return { productId: existing.id, bundleIds };
   }
 
-  const sizes = await Promise.all(IMAGES.map((img) => imageSize(img.file)));
+  const sizes = await Promise.all(IMAGES.map((img) => imageSize(`ibada-one-${img.file}.webp`)));
+  const lifestyleSizes = await Promise.all(LIFESTYLE.map((img) => imageSize(`gallery-${img.name}-en.webp`)));
 
   return db.transaction(async (tx) => {
     const [product] = await tx
@@ -93,6 +103,18 @@ export async function seedCatalog(db: Db): Promise<SeededCatalog> {
         })),
       )
       .returning({ id: productImages.id, position: productImages.position });
+    await tx.insert(productImages).values(
+      LIFESTYLE.map((img, i) => ({
+        productId: product.id,
+        url: `/images/products/gallery-${img.name}-en.webp`,
+        urlAr: `/images/products/gallery-${img.name}-ar.webp`,
+        altEn: img.altEn,
+        altAr: img.altAr,
+        width: lifestyleSizes[i]!.width,
+        height: lifestyleSizes[i]!.height,
+        position: IMAGES.length + i,
+      })),
+    );
     const imageIdAt = (pos: number) => images.find((im) => im.position === pos)?.id ?? null;
 
     const inserted = await tx

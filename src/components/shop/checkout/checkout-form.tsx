@@ -12,6 +12,7 @@ import {
   type DiscountPreview,
 } from '@/app/[locale]/(shop)/actions';
 import { useCart } from '@/components/shop/cart/cart-provider';
+import { DeliveryAmount } from '@/components/shop/free-delivery/delivery-amount';
 import { useFreeDelivery } from '@/components/shop/free-delivery/free-delivery-provider';
 import { Turnstile, type TurnstileHandle } from '@/components/shop/turnstile';
 import { Link } from '@/i18n/navigation';
@@ -44,7 +45,6 @@ export function CheckoutForm({ siteKey }: { siteKey: string }) {
   const isClient = useIsClient();
   const { lines, replace } = useCart();
   const freeDelivery = useFreeDelivery();
-  const tf = useTranslations('freeDelivery');
 
   const [quote, setQuote] = useState<CartQuoteResult | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
@@ -355,20 +355,10 @@ export function CheckoutForm({ siteKey }: { siteKey: string }) {
           )}
           <div className="flex justify-between">
             <dt className="text-muted-ink">{t('delivery_fee')}</dt>
-            <dd data-testid="summary-delivery" className="font-semibold text-blue">
-              {totals.deliveryCents > 0 ? formatUsd(totals.deliveryCents) : tc('free')}
+            <dd>
+              <DeliveryAmount deliveryCents={totals.deliveryCents} claimed={!!quote?.freeDelivery} testId="summary-delivery" />
             </dd>
           </div>
-          {totals.deliveryCents > 0 && !quote?.freeDelivery && (
-            <button
-              type="button"
-              data-testid="summary-get-free-delivery"
-              onClick={freeDelivery.openForm}
-              className="text-sm font-bold text-blue underline underline-offset-2 hover:text-navy"
-            >
-              {tf('getItFree')}
-            </button>
-          )}
           <div className="flex items-baseline justify-between border-t border-line pt-3">
             <dt className="text-base font-bold text-navy">{t('total')}</dt>
             <dd data-testid="summary-total" className="text-2xl font-extrabold text-navy">

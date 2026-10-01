@@ -33,7 +33,7 @@ it('filters by status and date and summarizes items', async () => {
 
   const confirmed = await listOrders(t.db, { status: 'confirmed', page: 1 });
   expect(confirmed.total).toBe(1);
-  expect(confirmed.rows[0]).toMatchObject({ status: 'confirmed', itemsSummary: 'Multi-Room Protection ×1', totalCents: 3600 });
+  expect(confirmed.rows[0]).toMatchObject({ status: 'confirmed', itemsSummary: 'Multi-Room Protection ×1', totalCents: 3599 });
   expect((await listOrders(t.db, { from: new Date('2030-01-01'), page: 1 })).total).toBe(0);
 });
 
@@ -71,7 +71,7 @@ it('detail includes items, customer and events with actor names', async () => {
   await placeTestOrder(t.db, s.bundleIds.single);
   await addOrderNote(t.db, { orderId: a.orderId, userId, note: 'Called', now: new Date() });
   const d = (await getOrderDetail(t.db, a.orderId))!;
-  expect(d.order).toMatchObject({ number: a.orderNumber, landmark: 'Near the pharmacy', totalCents: 3600 });
+  expect(d.order).toMatchObject({ number: a.orderNumber, landmark: 'Near the pharmacy', totalCents: 3599 });
   expect(d.items).toMatchObject([{ bundleNameEn: 'Multi-Room Protection', quantity: 1 }]);
   expect(d.customer).toMatchObject({ orderCount: 2, blocked: false });
   expect(d.events.map((e) => [e.type, e.actorName])).toEqual([
@@ -85,6 +85,6 @@ it('export rows carry full address and items', async () => {
   await placeTestOrder(t.db, s.bundleIds.double);
   const rows = await getOrdersForExport(t.db, {});
   expect(rows).toMatchObject([
-    { governorate: 'beirut', district: 'beirut', landmark: 'Near the pharmacy', items: 'Multi-Room Protection x1', totalCents: 3600 },
+    { governorate: 'beirut', district: 'beirut', landmark: 'Near the pharmacy', items: 'Multi-Room Protection x1', totalCents: 3599 },
   ]);
 });

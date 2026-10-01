@@ -55,13 +55,12 @@ export async function ProductTemplate({
           <Gallery header={<RatingSummary locale={locale} summary={shownSummary} trustpilotUrl={settings.trustpilotUrl} sample={showSamples} />} />
           <div id="buy" className="scroll-mt-24">
             <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-navy/70">
-              <LogoMark className="h-3.5" /> {product.name[locale]} · {t('eyebrow')}
+              <LogoMark className="h-3.5" /> {product.name[locale]}
             </p>
             <h1 className="mt-3 bg-linear-to-r from-navy via-navy-700 to-blue bg-clip-text pb-1 text-4xl font-extrabold leading-[1.05] tracking-tight text-transparent sm:text-5xl lg:text-6xl">
               {t('headline')}
             </h1>
-            <p className="mt-3 text-xl font-bold text-navy sm:text-2xl">{t('subheadline')}</p>
-            <p className="mt-2 text-lg text-muted-ink">{product.tagline[locale]}</p>
+            <p className="mt-3 text-lg font-medium text-navy">{product.tagline[locale]}</p>
             <PriceBlock />
             <Benefits locale={locale} />
             <BundlePicker />
@@ -71,7 +70,7 @@ export async function ProductTemplate({
         </div>
       </section>
 
-      <Steps locale={locale} imageUrl={singleImage} />
+      <Steps locale={locale} />
       <Pests locale={locale} />
       <Comparison locale={locale} imageUrl={singleImage} />
       <ReviewsSection locale={locale} productId={product.id} summary={shownSummary} reviews={shownReviews} />

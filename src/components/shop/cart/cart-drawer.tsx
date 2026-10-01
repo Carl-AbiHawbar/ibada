@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { AlertTriangle, ShoppingBag, Trash2, X } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { quoteCartAction, type CartQuoteResult } from '@/app/[locale]/(shop)/actions';
+import { DeliveryAmount } from '../free-delivery/delivery-amount';
 import { useFreeDelivery } from '../free-delivery/free-delivery-provider';
 import { QuantityStepper } from '@/components/shop/product/purchase-panel';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
@@ -17,8 +18,7 @@ export function CartDrawer() {
   const tc = useTranslations('common');
   const locale = useLocale() as 'en' | 'ar';
   const { open, setOpen, lines, setQuantity, remove, replace } = useCart();
-  const freeDelivery = useFreeDelivery();
-  const tf = useTranslations('freeDelivery');
+  const { version: freeDeliveryVersion } = useFreeDelivery();
   const [quote, setQuote] = useState<CartQuoteResult | null>(null);
   const [notice, setNotice] = useState(false);
   const request = useRef(0);
@@ -37,12 +37,13 @@ export function CartDrawer() {
       setQuote(q);
     }, 120);
     return () => clearTimeout(timer);
-  }, [open, lines, replace, freeDelivery.version]);
+  }, [open, lines, replace, freeDeliveryVersion]);
 
   const qty = new Map(lines.map((l) => [l.bundleId, l.quantity]));
   const shown = (quote?.lines ?? []).filter((l) => qty.has(l.bundleId));
   const subtotal = shown.reduce((sum, l) => sum + l.unitPriceCents * (qty.get(l.bundleId) ?? l.quantity), 0);
   const loading = lines.length > 0 && !quote;
+  const upgrade = quote?.upgrade ?? null;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -100,7 +101,12 @@ export function CartDrawer() {
                       <p className="text-sm text-muted-ink">{l.productName[locale]}</p>
                       <div className="mt-auto flex items-center justify-between gap-2 pt-2">
                         <QuantityStepper size="sm" value={q} onChange={(n) => setQuantity(l.bundleId, n)} />
-                        <span className="font-extrabold text-navy">{formatUsd(l.unitPriceCents * q)}</span>
+                        <span className="text-end leading-tight">
+                          <span className="block font-extrabold text-navy">{formatUsd(l.unitPriceCents * q)}</span>
+                          {l.compareAtCents !== null && l.compareAtCents > l.unitPriceCents && (
+                            <s className="block text-xs text-muted-ink">{formatUsd(l.compareAtCents * q)}</s>
+                          )}
+                        </span>
                       </div>
                     </div>
                     <button
@@ -114,6 +120,43 @@ export function CartDrawer() {
                   </li>
                 );
               })}
+              {upgrade && qty.get(upgrade.fromBundleId) === 1 && (
+                <li data-testid="cart-upgrade" className="rounded-2xl border border-blue/20 bg-ice p-4">
+                  <div className="flex gap-3">
+                    {upgrade.imageUrl && (
+                      <span className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-white">
+                        <Image src={upgrade.imageUrl} alt="" fill sizes="56px" className="object-contain p-1" />
+                      </span>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-xs font-extrabold uppercase tracking-widest text-blue">{t('upgradeEyebrow')}</p>
+                      <p className="font-extrabold leading-tight text-navy">{t('upgradeTitle', { name: upgrade.toName[locale] })}</p>
+                      <p className="mt-1 text-sm text-muted-ink">
+                        {t('upgradeBody', {
+                          from: upgrade.fromName[locale],
+                          units: upgrade.toUnits,
+                          extra: formatUsd(upgrade.extraCents),
+                          perUnit: formatUsd(upgrade.toPerUnitCents),
+                          fromPerUnit: formatUsd(upgrade.fromPerUnitCents),
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      replace(
+                        lines.map((l) =>
+                          l.bundleId === upgrade.fromBundleId ? { bundleId: upgrade.toBundleId, quantity: l.quantity } : l,
+                        ),
+                      )
+                    }
+                    className="mt-3 h-11 w-full rounded-full border-2 border-navy bg-white text-sm font-extrabold text-navy transition hover:bg-navy hover:text-white"
+                  >
+                    {t('upgradeCta', { extra: formatUsd(upgrade.extraCents) })}
+                  </button>
+                </li>
+              )}
             </ul>
 
             <div className="space-y-3 border-t border-line bg-ice/60 px-5 py-5">
@@ -126,23 +169,21 @@ export function CartDrawer() {
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-muted-ink">{t('delivery')}</dt>
-                  <dd data-testid="cart-delivery" className="font-semibold text-blue">
-                    {quote && quote.deliveryCents > 0 ? formatUsd(quote.deliveryCents) : tc('free')}
+                  <dd>
+                    <DeliveryAmount
+                      deliveryCents={quote?.deliveryCents ?? 0}
+                      claimed={!!quote?.freeDelivery}
+                      testId="cart-delivery"
+                      onBeforeOpen={() => setOpen(false)}
+                    />
                   </dd>
                 </div>
-                {quote && quote.deliveryCents > 0 && !quote.freeDelivery && (
-                  <button
-                    type="button"
-                    data-testid="cart-get-free-delivery"
-                    onClick={() => {
-                      setOpen(false);
-                      freeDelivery.openForm();
-                    }}
-                    className="text-sm font-bold text-blue underline underline-offset-2 hover:text-navy"
-                  >
-                    {tf('getItFree')}
-                  </button>
-                )}
+                <div className="flex justify-between border-t border-line pt-2 text-base">
+                  <dt className="font-bold text-navy">{t('total')}</dt>
+                  <dd data-testid="cart-total" className="font-extrabold text-navy">
+                    {formatUsd(subtotal + (quote?.deliveryCents ?? 0))}
+                  </dd>
+                </div>
               </dl>
               <p className="text-center text-xs font-medium text-navy/80">{t('codNote')}</p>
               <Link

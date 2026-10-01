@@ -14,7 +14,7 @@ function StarTiles({ value, rtl }: { value: number; rtl: boolean }) {
             key={i}
             className="flex size-6 items-center justify-center rounded-[5px] sm:size-7"
             style={{
-              background: `linear-gradient(to ${rtl ? 'left' : 'right'}, var(--color-blue) ${fill}%, #CBD5E1 ${fill}%)`,
+              background: `linear-gradient(to ${rtl ? 'left' : 'right'}, var(--color-blue) ${fill}%, rgba(255,255,255,0.25) ${fill}%)`,
             }}
           >
             <Star className="size-4 fill-white text-white sm:size-[18px]" />
@@ -46,20 +46,23 @@ export async function RatingSummary({
     summary.average >= 4.5 ? t('ratedExcellent') : summary.average >= 4 ? t('ratedGreat') : summary.average >= 3 ? t('ratedGood') : null;
 
   const content = (
-    <>
-      <StarTiles value={summary.average} rtl={locale === 'ar'} />
-      <span className="text-2xl font-extrabold leading-none text-navy">{average}</span>
-      <span className="text-sm leading-tight text-muted-ink">
-        {word && <span className="block font-bold text-navy">{word}</span>}
+    <span className="flex flex-col gap-1">
+      <span className="flex items-center gap-2.5">
+        <StarTiles value={summary.average} rtl={locale === 'ar'} />
+        <span className="text-2xl font-extrabold leading-none text-white">{average}</span>
+        {sample && <span className="rounded-full bg-amber-300 px-2 py-0.5 text-xs font-bold text-navy">{tc('sample')}</span>}
+      </span>
+      <span className="text-sm leading-tight text-white/85">
+        {word && <span className="font-bold text-white">{word}</span>}
+        {word ? ' · ' : ''}
         {t('reviewCount', { count: summary.count })}
         {trustpilotUrl ? ` ${t('onTrustpilot')}` : ''}
       </span>
-      {sample && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">{tc('sample')}</span>}
       <span className="sr-only">{t('ratingLabel', { average })}</span>
-    </>
+    </span>
   );
   const cls =
-    'mb-4 inline-flex items-center gap-3 rounded-2xl border border-blue/15 bg-white/90 px-3.5 py-2.5 shadow-[0_10px_30px_-20px_rgba(1,39,85,0.45)] transition hover:border-blue/40';
+    'mb-4 inline-flex rounded-2xl bg-navy px-4 py-3 shadow-[0_14px_34px_-18px_rgba(1,39,85,0.7)] transition hover:bg-navy-700';
   return trustpilotUrl ? (
     <a data-testid="rating-summary" href={trustpilotUrl} target="_blank" rel="noopener noreferrer" className={cls}>
       {content}

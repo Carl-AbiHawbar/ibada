@@ -37,7 +37,7 @@ describe('customers', () => {
     expect((await listCustomers(t.db, { q: 'khou', sort: 'recent', page: 1 })).rows.map((r) => r.name)).toEqual(['Maya Khoury']);
     const bySpend = await listCustomers(t.db, { sort: 'spent', page: 1 });
     expect(bySpend.rows.map((r) => [r.name, r.totalSpentCents])).toEqual([
-      ['Ali Haddad', 6000],
+      ['Ali Haddad', 5999],
       ['Maya Khoury', 0],
     ]);
     expect(bySpend.total).toBe(2);

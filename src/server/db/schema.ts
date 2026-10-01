@@ -85,6 +85,8 @@ export const productImages = pgTable('product_images', {
     .notNull()
     .references(() => products.id, { onDelete: 'cascade' }),
   url: text('url').notNull(),
+  /** Arabic version of the image (text baked into lifestyle shots); null = same as `url`. */
+  urlAr: text('url_ar'),
   altEn: text('alt_en').notNull().default(''),
   altAr: text('alt_ar').notNull().default(''),
   width: integer('width').notNull(),
@@ -388,7 +390,10 @@ export const deliverySignups = pgTable(
     email: text('email').notNull().unique(),
     name: text('name').notNull(),
     phone: text('phone').notNull(),
+    /** Consent to offers (sent on WhatsApp). */
     marketingOptIn: boolean('marketing_opt_in').notNull().default(false),
+    /** Pests the shopper usually deals with (keys from PEST_CHOICES). */
+    pests: text('pests').array().notNull().default(sql`'{}'::text[]`),
     locale: text('locale').notNull().default('en'),
     ipHash: text('ip_hash'),
     createdAt: createdAt(),

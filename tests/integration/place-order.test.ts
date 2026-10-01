@@ -39,10 +39,10 @@ it('places an order', async () => {
   expect(o).toMatchObject({
     status: 'new',
     paymentStatus: 'pending',
-    subtotalCents: 3600,
+    subtotalCents: 3599,
     discountCents: 0,
     deliveryCents: 0,
-    totalCents: 3600,
+    totalCents: 3599,
     phone: '+9613123456',
     name: 'Ali Haddad',
     governorate: 'beirut',
@@ -58,8 +58,8 @@ it('places an order', async () => {
       productNameEn: 'IBADA ONE',
       unitsPerBundle: 2,
       quantity: 1,
-      unitPriceCents: 3600,
-      lineTotalCents: 3600,
+      unitPriceCents: 3599,
+      lineTotalCents: 3599,
     },
   ]);
   expect(await stock()).toBe(98);
@@ -73,7 +73,7 @@ it('places an order', async () => {
   expect(ctx.notify).toHaveBeenCalledWith({
     id: o!.id,
     number: 1001,
-    totalCents: 3600,
+    totalCents: 3599,
     district: 'Beirut',
     items: [{ bundleName: 'Multi-Room Protection', quantity: 1 }],
   });
@@ -97,7 +97,7 @@ it('ignores client-sent prices', async () => {
     orderContext(),
   );
   expect(r.ok).toBe(true);
-  expect((await t.db.select().from(orders))[0]!.totalCents).toBe(3600);
+  expect((await t.db.select().from(orders))[0]!.totalCents).toBe(3599);
 });
 
 it('rejects out of stock atomically', async () => {
@@ -186,7 +186,7 @@ it('applies discounts and records the redemption', async () => {
   ]);
   expect(await placeOrder(t.db, valid({ discountCode: 'welcome10' }), orderContext())).toMatchObject({ ok: true });
   const [o] = await t.db.select().from(orders);
-  expect(o).toMatchObject({ discountCents: 360, totalCents: 3240, discountCode: 'WELCOME10' });
+  expect(o).toMatchObject({ discountCents: 360, totalCents: 3239, discountCode: 'WELCOME10' });
   const [w] = await t.db.select().from(discounts).where(eq(discounts.code, 'WELCOME10'));
   expect(w!.usedCount).toBe(1);
   expect(await t.db.select().from(discountRedemptions)).toMatchObject([{ phone: '+9613123456', orderId: o!.id }]);
@@ -224,11 +224,11 @@ it('survives a failing notifier', async () => {
 it('charges the delivery fee setting', async () => {
   await t.db.update(settings).set({ deliveryFeeCents: 300 });
   await placeOrder(t.db, valid(), orderContext());
-  expect((await t.db.select().from(orders))[0]).toMatchObject({ deliveryCents: 300, totalCents: 3900 });
+  expect((await t.db.select().from(orders))[0]).toMatchObject({ deliveryCents: 300, totalCents: 3899 });
 });
 
 it('a shopper who claimed free delivery pays no delivery fee', async () => {
   await t.db.update(settings).set({ deliveryFeeCents: 300 });
   await placeOrder(t.db, valid(), orderContext({ freeDelivery: true }));
-  expect((await t.db.select().from(orders))[0]).toMatchObject({ deliveryCents: 0, totalCents: 3600 });
+  expect((await t.db.select().from(orders))[0]).toMatchObject({ deliveryCents: 0, totalCents: 3599 });
 });

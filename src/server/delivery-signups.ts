@@ -1,6 +1,7 @@
 import { desc, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { formatBeirut } from '@/lib/dates';
+import { PEST_KEYS, PEST_LABELS } from '@/lib/pests';
 import { formatLebanesePhone, normalizeLebanesePhone } from '@/lib/phone';
 import type { Db } from './db/client';
 import { deliverySignups } from './db/schema';
@@ -23,6 +24,11 @@ export const deliverySignupSchema = z.object({
       return e164 ?? '';
     }),
   marketingOptIn: z.boolean().default(false),
+  pests: z
+    .array(z.enum(PEST_KEYS, { error: 'invalid_pests' }), { error: 'invalid_pests' })
+    .max(PEST_KEYS.length, 'invalid_pests')
+    .default([])
+    .transform((v) => PEST_KEYS.filter((k) => v.includes(k))),
   locale: z.enum(['en', 'ar']).default('en'),
 });
 
@@ -42,7 +48,7 @@ export async function saveDeliverySignup(
     .values({ ...v, ipHash: ctx.ipHash, createdAt: ctx.now, updatedAt: ctx.now })
     .onConflictDoUpdate({
       target: deliverySignups.email,
-      set: { name: v.name, phone: v.phone, marketingOptIn: v.marketingOptIn, locale: v.locale, updatedAt: ctx.now },
+      set: { name: v.name, phone: v.phone, marketingOptIn: v.marketingOptIn, pests: v.pests, locale: v.locale, updatedAt: ctx.now },
     })
     .returning({ id: deliverySignups.id });
   return { ok: true, id: row!.id };
@@ -68,13 +74,14 @@ function cell(value: string): string {
 
 /** RFC 4180 CSV (CRLF) for mailing tools and spreadsheets. */
 export function deliverySignupsToCsv(rows: DeliverySignupRow[]): string {
-  const header = 'Date,Name,Email,Phone,Offers OK,Language';
+  const header = 'Date,Name,Email,Phone,Pests,WhatsApp offers,Language';
   const lines = rows.map((r) =>
     [
       formatBeirut(r.createdAt, 'datetime'),
       r.name,
       r.email,
       formatLebanesePhone(r.phone),
+      r.pests.map((p) => PEST_LABELS[p as keyof typeof PEST_LABELS] ?? p).join('; '),
       r.marketingOptIn ? 'Yes' : 'No',
       r.locale,
     ]

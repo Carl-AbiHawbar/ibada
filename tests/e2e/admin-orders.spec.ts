@@ -25,7 +25,7 @@ test.describe.serial('orders', () => {
     await page.goto('/admin/orders?status=new');
     const row = page.getByTestId('order-row').filter({ hasText: `#${number}` });
     await expect(row).toContainText(buyer);
-    await expect(row).toContainText('$36');
+    await expect(row).toContainText('$35.99');
     await row.getByRole('link').first().click();
     await expect(page).toHaveURL(/\/admin\/orders\/[0-9a-f-]{36}$/);
 
@@ -72,7 +72,7 @@ test.describe.serial('orders', () => {
     await page.goto(`/admin/orders?q=${number}`);
     const id = (await page.getByTestId('order-row').first().getAttribute('data-id'))!;
     await page.goto(`/admin/print/orders?ids=${id}&format=a4`);
-    await expect(page.getByText('COD amount: $36.00')).toBeVisible();
+    await expect(page.getByText('COD amount: $35.99')).toBeVisible();
     await expect(page.getByText('Opposite the bakery')).toBeVisible();
   });
 

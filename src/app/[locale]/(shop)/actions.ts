@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { after } from 'next/server';
 import { z } from 'zod';
 import { MAX_CART_LINES, cartLineSchema } from '@/lib/cart-schema';
-import { quoteCart, type CartQuote } from '@/server/catalog';
+import { quoteCart, suggestUpgrade, type CartQuote, type UpgradeSuggestion } from '@/server/catalog';
 import { hashIp } from '@/server/crypto';
 import { getDb } from '@/server/db/client';
 import { computeTotals, evaluateDiscount, type DiscountReason } from '@/server/discounts';
@@ -29,9 +29,22 @@ export async function loadMoreReviewsAction(productId: string, offset: number): 
   return listVisibleReviews(getDb(), parsed.data.productId, { limit: 6, offset: parsed.data.offset });
 }
 
-export type CartQuoteResult = CartQuote & { deliveryCents: number; totalCents: number; freeDelivery: boolean };
+export type CartQuoteResult = CartQuote & {
+  deliveryCents: number;
+  totalCents: number;
+  freeDelivery: boolean;
+  upgrade: UpgradeSuggestion | null;
+};
 
-const EMPTY: CartQuoteResult = { lines: [], removed: [], subtotalCents: 0, deliveryCents: 0, totalCents: 0, freeDelivery: false };
+const EMPTY: CartQuoteResult = {
+  lines: [],
+  removed: [],
+  subtotalCents: 0,
+  deliveryCents: 0,
+  totalCents: 0,
+  freeDelivery: false,
+  upgrade: null,
+};
 const linesSchema = z.array(cartLineSchema).max(MAX_CART_LINES);
 
 /** Current prices for the browser's cart; unknown or unavailable lines come back in `removed`. */
@@ -42,7 +55,8 @@ export async function quoteCartAction(lines: unknown): Promise<CartQuoteResult> 
   const [quote, settings, freeDelivery] = await Promise.all([quoteCart(db, parsed.data), getSettings(db), hasFreeDelivery()]);
   if (quote.lines.length === 0) return { ...EMPTY, removed: quote.removed, freeDelivery };
   const totals = computeTotals({ subtotalCents: quote.subtotalCents, discountCents: 0, settings, freeDelivery });
-  return { ...quote, deliveryCents: totals.deliveryCents, totalCents: totals.totalCents, freeDelivery };
+  const upgrade = await suggestUpgrade(db, quote.lines);
+  return { ...quote, deliveryCents: totals.deliveryCents, totalCents: totals.totalCents, freeDelivery, upgrade };
 }
 
 export type DiscountPreview =
@@ -116,6 +130,7 @@ export async function claimFreeDeliveryAction(input: {
   email: string;
   phone: string;
   marketingOptIn: boolean;
+  pests: string[];
   locale: string;
   turnstileToken: string;
 }): Promise<FreeDeliveryResult> {

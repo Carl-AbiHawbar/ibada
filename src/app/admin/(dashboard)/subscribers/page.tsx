@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Download } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { formatBeirut } from '@/lib/dates';
+import { PEST_LABELS, type PestKey } from '@/lib/pests';
 import { formatLebanesePhone } from '@/lib/phone';
 import { getDb } from '@/server/db/client';
 import { countDeliverySignups, listDeliverySignups } from '@/server/delivery-signups';
@@ -26,7 +27,7 @@ export default async function SubscribersPage({ searchParams }: PageProps<'/admi
     <>
       <PageHeader
         title="Subscribers"
-        description={`People who filled in the free-delivery form (${total}). Only email those who ticked “offers OK”.`}
+        description={`People who filled in the free-delivery form (${total}). Only send WhatsApp offers to those marked “WhatsApp OK”.`}
         actions={
           <a
             href="/admin/subscribers/export"
@@ -55,8 +56,13 @@ export default async function SubscribersPage({ searchParams }: PageProps<'/admi
                   : 'rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500'
               }
             >
-              {r.marketingOptIn ? 'Offers OK' : 'No offers'}
+              {r.marketingOptIn ? 'WhatsApp OK' : 'No offers'}
             </span>
+            {r.pests.length > 0 && (
+              <span className="basis-full text-xs text-slate-500">
+                Pests: {r.pests.map((p) => PEST_LABELS[p as PestKey] ?? p).join(', ')}
+              </span>
+            )}
           </li>
         ))}
         {rows.length === 0 && <li className="p-10 text-center text-slate-500">No signups yet.</li>}

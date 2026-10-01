@@ -29,6 +29,13 @@
       "when": 1790716037444,
       "tag": "0003_delivery_signups",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790880660478,
+      "tag": "0004_gallery_prices_pests",
+      "breakpoints": true
     }
   ]
 }

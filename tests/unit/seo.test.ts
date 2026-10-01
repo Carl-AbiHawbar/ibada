@@ -24,7 +24,7 @@ const p: ProductView = {
   description: { en: 'Long', ar: 'طويل' },
   seoTitle: { en: '', ar: '' },
   seoDescription: { en: '', ar: '' },
-  images: [{ id: 'i1', url: '/images/products/ibada-one-single.webp', alt: { en: 'a', ar: 'ب' }, width: 10, height: 10 }],
+  images: [{ id: 'i1', url: '/images/products/ibada-one-single.webp', urlAr: null, alt: { en: 'a', ar: 'ب' }, width: 10, height: 10 }],
   bundles: [bundle(3600, 2), bundle(2000, 1), bundle(6000, 4), bundle(5100, 3)],
   stockUnits: 100,
   inStock: true,

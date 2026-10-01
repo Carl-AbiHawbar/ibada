@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { createTestDb, type TestDb } from '../helpers/db';
 import { seeded } from '../helpers/fixtures';
 import { bundles, products } from '@/server/db/schema';
-import { getFeaturedProduct, getProductBySlug, listActiveProducts, quoteCart } from '@/server/catalog';
+import { getFeaturedProduct, getProductBySlug, listActiveProducts, quoteCart, suggestUpgrade } from '@/server/catalog';
 import type { SeededCatalog } from '@/server/db/seed';
 
 let t: TestDb;
@@ -25,7 +25,7 @@ test('featured product exposes computed bundle pricing', async () => {
     'Full Home Protection',
   ]);
   expect(p.bundles.map((b) => [b.savePercent, b.perUnitCents])).toEqual([
-    [33, 2000],
+    [33, 1999],
     [40, 1800],
     [43, 1700],
     [50, 1500],
@@ -37,7 +37,7 @@ test('featured product exposes computed bundle pricing', async () => {
     '/images/products/ibada-one-full.webp',
   ]);
   expect(p.bundles.find((b) => b.isDefault)?.name.en).toBe('Multi-Room Protection');
-  expect(p.images).toHaveLength(4);
+  expect(p.images).toHaveLength(9); // 4 pack shots + 5 lifestyle photos
   expect(p.inStock).toBe(true);
   expect(JSON.parse(JSON.stringify(p))).toEqual(p);
 });
@@ -76,15 +76,15 @@ test('quoteCart merges, clamps and removes unknown lines', async () => {
       productId: s.productId,
       quantity: 10,
       units: 2,
-      unitPriceCents: 3600,
-      lineTotalCents: 36000,
+      unitPriceCents: 3599,
+      lineTotalCents: 35990,
       bundleName: { en: 'Multi-Room Protection', ar: 'حماية عدة غرف' },
       productName: { en: 'IBADA ONE' },
       imageUrl: '/images/products/ibada-one-double.webp',
     },
   ]);
   expect(q.removed).toEqual([unknown]);
-  expect(q.subtotalCents).toBe(36000);
+  expect(q.subtotalCents).toBe(35990);
 });
 
 test('quoteCart prices two bundles', async () => {
@@ -92,7 +92,7 @@ test('quoteCart prices two bundles', async () => {
     { bundleId: s.bundleIds.single, quantity: 2 },
     { bundleId: s.bundleIds.full, quantity: 1 },
   ]);
-  expect(q.subtotalCents).toBe(2 * 2000 + 6000);
+  expect(q.subtotalCents).toBe(2 * 1999 + 5999);
   expect(q.removed).toEqual([]);
 });
 
@@ -120,4 +120,52 @@ test('quoteCart removes lines of draft products and lines exceeding stock', asyn
 
   await t.db.update(products).set({ status: 'draft', stockUnits: 100 });
   expect((await quoteCart(t.db, [{ bundleId: s.bundleIds.single, quantity: 1 }])).removed).toEqual([s.bundleIds.single]);
+});
+
+test('lifestyle photos follow the pack shots, each with an Arabic version', async () => {
+  const p = (await getFeaturedProduct(t.db))!;
+  expect(p.images).toHaveLength(9);
+  const lifestyle = p.images.slice(4);
+  expect(lifestyle.map((i) => i.url)).toEqual([
+    '/images/products/gallery-box-en.webp',
+    '/images/products/gallery-how-en.webp',
+    '/images/products/gallery-family-en.webp',
+    '/images/products/gallery-home-en.webp',
+    '/images/products/gallery-settings-en.webp',
+  ]);
+  expect(lifestyle.every((i) => i.urlAr?.endsWith('-ar.webp'))).toBe(true);
+  expect(p.images[0]!.urlAr).toBeNull();
+});
+
+test('client prices end in .99', async () => {
+  const p = (await getFeaturedProduct(t.db))!;
+  expect(p.bundles.map((b) => b.priceCents)).toEqual([1999, 3599, 5099, 5999]);
+});
+
+test('quoted lines carry the compare-at price', async () => {
+  const q = await quoteCart(t.db, [{ bundleId: s.bundleIds.single, quantity: 1 }]);
+  expect(q.lines[0]).toMatchObject({ unitPriceCents: 1999, compareAtCents: 3000 });
+});
+
+test('suggests swapping a single pack for the next pack up', async () => {
+  const q = await quoteCart(t.db, [
+    { bundleId: s.bundleIds.single, quantity: 1 },
+    { bundleId: s.bundleIds.full, quantity: 1 },
+  ]);
+  expect(await suggestUpgrade(t.db, q.lines)).toMatchObject({
+    fromBundleId: s.bundleIds.single,
+    toBundleId: s.bundleIds.double,
+    toName: { en: 'Multi-Room Protection' },
+    toUnits: 2,
+    extraCents: 1600,
+    toPerUnitCents: 1800,
+    fromPerUnitCents: 1999,
+  });
+});
+
+test('no upgrade for the largest pack or for lines with several packs', async () => {
+  const largest = await quoteCart(t.db, [{ bundleId: s.bundleIds.full, quantity: 1 }]);
+  expect(await suggestUpgrade(t.db, largest.lines)).toBeNull();
+  const several = await quoteCart(t.db, [{ bundleId: s.bundleIds.single, quantity: 2 }]);
+  expect(await suggestUpgrade(t.db, several.lines)).toBeNull();
 });

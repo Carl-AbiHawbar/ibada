@@ -6,13 +6,13 @@ test('bundle picker drives the price', async ({ page }) => {
   await expect(page.getByRole('radio', { name: /Multi-Room Protection/ })).toBeChecked();
 
   const price = page.getByTestId('price-block');
-  await expect(price).toContainText('$36');
+  await expect(price).toContainText('$35.99');
   await expect(price).toContainText('$60');
   await expect(price).toContainText('Save 40%');
 
   await page.getByTestId('bundle-option').filter({ hasText: 'Family Pack' }).click();
   await expect(page.getByRole('radio', { name: /Family Pack/ })).toBeChecked();
-  await expect(price).toContainText('$51');
+  await expect(price).toContainText('$50.99');
   await expect(price).toContainText('Save 43%');
   await expect(page.getByTestId('bundle-option').filter({ hasText: 'Family Pack' })).toContainText('$17 / unit');
   await expect(page.getByTestId('bundle-option').filter({ hasText: 'Full Home Protection' })).toContainText('BEST VALUE');
@@ -30,7 +30,7 @@ test('sticky add-to-cart bar appears after scrolling past the button', async ({ 
   await expect(sticky).toBeHidden();
   await page.locator('#how-it-works').scrollIntoViewIfNeeded();
   await expect(sticky).toBeVisible();
-  await expect(sticky).toContainText('$36');
+  await expect(sticky).toContainText('$35.99');
 });
 
 test('the sticky bar switches packs and stays in sync with the picker', async ({ page }) => {
@@ -38,16 +38,17 @@ test('the sticky bar switches packs and stays in sync with the picker', async ({
   await page.locator('#how-it-works').scrollIntoViewIfNeeded();
   const sticky = page.getByTestId('sticky-atc');
   await expect(sticky).toBeVisible();
-  await sticky.getByTestId('sticky-pack').selectOption({ label: 'Single Room Protection · $20' });
-  await expect(sticky.locator('p').filter({ hasText: '$20' })).toBeVisible();
+  await sticky.getByTestId('sticky-pack').selectOption({ label: 'Single Room Protection · 50m²' });
+  await expect(sticky.locator('p').filter({ hasText: '$19.99' })).toBeVisible();
   await expect(page.getByRole('radio', { name: /Single Room Protection/ })).toBeChecked();
-  await expect(page.getByTestId('price-block')).toContainText('$20');
+  await expect(page.getByTestId('price-block')).toContainText('$19.99');
 });
 
-test('the gallery shows the chosen pack, not the other packs', async ({ page }) => {
+test('the gallery shows the chosen pack, then the lifestyle photos', async ({ page }) => {
   await page.goto('/en');
-  // Seeded photos are all pack shots, so there is nothing else to page through.
-  await expect(page.getByRole('button', { name: /Show image/ })).toHaveCount(0);
+  // The selected pack's photo plus 5 lifestyle photos; the other packs only appear in the picker.
+  await expect(page.getByTestId('gallery').getByRole('button', { name: /Show image/ })).toHaveCount(6);
+  await expect(page.getByTestId('gallery').getByRole('img', { name: /no scent, no insects/ })).toHaveCount(1);
   await page.getByTestId('bundle-option').filter({ hasText: 'Family Pack' }).click();
   await expect(page.getByTestId('gallery').getByRole('img', { name: /pack of 3/ })).toBeVisible();
 });
@@ -71,7 +72,7 @@ test('arabic product page', async ({ page }) => {
   await page.goto('/ar');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await expect(page.getByTestId('bundle-option').filter({ hasText: 'باقة العائلة' })).toBeVisible();
-  await expect(page.getByTestId('price-block')).toContainText('$36');
+  await expect(page.getByTestId('price-block')).toContainText('$35.99');
 });
 
 test('product and shop pages', async ({ page }) => {
@@ -93,4 +94,23 @@ test('seo files and structured data', async ({ page, request }) => {
   const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').first().textContent()) ?? '{}');
   expect(ld.offers.lowPrice).toBe('20.00');
   await expect(page.locator('link[rel="alternate"][hreflang="ar"]')).toHaveCount(1);
+});
+
+test('hero follows the refinement deck', async ({ page }) => {
+  await page.goto('/en');
+  await expect(page.getByText('One device. A calmer home.')).toHaveCount(0);
+  await expect(page.getByText('ULTRASONIC PEST REPELLER', { exact: false })).toHaveCount(0);
+  const benefits = page.getByTestId('benefits').locator('ul');
+  await expect(benefits.nth(0)).toContainText('24/7 continuous protection');
+  await expect(benefits.nth(1)).toContainText('Plug in & forget');
+});
+
+test('arabic gallery, steps and comparison use the client images', async ({ page }) => {
+  await page.goto('/ar');
+  const gallery = page.getByTestId('gallery');
+  await expect(gallery.locator('img[src*="gallery-box-ar"]').first()).toBeAttached();
+  await page.goto('/en');
+  await expect(page.locator('img[src*="step1-plug-in"]').first()).toBeAttached();
+  await expect(page.locator('img[src*="step2-relax"]').first()).toBeAttached();
+  await expect(page.getByTestId('comparison-others').locator('img')).toBeAttached();
 });
