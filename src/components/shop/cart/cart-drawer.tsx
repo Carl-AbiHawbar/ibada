@@ -50,7 +50,7 @@ export function CartDrawer() {
       <SheetContent
         side={locale === 'ar' ? 'left' : 'right'}
         showCloseButton={false}
-        className="w-full gap-0 bg-white p-0 sm:max-w-md"
+        className="w-full gap-0 bg-white p-0 data-[side=left]:w-full data-[side=right]:w-full sm:max-w-md data-[side=left]:sm:max-w-md data-[side=right]:sm:max-w-md"
       >
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <SheetTitle className="text-lg font-extrabold text-navy">{t('title')}</SheetTitle>
