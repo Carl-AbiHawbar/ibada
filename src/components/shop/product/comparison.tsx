@@ -30,12 +30,12 @@ export async function Comparison({ locale, imageUrl }: { locale: Locale; imageUr
             ) : (
               <LogoMark tone="light" className="h-10" />
             )}
-            <span className="text-lg font-extrabold tracking-wide">{t('ibada')}</span>
+            <span className="whitespace-nowrap text-base font-extrabold leading-7 tracking-wide sm:text-lg">{t('ibada')}</span>
           </div>
-          <div data-testid="comparison-others" className="relative flex min-h-40 items-end justify-center overflow-hidden px-4 py-5 text-white">
+          <div data-testid="comparison-others" className="relative flex items-end justify-center overflow-hidden px-2 py-6 text-white">
             <Image src="/images/comparison/sprays-poisons.webp" alt="" fill sizes="(min-width: 896px) 448px, 50vw" className="object-cover" />
             <span className="absolute inset-0 bg-linear-to-t from-black/70 via-black/25 to-black/10" aria-hidden />
-            <span className="relative text-lg font-bold drop-shadow-md">{t('others')}</span>
+            <span className="relative whitespace-nowrap text-center text-base font-extrabold leading-7 tracking-wide drop-shadow-md sm:text-lg">{t('others')}</span>
           </div>
 
           {ROWS.map((r) => (
