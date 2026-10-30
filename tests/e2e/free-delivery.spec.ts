@@ -24,8 +24,7 @@ test('the free-delivery form removes the delivery fee', async ({ browser }) => {
     await drawer.getByTestId('cart-delivery-get-free').click();
     const form = shopper.getByRole('dialog', { name: 'Get free delivery forever!' });
     await form.getByLabel('First name', { exact: true }).fill('Rana Test');
-    await form.getByLabel('Email', { exact: true }).fill(`rana+${Date.now()}@example.com`);
-    await form.getByLabel('Phone Number', { exact: true }).fill('71 234 567');
+    await form.getByLabel('Phone Number', { exact: true }).fill(`71 ${String(Math.floor(100000 + Math.random() * 899999))}`);
     await form.getByText('Cockroaches').click();
     await form.getByLabel(/offers on WhatsApp/).check();
     await form.getByRole('button', { name: 'Claim my free delivery' }).click();
@@ -34,7 +33,7 @@ test('the free-delivery form removes the delivery fee', async ({ browser }) => {
 
     await shopper.goto('/en/checkout');
     await expect(shopper.getByTestId('summary-delivery')).toHaveText('FREE');
-    await expect(shopper.getByTestId('summary-total')).toHaveText('$35.99');
+    await expect(shopper.getByTestId('summary-total')).toHaveText('$19.99');
     await expect(shopper.getByTestId('free-delivery-button')).toHaveCount(0);
 
     await adminPage.goto('/admin/subscribers');
@@ -58,10 +57,8 @@ test('the floating button opens the form and shows field errors', async ({ brows
     await shopper.getByTestId('free-delivery-button').click();
     const form = shopper.getByRole('dialog', { name: 'Get free delivery forever!' });
     await form.getByLabel('First name', { exact: true }).fill('Test');
-    await form.getByLabel('Email', { exact: true }).fill('nope');
     await form.getByLabel('Phone Number', { exact: true }).fill('12');
     await form.getByRole('button', { name: 'Claim my free delivery' }).click();
-    await expect(form.getByText('Enter a valid email address')).toBeVisible();
     await expect(form.getByText('Enter a Lebanese number, e.g. 03 123 456')).toBeVisible();
   } finally {
     await setDeliveryFee(adminPage, '0');

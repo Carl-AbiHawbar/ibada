@@ -40,7 +40,7 @@ test.describe.serial('checkout', () => {
     await addDefaultBundle(page);
     await fillAddress(page, EN);
     await expect(page.getByTestId('summary-delivery')).toHaveText('FREE');
-    await expect(page.getByTestId('summary-total')).toHaveText('$35.99');
+    await expect(page.getByTestId('summary-total')).toHaveText('$19.99');
     await expect(page.getByTestId('summary-payment')).toContainText('Cash on delivery');
     await page.getByRole('button', { name: 'PLACE ORDER' }).click();
 
@@ -66,7 +66,7 @@ test.describe.serial('checkout', () => {
     await page.getByLabel('Phone').fill('03123456');
     await page.getByRole('button', { name: 'Track order' }).click();
     await expect(page.getByTestId('track-result')).toContainText('Order received');
-    await expect(page.getByTestId('track-result')).toContainText('Multi-Room Protection');
+    await expect(page.getByTestId('track-result')).toContainText('Single Room Protection');
   });
 
   test('wrong phone does not reveal the order', async ({ page }) => {
@@ -91,8 +91,8 @@ test('discount code', async ({ page }) => {
   await addDefaultBundle(page);
   await page.getByLabel('Discount code').fill('welcome10');
   await page.getByRole('button', { name: 'Apply' }).click();
-  await expect(page.getByTestId('summary-discount')).toHaveText('-$3.60');
-  await expect(page.getByTestId('summary-total')).toHaveText('$32.39');
+  await expect(page.getByTestId('summary-discount')).toHaveText('-$2.00');
+  await expect(page.getByTestId('summary-total')).toHaveText('$17.99');
   await page.getByLabel('Discount code').fill('NOPE');
   await page.getByRole('button', { name: 'Apply' }).click();
   await expect(page.getByText("This code isn't valid")).toBeVisible();

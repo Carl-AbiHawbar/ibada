@@ -127,7 +127,6 @@ export type FreeDeliveryResult =
 /** Save the free-delivery form and give this browser free delivery. */
 export async function claimFreeDeliveryAction(input: {
   name: string;
-  email: string;
   phone: string;
   marketingOptIn: boolean;
   pests: string[];

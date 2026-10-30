@@ -11,8 +11,8 @@ import { cn } from '@/lib/utils';
 import { describe, Field, inputClass } from '../checkout/field';
 import { Turnstile, type TurnstileHandle } from '../turnstile';
 
-type Form = { name: string; email: string; phone: string; marketingOptIn: boolean; pests: PestKey[] };
-const EMPTY: Form = { name: '', email: '', phone: '', marketingOptIn: false, pests: [] };
+type Form = { name: string; phone: string; marketingOptIn: boolean; pests: PestKey[] };
+const EMPTY: Form = { name: '', phone: '', marketingOptIn: false, pests: [] };
 
 /** Floating "FREE DELIVERY" button (lower corner) and the form that unlocks it. */
 export function FreeDeliveryOffer({
@@ -38,7 +38,7 @@ export function FreeDeliveryOffer({
   const [pending, start] = useTransition();
   const turnstile = useRef<TurnstileHandle>(null);
 
-  const set = (key: 'name' | 'email' | 'phone') => (value: string) => {
+  const set = (key: 'name' | 'phone') => (value: string) => {
     setForm((f) => ({ ...f, [key]: value }));
     setErrors((e) => ({ ...e, [key]: '' }));
   };
@@ -120,19 +120,6 @@ export function FreeDeliveryOffer({
                   onChange={(e) => set('name')(e.target.value)}
                   className={inputClass}
                   {...describe('fd-name', err('name'))}
-                />
-              </Field>
-              <Field id="fd-email" label={t('email')} error={err('email')}>
-                <input
-                  id="fd-email"
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  placeholder={t('emailPlaceholder')}
-                  value={form.email}
-                  onChange={(e) => set('email')(e.target.value)}
-                  className={inputClass}
-                  {...describe('fd-email', err('email'))}
                 />
               </Field>
               <Field id="fd-phone" label={t('phone')} error={err('phone')}>

@@ -14,7 +14,9 @@ export const deliverySignupSchema = z.object({
     .trim()
     .toLowerCase()
     .max(254, 'invalid_email')
-    .pipe(z.email('invalid_email')),
+    .transform((v) => v || undefined)
+    .pipe(z.email('invalid_email').optional())
+    .optional(),
   phone: z
     .string()
     .max(32, 'invalid_phone')
@@ -34,7 +36,7 @@ export const deliverySignupSchema = z.object({
 
 export type SaveSignupResult = { ok: true; id: string } | { ok: false; fieldErrors: Record<string, string> };
 
-/** Save (or update, by email) a free-delivery signup. */
+/** Save (or update, by phone) a free-delivery signup. */
 export async function saveDeliverySignup(
   db: Db,
   input: unknown,
@@ -45,10 +47,18 @@ export async function saveDeliverySignup(
   const v = parsed.data;
   const [row] = await db
     .insert(deliverySignups)
-    .values({ ...v, ipHash: ctx.ipHash, createdAt: ctx.now, updatedAt: ctx.now })
+    .values({ ...v, email: v.email ?? null, ipHash: ctx.ipHash, createdAt: ctx.now, updatedAt: ctx.now })
     .onConflictDoUpdate({
-      target: deliverySignups.email,
-      set: { name: v.name, phone: v.phone, marketingOptIn: v.marketingOptIn, pests: v.pests, locale: v.locale, updatedAt: ctx.now },
+      target: deliverySignups.phone,
+      set: {
+        name: v.name,
+        // A later signup without an email keeps the one we already have.
+        email: sql`coalesce(excluded.email, ${deliverySignups.email})`,
+        marketingOptIn: v.marketingOptIn,
+        pests: v.pests,
+        locale: v.locale,
+        updatedAt: ctx.now,
+      },
     })
     .returning({ id: deliverySignups.id });
   return { ok: true, id: row!.id };
@@ -74,13 +84,13 @@ function cell(value: string): string {
 
 /** RFC 4180 CSV (CRLF) for mailing tools and spreadsheets. */
 export function deliverySignupsToCsv(rows: DeliverySignupRow[]): string {
-  const header = 'Date,Name,Email,Phone,Pests,WhatsApp offers,Language';
+  const header = 'Date,Name,Phone,Email,Pests,WhatsApp offers,Language';
   const lines = rows.map((r) =>
     [
       formatBeirut(r.createdAt, 'datetime'),
       r.name,
-      r.email,
       formatLebanesePhone(r.phone),
+      r.email ?? '',
       r.pests.map((p) => PEST_LABELS[p as keyof typeof PEST_LABELS] ?? p).join('; '),
       r.marketingOptIn ? 'Yes' : 'No',
       r.locale,

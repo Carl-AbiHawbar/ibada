@@ -3,12 +3,13 @@ import { expect, test } from '@playwright/test';
 test('bundle picker drives the price', async ({ page }) => {
   await page.goto('/en');
   await expect(page.getByRole('radio')).toHaveCount(4);
-  await expect(page.getByRole('radio', { name: /Multi-Room Protection/ })).toBeChecked();
+  // The single device is selected when the page opens.
+  await expect(page.getByRole('radio', { name: /Single Room Protection/ })).toBeChecked();
 
   const price = page.getByTestId('price-block');
-  await expect(price).toContainText('$35.99');
-  await expect(price).toContainText('$60');
-  await expect(price).toContainText('Save 40%');
+  await expect(price).toContainText('$19.99');
+  await expect(price).toContainText('$30');
+  await expect(price).toContainText('Save 33%');
 
   await page.getByTestId('bundle-option').filter({ hasText: 'Family Pack' }).click();
   await expect(page.getByRole('radio', { name: /Family Pack/ })).toBeChecked();
@@ -30,7 +31,7 @@ test('sticky add-to-cart bar appears after scrolling past the button', async ({ 
   await expect(sticky).toBeHidden();
   await page.locator('#how-it-works').scrollIntoViewIfNeeded();
   await expect(sticky).toBeVisible();
-  await expect(sticky).toContainText('$35.99');
+  await expect(sticky).toContainText('$19.99');
 });
 
 test('the sticky bar switches packs and stays in sync with the picker', async ({ page }) => {
@@ -38,10 +39,10 @@ test('the sticky bar switches packs and stays in sync with the picker', async ({
   await page.locator('#how-it-works').scrollIntoViewIfNeeded();
   const sticky = page.getByTestId('sticky-atc');
   await expect(sticky).toBeVisible();
-  await sticky.getByTestId('sticky-pack').selectOption({ label: 'Single Room Protection · 50m²' });
-  await expect(sticky.locator('p').filter({ hasText: '$19.99' })).toBeVisible();
-  await expect(page.getByRole('radio', { name: /Single Room Protection/ })).toBeChecked();
-  await expect(page.getByTestId('price-block')).toContainText('$19.99');
+  await sticky.getByTestId('sticky-pack').selectOption({ label: 'Multi-Room Protection · 100m²' });
+  await expect(sticky.locator('p').filter({ hasText: '$35.99' })).toBeVisible();
+  await expect(page.getByRole('radio', { name: /Multi-Room Protection/ })).toBeChecked();
+  await expect(page.getByTestId('price-block')).toContainText('$35.99');
 });
 
 test('the gallery shows the chosen pack, then the lifestyle photos', async ({ page }) => {
@@ -72,7 +73,7 @@ test('arabic product page', async ({ page }) => {
   await page.goto('/ar');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await expect(page.getByTestId('bundle-option').filter({ hasText: 'باقة العائلة' })).toBeVisible();
-  await expect(page.getByTestId('price-block')).toContainText('$35.99');
+  await expect(page.getByTestId('price-block')).toContainText('$19.99');
 });
 
 test('product and shop pages', async ({ page }) => {

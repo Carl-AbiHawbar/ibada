@@ -131,7 +131,7 @@ export async function seedCatalog(db: Db): Promise<SeededCatalog> {
           compareAtCents: b.compareAt,
           badge: b.badge,
           imageId: imageIdAt(i),
-          isDefault: b.key === 'double',
+          isDefault: b.key === 'single',
           position: i,
         })),
       )

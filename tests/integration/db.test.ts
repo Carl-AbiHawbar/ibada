@@ -24,7 +24,7 @@ test('seedCatalog is idempotent and matches the pricing sheet', async () => {
   expect(bs.map((b) => b.priceCents)).toEqual([1999, 3599, 5099, 5999]);
   expect(bs.map((b) => b.compareAtCents)).toEqual([3000, 6000, 9000, 12000]);
   expect(bs.map((b) => b.badge)).toEqual(['none', 'most_popular', 'none', 'best_value']);
-  expect(bs.filter((b) => b.isDefault).map((b) => b.nameEn)).toEqual(['Multi-Room Protection']);
+  expect(bs.filter((b) => b.isDefault).map((b) => b.nameEn)).toEqual(['Single Room Protection']);
   expect(bs.map((b) => b.nameAr)).toEqual(['حماية غرفة واحدة', 'حماية عدة غرف', 'باقة العائلة', 'حماية المنزل بالكامل']);
   expect(bs.every((b) => b.imageId !== null)).toBe(true);
 

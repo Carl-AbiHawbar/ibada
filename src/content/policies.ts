@@ -21,7 +21,7 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
         {
           heading: 'Delivery fee',
           paragraphs: [
-            'A delivery fee applies and is shown clearly in your cart and at checkout before you place your order. Delivery is free when you claim our free-delivery offer: tap “Free delivery” and leave your first name, email and phone.',
+            'A delivery fee applies and is shown clearly in your cart and at checkout before you place your order. Delivery is free when you claim our free-delivery offer: tap “Free delivery” and leave your first name and phone.',
           ],
         },
         {
@@ -43,7 +43,7 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
         {
           heading: 'رسوم التوصيل',
           paragraphs: [
-            'تُطبَّق رسوم توصيل تظهر بوضوح في سلتك وعند إتمام الطلب قبل تأكيده. ويصبح التوصيل مجانيًا عند الاستفادة من عرض التوصيل المجاني: اضغط على «توصيل مجاني» واترك اسمك وبريدك الإلكتروني ورقم هاتفك.',
+            'تُطبَّق رسوم توصيل تظهر بوضوح في سلتك وعند إتمام الطلب قبل تأكيده. ويصبح التوصيل مجانيًا عند الاستفادة من عرض التوصيل المجاني: اضغط على «توصيل مجاني» واترك اسمك ورقم هاتفك.',
           ],
         },
         {
@@ -105,7 +105,7 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
           heading: 'What we collect',
           paragraphs: [
             'When you order we collect your name, phone number, delivery address, any notes you add, and what you ordered. We never ask for card details.',
-            'When you claim the free-delivery offer we collect your first name, email address and phone number, the pests you tell us you deal with, and whether you agreed to receive offers on WhatsApp.',
+            'When you claim the free-delivery offer we collect your first name and phone number, the pests you tell us you deal with, and whether you agreed to receive offers on WhatsApp.',
           ],
         },
         {
@@ -142,7 +142,7 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
           heading: 'ما الذي نجمعه',
           paragraphs: [
             'عند الطلب نجمع اسمك ورقم هاتفك وعنوان التوصيل وأي ملاحظات تضيفها وتفاصيل طلبك. لا نطلب أبدًا معلومات بطاقتك.',
-            'عند الاستفادة من عرض التوصيل المجاني نجمع اسمك الأول وبريدك الإلكتروني ورقم هاتفك والحشرات التي تخبرنا أنها تزعجك، وما إذا كنت قد وافقت على تلقي العروض عبر واتساب.',
+            'عند الاستفادة من عرض التوصيل المجاني نجمع اسمك الأول ورقم هاتفك والحشرات التي تخبرنا أنها تزعجك، وما إذا كنت قد وافقت على تلقي العروض عبر واتساب.',
           ],
         },
         {

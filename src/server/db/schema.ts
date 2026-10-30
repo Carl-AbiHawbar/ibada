@@ -387,9 +387,10 @@ export const deliverySignups = pgTable(
   'delivery_signups',
   {
     id: id(),
-    email: text('email').notNull().unique(),
+    /** Optional since the form stopped asking for it; the phone identifies a signup. */
+    email: text('email').unique(),
     name: text('name').notNull(),
-    phone: text('phone').notNull(),
+    phone: text('phone').notNull().unique(),
     /** Consent to offers (sent on WhatsApp). */
     marketingOptIn: boolean('marketing_opt_in').notNull().default(false),
     /** Pests the shopper usually deals with (keys from PEST_CHOICES). */

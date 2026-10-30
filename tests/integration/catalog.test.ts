@@ -36,7 +36,7 @@ test('featured product exposes computed bundle pricing', async () => {
     '/images/products/ibada-one-triple.webp',
     '/images/products/ibada-one-full.webp',
   ]);
-  expect(p.bundles.find((b) => b.isDefault)?.name.en).toBe('Multi-Room Protection');
+  expect(p.bundles.find((b) => b.isDefault)?.name.en).toBe('Single Room Protection');
   expect(p.images).toHaveLength(9); // 4 pack shots + 5 lifestyle photos
   expect(p.inStock).toBe(true);
   expect(JSON.parse(JSON.stringify(p))).toEqual(p);

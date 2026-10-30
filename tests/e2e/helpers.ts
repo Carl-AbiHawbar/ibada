@@ -40,7 +40,7 @@ export function randomPhone(prefix = '71'): string {
   return `${prefix} ${String(Math.floor(100000 + Math.random() * 899999))}`;
 }
 
-/** Place a real Multi-Room order through the storefront; returns the order number. */
+/** Place a real order for the default pack (Single Room) through the storefront; returns the order number. */
 export async function placeStorefrontOrder(page: Page, name: string, phone: string): Promise<string> {
   await page.goto('/en');
   await page.getByRole('button', { name: 'ADD TO CART' }).first().click();

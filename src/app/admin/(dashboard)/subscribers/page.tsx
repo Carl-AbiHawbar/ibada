@@ -43,9 +43,13 @@ export default async function SubscribersPage({ searchParams }: PageProps<'/admi
           <li key={r.id} data-testid="subscriber-row" className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-4 py-3 text-sm">
             <span className="w-36 shrink-0 text-xs text-slate-500">{formatBeirut(r.createdAt, 'datetime')}</span>
             <span className="min-w-32 font-semibold text-navy">{r.name}</span>
-            <a href={`mailto:${r.email}`} className="min-w-48 flex-1 text-blue hover:underline">
-              {r.email}
-            </a>
+            {r.email ? (
+              <a href={`mailto:${r.email}`} className="min-w-48 flex-1 text-blue hover:underline">
+                {r.email}
+              </a>
+            ) : (
+              <span className="flex-1" />
+            )}
             <span className="text-ink/80" dir="ltr">
               {formatLebanesePhone(r.phone)}
             </span>
