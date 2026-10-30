@@ -93,7 +93,7 @@ test('seo files and structured data', async ({ page, request }) => {
   expect(robots).toMatch(/Disallow: \/admin/);
   await page.goto('/en');
   const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').first().textContent()) ?? '{}');
-  expect(ld.offers.lowPrice).toBe('20.00');
+  expect(ld.offers.lowPrice).toBe('19.99');
   await expect(page.locator('link[rel="alternate"][hreflang="ar"]')).toHaveCount(1);
 });
 

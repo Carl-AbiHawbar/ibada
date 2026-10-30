@@ -29,7 +29,7 @@ test.describe.serial('products', () => {
 
     // Put the pricing sheet back for the other specs.
     await openIbadaOne(page);
-    await setSinglePrice(page, '20');
+    await setSinglePrice(page, '19.99');
   });
 
   test('the "was" price must be above the price', async ({ page }) => {

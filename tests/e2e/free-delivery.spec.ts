@@ -53,6 +53,8 @@ test('the floating button opens the form and shows field errors', async ({ brows
     const shopper = await (await browser.newContext()).newPage();
     // The automatic popup is covered by its own test.
     await shopper.addInitScript(() => localStorage.setItem('ibada:free-delivery-popup', '1'));
+    // The button breathes forever; Playwright only clicks still elements. Reduced motion stops it.
+    await shopper.emulateMedia({ reducedMotion: 'reduce' });
     await shopper.goto('/en/shop');
     await shopper.getByTestId('free-delivery-button').click();
     const form = shopper.getByRole('dialog', { name: 'Get free delivery forever!' });

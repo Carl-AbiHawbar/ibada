@@ -91,7 +91,7 @@ test('discount code', async ({ page }) => {
   await addDefaultBundle(page);
   await page.getByLabel('Discount code').fill('welcome10');
   await page.getByRole('button', { name: 'Apply' }).click();
-  await expect(page.getByTestId('summary-discount')).toHaveText('-$2.00');
+  await expect(page.getByTestId('summary-discount')).toHaveText('-$2');
   await expect(page.getByTestId('summary-total')).toHaveText('$17.99');
   await page.getByLabel('Discount code').fill('NOPE');
   await page.getByRole('button', { name: 'Apply' }).click();
