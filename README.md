@@ -9,7 +9,7 @@ Built with Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Drizzl
 
 ## Run it locally
 
-Requirements: Node.js 20.9 or newer. No separate Postgres install is needed, because `npm run db:start` runs an embedded one.
+Requirements: Node.js 22 or newer. No separate Postgres install is needed, because `npm run db:start` runs an embedded one.
 
 ```bash
 npm install
