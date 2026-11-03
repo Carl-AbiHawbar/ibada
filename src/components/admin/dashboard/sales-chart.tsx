@@ -16,10 +16,10 @@ function ChartTooltip({ active, payload }: { active?: boolean; payload?: { paylo
   const p = active ? payload?.[0]?.payload : undefined;
   if (!p) return null;
   return (
-    <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-lg">
-      <p className="font-semibold text-navy">{dayLabel(p.date)}</p>
-      <p className="text-ink">{formatUsd(p.salesCents)} sales</p>
-      <p className="text-slate-500">
+    <div className="rounded-xl border border-[#e3e3e3] bg-white px-3 py-2 text-sm shadow-lg">
+      <p className="font-semibold text-[#303030]">{dayLabel(p.date)}</p>
+      <p className="text-[#303030]">{formatUsd(p.salesCents)} sales</p>
+      <p className="text-[#616161]">
         {p.orders} order{p.orders === 1 ? '' : 's'}
       </p>
     </div>
@@ -75,7 +75,7 @@ export function SalesChart({ data }: { data: Point[] }) {
       <details className="mt-3 text-sm">
         <summary className="cursor-pointer font-semibold text-blue">Show as table</summary>
         <table className="mt-2 w-full text-start">
-          <thead className="text-xs uppercase text-slate-500">
+          <thead className="text-xs uppercase text-[#616161]">
             <tr>
               <th className="py-1 text-start">Day</th>
               <th className="py-1 text-end">Sales</th>
@@ -84,7 +84,7 @@ export function SalesChart({ data }: { data: Point[] }) {
           </thead>
           <tbody>
             {data.map((d) => (
-              <tr key={d.date} className="border-t border-slate-100">
+              <tr key={d.date} className="border-t border-[#ebebeb]">
                 <td className="py-1">{dayLabel(d.date)}</td>
                 <td className="py-1 text-end tabular-nums">{formatUsd(d.salesCents)}</td>
                 <td className="py-1 text-end tabular-nums">{d.orders}</td>

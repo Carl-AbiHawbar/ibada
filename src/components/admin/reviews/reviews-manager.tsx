@@ -42,7 +42,7 @@ function ReviewForm({ products, review, today, onDone }: { products: Product[]; 
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4 rounded-2xl border border-blue/30 bg-ice/40 p-4">
+    <form onSubmit={submit} className="space-y-4 rounded-xl border border-[#e3e3e3] bg-[#f7f7f7] p-4">
       {products.length > 1 ? (
         <AdminField id="r-product" label="Product">
           <AdminSelect id="r-product" name="productId" defaultValue={review?.productId ?? products[0]?.id}>
@@ -88,7 +88,7 @@ function ReviewForm({ products, review, today, onDone }: { products: Product[]; 
           {review?.photoUrl && <input type="hidden" name="keepPhoto" value={review.photoUrl} />}
         </AdminField>
       </div>
-      <label className="flex items-center gap-2 text-sm font-medium text-navy">
+      <label className="flex items-center gap-2 text-sm font-medium text-[#303030]">
         <input type="checkbox" name="visible" className="size-4 accent-navy" defaultChecked={review?.visible ?? true} />
         Show on the shop
       </label>
@@ -125,9 +125,9 @@ export function ReviewsManager({ rows, products, today }: { rows: ReviewRow[]; p
               <ReviewForm products={products} review={r} today={today} onDone={() => setEditing(null)} />
             </li>
           ) : (
-            <li key={r.id} data-testid="review-row" className={cn('flex gap-4 rounded-2xl border border-slate-200 bg-white p-4', !r.visible && 'opacity-60')}>
+            <li key={r.id} data-testid="review-row" className={cn('flex gap-4 rounded-xl bg-white shadow-[0_0_0_1px_rgba(26,26,26,0.08),0_1px_2px_rgba(26,26,26,0.07)] p-4', !r.visible && 'opacity-60')}>
               {r.photoUrl && (
-                <span className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-slate-100">
+                <span className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-[#f1f1f1]">
                   <Image src={r.photoUrl} alt="" fill sizes="64px" className="object-cover" />
                 </span>
               )}
@@ -135,17 +135,17 @@ export function ReviewsManager({ rows, products, today }: { rows: ReviewRow[]; p
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="flex text-amber-400" aria-label={`${r.rating} out of 5`}>
                     {Array.from({ length: 5 }, (_, i) => (
-                      <Star key={i} className={cn('size-4', i < r.rating ? 'fill-current' : 'text-slate-300')} />
+                      <Star key={i} className={cn('size-4', i < r.rating ? 'fill-current' : 'text-[#d4d4d4]')} />
                     ))}
                   </span>
-                  <span className="font-semibold text-navy" dir="auto">
+                  <span className="font-semibold text-[#303030]" dir="auto">
                     {r.authorName}
                   </span>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-[#616161]">
                     {r.reviewDate} · {r.locale === 'ar' ? 'Arabic' : 'English'}
                   </span>
                 </div>
-                <p className="mt-1 line-clamp-3 text-sm text-ink/80" dir="auto">
+                <p className="mt-1 line-clamp-3 text-sm text-[#303030]/80" dir="auto">
                   {r.body}
                 </p>
               </div>
@@ -173,7 +173,7 @@ export function ReviewsManager({ rows, products, today }: { rows: ReviewRow[]; p
           ),
         )}
         {rows.length === 0 && editing !== 'new' && (
-          <li className="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
+          <li className="rounded-2xl border border-dashed border-[#d4d4d4] p-10 text-center text-[#616161]">
             No reviews yet. Add real reviews from your customers — the shop hides the rating until there is one.
           </li>
         )}

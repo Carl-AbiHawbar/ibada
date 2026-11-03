@@ -27,7 +27,7 @@ export function AsyncSwitch({
   useEffect(() => setValue(checked), [checked]);
 
   return (
-    <label className={cn('flex items-center gap-2 text-sm font-medium text-slate-600', className)}>
+    <label className={cn('flex items-center gap-2 text-sm font-medium text-[#616161]', className)}>
       <input
         type="checkbox"
         role="switch"

@@ -69,7 +69,7 @@ function DiscountForm({ id, initial, onDone }: { id: string | null; initial: Dis
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4 rounded-2xl border border-blue/30 bg-ice/40 p-4">
+    <form onSubmit={submit} className="space-y-4 rounded-xl border border-[#e3e3e3] bg-[#f7f7f7] p-4">
       <div className="grid gap-3 sm:grid-cols-3">
         <AdminField id="d-code" label="Code" error={errors.code} hint="Customers type this at checkout">
           <AdminInput id="d-code" className="uppercase" value={v.code} onChange={set('code')} maxLength={32} autoComplete="off" />
@@ -90,7 +90,7 @@ function DiscountForm({ id, initial, onDone }: { id: string | null; initial: Dis
           <AdminInput id="d-limit" type="number" min={1} value={v.usageLimit} onChange={set('usageLimit')} />
         </AdminField>
         <div className="flex items-end pb-2">
-          <label className="flex items-center gap-2 text-sm font-medium text-navy">
+          <label className="flex items-center gap-2 text-sm font-medium text-[#303030]">
             <input type="checkbox" className="size-4 accent-navy" checked={v.oncePerPhone} onChange={(e) => setV((s) => ({ ...s, oncePerPhone: e.target.checked }))} />
             Once per phone number
           </label>
@@ -102,7 +102,7 @@ function DiscountForm({ id, initial, onDone }: { id: string | null; initial: Dis
           <AdminInput id="d-end" type="date" value={v.endsOn} onChange={set('endsOn')} />
         </AdminField>
         <div className="flex items-end pb-2">
-          <label className="flex items-center gap-2 text-sm font-medium text-navy">
+          <label className="flex items-center gap-2 text-sm font-medium text-[#303030]">
             <input type="checkbox" className="size-4 accent-navy" checked={v.active} onChange={(e) => setV((s) => ({ ...s, active: e.target.checked }))} />
             Active
           </label>
@@ -139,10 +139,10 @@ export function DiscountsManager({ rows }: { rows: DiscountRow[] }) {
               <DiscountForm id={d.id} initial={toForm(d)} onDone={() => setEditing(null)} />
             </li>
           ) : (
-            <li key={d.id} data-testid="discount-row" className={cn('flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4', !d.active && 'opacity-60')}>
-              <span className="rounded-lg bg-ice px-2.5 py-1 font-mono text-sm font-bold text-navy">{d.code}</span>
-              <span className="font-semibold text-navy">{d.type === 'percent' ? `${d.value}%` : `${formatUsd(d.value)} off`}</span>
-              <span className="text-sm text-slate-500">
+            <li key={d.id} data-testid="discount-row" className={cn('flex flex-wrap items-center gap-3 rounded-xl bg-white shadow-[0_0_0_1px_rgba(26,26,26,0.08),0_1px_2px_rgba(26,26,26,0.07)] p-4', !d.active && 'opacity-60')}>
+              <span className="rounded-lg bg-ice px-2.5 py-1 font-mono text-sm font-bold text-[#303030]">{d.code}</span>
+              <span className="font-semibold text-[#303030]">{d.type === 'percent' ? `${d.value}%` : `${formatUsd(d.value)} off`}</span>
+              <span className="text-sm text-[#616161]">
                 {d.usageLimit ? `${d.usedCount} / ${d.usageLimit} used` : `${d.usedCount} used`}
                 {d.minSubtotalCents ? ` · min ${formatUsd(d.minSubtotalCents)}` : ''}
                 {d.oncePerPhone ? ' · once per phone' : ''}
@@ -165,7 +165,7 @@ export function DiscountsManager({ rows }: { rows: DiscountRow[] }) {
             </li>
           ),
         )}
-        {rows.length === 0 && editing !== 'new' && <li className="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500">No discount codes yet.</li>}
+        {rows.length === 0 && editing !== 'new' && <li className="rounded-2xl border border-dashed border-[#d4d4d4] p-10 text-center text-[#616161]">No discount codes yet.</li>}
       </ul>
     </div>
   );

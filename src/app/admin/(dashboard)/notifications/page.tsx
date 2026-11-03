@@ -33,15 +33,15 @@ export default async function NotificationsPage() {
         </AdminCard>
         <AdminCard title={`Your devices (${devices.length})`}>
           {devices.length === 0 ? (
-            <p className="text-sm text-slate-500">No devices yet. Enable notifications on your phone to receive new orders.</p>
+            <p className="text-sm text-[#616161]">No devices yet. Enable notifications on your phone to receive new orders.</p>
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-[#ebebeb]">
               {devices.map((d) => (
                 <li key={d.endpoint} className="flex items-center gap-3 py-3">
-                  <Smartphone className="size-5 text-slate-400" aria-hidden />
+                  <Smartphone className="size-5 text-[#8a8a8a]" aria-hidden />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-navy">{deviceName(d.userAgent)}</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-sm font-semibold text-[#303030]">{deviceName(d.userAgent)}</p>
+                    <p className="text-xs text-[#616161]">
                       Added {formatBeirut(new Date(d.createdAt), 'date')}
                       {d.lastSuccessAt ? ` · last notified ${formatBeirut(new Date(d.lastSuccessAt), 'datetime')}` : ''}
                     </p>

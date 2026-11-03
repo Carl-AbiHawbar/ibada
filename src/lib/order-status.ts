@@ -27,3 +27,12 @@ export function nextStatuses(from: OrderStatus): OrderStatus[] {
 export function canTransition(from: OrderStatus, to: OrderStatus): boolean {
   return TRANSITIONS[from].includes(to);
 }
+
+export type PaymentLabel = 'Payment pending' | 'Paid' | 'Voided' | 'Refunded';
+
+/** Shopify-style payment state for a cash-on-delivery order. */
+export function paymentLabel(status: OrderStatus, paymentStatus: 'pending' | 'paid'): PaymentLabel {
+  if (status === 'returned') return 'Refunded';
+  if (status === 'cancelled') return 'Voided';
+  return paymentStatus === 'paid' ? 'Paid' : 'Payment pending';
+}

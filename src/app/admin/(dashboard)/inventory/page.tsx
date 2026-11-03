@@ -30,10 +30,10 @@ export default async function InventoryPage() {
               <div data-testid="stock-card" className="space-y-5">
                 <span className="sr-only">{p.nameEn}</span>
                 <div className="flex flex-wrap items-center gap-3">
-                  <span data-testid="stock-units" className={`text-4xl font-extrabold ${low ? 'text-red-600' : 'text-navy'}`}>
+                  <span data-testid="stock-units" className={`text-4xl font-extrabold ${low ? 'text-red-600' : 'text-[#303030]'}`}>
                     {p.stockUnits}
                   </span>
-                  <span className="text-sm text-slate-500">devices in stock · alert at {p.lowStockThreshold}</span>
+                  <span className="text-sm text-[#616161]">devices in stock · alert at {p.lowStockThreshold}</span>
                   {low && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700">
                       <AlertTriangle className="size-3.5" /> Low stock
@@ -42,16 +42,16 @@ export default async function InventoryPage() {
                 </div>
                 <StockAdjustForm productId={p.id} />
                 <div>
-                  <h3 className="mb-2 text-sm font-bold text-navy">History</h3>
-                  <ul data-testid="movements" className="divide-y divide-slate-100 text-sm">
+                  <h3 className="mb-2 text-sm font-bold text-[#303030]">History</h3>
+                  <ul data-testid="movements" className="divide-y divide-[#ebebeb] text-sm">
                     {history[i]!.rows.map((m) => (
                       <li key={m.id} className="flex flex-wrap items-center gap-x-3 gap-y-0.5 py-2">
                         <span className={`w-14 font-bold tabular-nums ${m.deltaUnits > 0 ? 'text-green-700' : 'text-red-600'}`}>
                           {m.deltaUnits > 0 ? `+${m.deltaUnits}` : m.deltaUnits}
                         </span>
-                        <span className="font-medium text-navy">{REASON[m.reason]}</span>
-                        {m.note && <span className="text-slate-600">· {m.note}</span>}
-                        <span className="ms-auto text-xs text-slate-500">
+                        <span className="font-medium text-[#303030]">{REASON[m.reason]}</span>
+                        {m.note && <span className="text-[#616161]">· {m.note}</span>}
+                        <span className="ms-auto text-xs text-[#616161]">
                           {formatBeirut(m.createdAt, 'datetime')}
                           {m.actorName ? ` · ${m.actorName}` : ''}
                         </span>

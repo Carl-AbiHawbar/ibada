@@ -23,10 +23,10 @@ export default async function ReviewsPage() {
       <PageHeader title="Reviews" description="Real customer reviews. Only visible ones count toward the stars on the shop." />
       {rows.length === 0 && (
         <div data-testid="preview-link" className="mb-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm">
-          <p className="flex items-center gap-2 font-semibold text-navy">
+          <p className="flex items-center gap-2 font-semibold text-[#303030]">
             <Eye className="size-4" aria-hidden /> Preview how reviews will look
           </p>
-          <p className="mt-1 text-slate-600">
+          <p className="mt-1 text-[#616161]">
             This private link shows the shop with sample reviews, marked “Sample”, to whoever opens it. Shoppers never see
             them. The link works for 7 days.
           </p>

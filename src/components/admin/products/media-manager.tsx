@@ -47,8 +47,8 @@ export function MediaManager({ productId, images }: { productId: string; images:
     <AdminCard title="Photos">
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {images.map((img, i) => (
-          <li key={img.id} data-testid="media-item" className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-            <div className="relative aspect-square bg-slate-50">
+          <li key={img.id} data-testid="media-item" className="overflow-hidden rounded-xl bg-white shadow-[0_0_0_1px_rgba(26,26,26,0.08),0_1px_2px_rgba(26,26,26,0.07)]">
+            <div className="relative aspect-square bg-[#f7f7f7]">
               <Image src={img.url} alt={img.altEn} fill sizes="200px" className="object-contain p-2" />
               {i === 0 && <span className="absolute start-2 top-2 rounded-full bg-navy px-2 py-0.5 text-[10px] font-bold text-white">MAIN</span>}
             </div>
@@ -70,7 +70,7 @@ export function MediaManager({ productId, images }: { productId: string; images:
               />
               <div className="flex items-center justify-between">
                 <div className="flex">
-                  <button type="button" aria-label="Move earlier" disabled={i === 0 || pending} onClick={() => move(i, -1)} className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 disabled:opacity-30">
+                  <button type="button" aria-label="Move earlier" disabled={i === 0 || pending} onClick={() => move(i, -1)} className="rounded-lg p-1.5 text-[#616161] hover:bg-[#f1f1f1] disabled:opacity-30">
                     <ChevronLeft className="size-4" />
                   </button>
                   <button
@@ -78,7 +78,7 @@ export function MediaManager({ productId, images }: { productId: string; images:
                     aria-label="Move later"
                     disabled={i === images.length - 1 || pending}
                     onClick={() => move(i, 1)}
-                    className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 disabled:opacity-30"
+                    className="rounded-lg p-1.5 text-[#616161] hover:bg-[#f1f1f1] disabled:opacity-30"
                   >
                     <ChevronRight className="size-4" />
                   </button>
@@ -104,7 +104,7 @@ export function MediaManager({ productId, images }: { productId: string; images:
             }}
             className={cn(
               'flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed text-center text-sm font-semibold transition',
-              drag ? 'border-blue bg-blue/5 text-blue' : 'border-slate-300 text-slate-500 hover:border-navy hover:text-navy',
+              drag ? 'border-blue bg-blue/5 text-blue' : 'border-[#d4d4d4] text-[#616161] hover:border-navy hover:text-[#1a1a1a]',
               pending && 'pointer-events-none opacity-60',
             )}
           >

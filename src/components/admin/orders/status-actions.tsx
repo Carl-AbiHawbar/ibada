@@ -37,17 +37,17 @@ export function StatusActions({ orderId, status, number }: { orderId: string; st
       router.refresh();
     });
 
-  if (options.length === 0) return <p className="text-sm text-slate-500">No further steps for this order.</p>;
+  if (options.length === 0) return <p className="text-end text-[13px] text-[#616161]">No further steps for this order.</p>;
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap justify-end gap-2">
       {options.map((to) => {
         const destructive = to === 'cancelled' || to === 'returned';
         return (
           <AdminButton
             key={to}
             variant={destructive ? 'secondary' : 'primary'}
-            className={destructive ? 'text-red-600' : undefined}
+            className={destructive ? 'text-[#8e1f0b]' : undefined}
             disabled={pending}
             onClick={() => (destructive ? setConfirm(to) : apply(to))}
           >

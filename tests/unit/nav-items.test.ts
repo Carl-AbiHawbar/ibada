@@ -6,9 +6,9 @@ test('staff see only day-to-day areas', () => {
     'home',
     'orders',
     'products',
-    'customers',
     'inventory',
     'reviews',
+    'customers',
     'notifications',
     'account',
   ]);
@@ -28,4 +28,9 @@ test('phone tab bar holds the four busiest areas', () => {
     '/admin/products',
     '/admin/customers',
   ]);
+});
+
+test('inventory and reviews sit under products, subscribers under customers', () => {
+  const parents = Object.fromEntries(navItemsFor('owner').filter((i) => i.parent).map((i) => [i.area, i.parent]));
+  expect(parents).toEqual({ inventory: '/admin/products', reviews: '/admin/products', subscribers: '/admin/customers' });
 });

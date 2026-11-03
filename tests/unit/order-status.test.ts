@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { canTransition, nextStatuses } from '@/lib/order-status';
+import { canTransition, nextStatuses, paymentLabel } from '@/lib/order-status';
 
 test('allowed next statuses follow the spec arrows', () => {
   expect(nextStatuses('new')).toEqual(['confirmed', 'cancelled']);
@@ -16,4 +16,13 @@ test('skipping or reversing steps is not allowed', () => {
   expect(canTransition('confirmed', 'new')).toBe(false);
   expect(canTransition('new', 'new')).toBe(false);
   expect(canTransition('out_for_delivery', 'delivered')).toBe(true);
+});
+
+test('labels cash-on-delivery payment the way Shopify does', () => {
+  expect(paymentLabel('new', 'pending')).toBe('Payment pending');
+  expect(paymentLabel('out_for_delivery', 'pending')).toBe('Payment pending');
+  expect(paymentLabel('delivered', 'paid')).toBe('Paid');
+  expect(paymentLabel('cancelled', 'pending')).toBe('Voided');
+  expect(paymentLabel('returned', 'paid')).toBe('Refunded');
+  expect(paymentLabel('returned', 'pending')).toBe('Refunded');
 });

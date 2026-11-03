@@ -63,9 +63,9 @@ export function BackupCodesCard() {
 
   return (
     <AdminCard title="Backup codes">
-      <p className="mb-4 text-sm text-slate-600">Lost your phone? Each backup code signs you in once. Making new codes cancels the old ones.</p>
+      <p className="mb-4 text-sm text-[#616161]">Lost your phone? Each backup code signs you in once. Making new codes cancels the old ones.</p>
       {codes ? (
-        <ul className="grid max-w-md grid-cols-2 gap-2 rounded-xl bg-slate-100 p-3 font-mono text-sm text-navy">
+        <ul className="grid max-w-md grid-cols-2 gap-2 rounded-xl bg-[#f1f1f1] p-3 font-mono text-sm text-[#303030]">
           {codes.map((c) => (
             <li key={c}>{c}</li>
           ))}
@@ -111,16 +111,16 @@ export function SessionsCard() {
   return (
     <AdminCard title="Active sessions" actions={<AdminButton size="sm" variant="secondary" onClick={revokeOthers}>Sign out other devices</AdminButton>}>
       {!sessions ? (
-        <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
+        <div className="h-16 animate-pulse rounded-xl bg-[#f1f1f1]" />
       ) : (
-        <ul className="divide-y divide-slate-100">
+        <ul className="divide-y divide-[#ebebeb]">
           {sessions.map((s) => {
             const mobile = /iPhone|Android|Mobile/.test(s.userAgent ?? '');
             const Icon = mobile ? Smartphone : Laptop;
             return (
               <li key={s.id} className="flex items-center gap-3 py-3 text-sm">
-                <Icon className="size-5 text-slate-400" aria-hidden />
-                <span className="flex-1 text-navy">
+                <Icon className="size-5 text-[#8a8a8a]" aria-hidden />
+                <span className="flex-1 text-[#303030]">
                   {mobile ? 'Phone' : 'Computer'} · since {new Date(s.createdAt).toLocaleDateString('en-GB', { timeZone: 'Asia/Beirut' })}
                 </span>
                 {s.token === current && <span className="rounded-full bg-green-50 px-2 py-0.5 text-xs font-semibold text-green-700">This device</span>}

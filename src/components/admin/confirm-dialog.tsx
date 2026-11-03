@@ -35,8 +35,8 @@ export function ConfirmDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="bg-white p-6 sm:max-w-md">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-lg font-bold text-navy">{title}</AlertDialogTitle>
-          <AlertDialogDescription className="text-sm text-slate-600">{description}</AlertDialogDescription>
+          <AlertDialogTitle className="text-lg font-bold text-[#303030]">{title}</AlertDialogTitle>
+          <AlertDialogDescription className="text-sm text-[#616161]">{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-2">
           <AdminButton variant="secondary" onClick={() => onOpenChange(false)} disabled={busy}>

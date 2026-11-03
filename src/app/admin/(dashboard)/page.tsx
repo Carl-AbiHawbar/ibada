@@ -1,30 +1,52 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { AlertTriangle, ArrowRight } from 'lucide-react';
+import { AlertTriangle, Banknote, ChevronRight, CircleCheck, Inbox, Truck, type LucideIcon } from 'lucide-react';
 import { BarList } from '@/components/admin/dashboard/bar-list';
 import { RangePicker } from '@/components/admin/dashboard/range-picker';
 import { SalesChart } from '@/components/admin/dashboard/sales-chart';
 import { StatusBadge } from '@/components/admin/orders/status-badge';
 import { PageHeader } from '@/components/admin/page-header';
-import { AdminCard } from '@/components/admin/ui';
+import { AdminCard, cardClass } from '@/components/admin/ui';
 import { parseDashboardRange } from '@/lib/dashboard-range';
 import { beirutDateKey, formatBeirut } from '@/lib/dates';
 import { governorateName, type GovernorateId } from '@/lib/lebanon';
 import { formatUsd } from '@/lib/money';
+import { can } from '@/lib/permissions';
+import { cn } from '@/lib/utils';
 import { dashboardSummary, funnel, lowStock, ordersByGovernorate, salesSeries, topBundles } from '@/server/analytics';
 import { getDb } from '@/server/db/client';
 import { requireAdmin } from '@/server/next/admin-session';
-import { listOrders } from '@/server/orders/admin-query';
+import { listOrders, orderStatusCounts } from '@/server/orders/admin-query';
 
 export const metadata: Metadata = { title: 'Home' };
 
-function Stat({ label, value, sub, testId }: { label: string; value: string; sub?: string; testId?: string }) {
+function Stat({ label, value, sub, testId, className }: { label: string; value: string; sub?: string; testId?: string; className?: string }) {
   return (
-    <div data-testid={testId} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
-      <p className="mt-1 text-2xl font-extrabold tabular-nums text-navy sm:text-3xl">{value}</p>
-      {sub && <p className="mt-0.5 text-xs text-slate-500">{sub}</p>}
+    <div data-testid={testId} className={cn('border-[#ebebeb] p-4', className)}>
+      <p className="text-[13px] font-medium text-[#616161] underline decoration-[#b5b5b5] decoration-dotted underline-offset-4">{label}</p>
+      <p className="mt-1.5 text-xl font-bold tabular-nums text-[#303030]">{value}</p>
+      {sub && <p className="mt-0.5 text-xs text-[#616161]">{sub}</p>}
     </div>
+  );
+}
+
+function Todo({ href, icon: Icon, children, tone = 'neutral' }: { href: string; icon: LucideIcon; children: ReactNode; tone?: 'neutral' | 'critical' }) {
+  return (
+    <li>
+      <Link href={href} className="flex items-center gap-3 px-4 py-3 text-[13px] font-medium text-[#303030] hover:bg-[#f7f7f7]">
+        <span
+          className={cn(
+            'flex size-8 shrink-0 items-center justify-center rounded-lg',
+            tone === 'critical' ? 'bg-[#fedad9] text-[#8e1f0b]' : 'bg-[#f1f1f1] text-[#4a4a4a]',
+          )}
+        >
+          <Icon className="size-4" aria-hidden />
+        </span>
+        <span className="flex-1">{children}</span>
+        <ChevronRight className="size-4 text-[#8a8a8a]" aria-hidden />
+      </Link>
+    </li>
   );
 }
 
@@ -32,7 +54,7 @@ export default async function AdminHome({ searchParams }: PageProps<'/admin'>) {
   const { user } = await requireAdmin('home');
   const range = parseDashboardRange(await searchParams);
   const db = getDb();
-  const [summary, series, steps, bundles, governorates, latest, low] = await Promise.all([
+  const [summary, series, steps, bundles, governorates, latest, low, counts] = await Promise.all([
     dashboardSummary(db, range),
     salesSeries(db, range),
     funnel(db, range),
@@ -40,8 +62,12 @@ export default async function AdminHome({ searchParams }: PageProps<'/admin'>) {
     ordersByGovernorate(db, range),
     listOrders(db, { page: 1 }),
     lowStock(db),
+    orderStatusCounts(db),
   ]);
   const pct = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : '—');
+  const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+  const showOrders = can(user.role, 'orders');
+  const todos = showOrders && (counts.new > 0 || counts.confirmed > 0 || counts.out_for_delivery > 0);
 
   return (
     <>
@@ -57,28 +83,49 @@ export default async function AdminHome({ searchParams }: PageProps<'/admin'>) {
         }
       />
 
-      {low.length > 0 && (
-        <Link href="/admin/inventory" className="mb-5 flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800 hover:bg-red-100">
-          <AlertTriangle className="size-5 shrink-0" />
-          <span className="flex-1">
-            <strong>Low stock:</strong> {low.map((p) => `${p.name} (${p.stockUnits} left)`).join(', ')}
-          </span>
-          <ArrowRight className="size-4" />
-        </Link>
-      )}
-
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Stat testId="stat-sales" label="Sales" value={formatUsd(summary.salesCents)} sub="Excludes cancelled & returned" />
-        <Stat label="Orders" value={String(summary.orders)} />
-        <Stat label="Average order" value={formatUsd(summary.aovCents)} />
+      <section className={cn(cardClass, 'grid grid-cols-2 lg:grid-cols-4')}>
+        <Stat className="border-b border-e lg:border-b-0" testId="stat-sales" label="Total sales" value={formatUsd(summary.salesCents)} sub="Excludes cancelled & returned" />
+        <Stat className="border-b lg:border-b-0 lg:border-e" label="Orders" value={String(summary.orders)} />
+        <Stat className="border-e" label="Average order value" value={formatUsd(summary.aovCents)} />
         <Stat label="Cash collected" value={formatUsd(summary.collectedCents)} sub={`${formatUsd(summary.pendingCents)} still to collect`} />
-      </div>
+      </section>
 
-      <AdminCard className="mt-5" title="Sales per day">
+      <section className={cn(cardClass, 'mt-4 overflow-hidden')}>
+        <h2 className="px-4 pb-1 pt-4 text-sm font-semibold">To do</h2>
+        <ul className="divide-y divide-[#ebebeb]">
+          {showOrders && counts.new > 0 && (
+            <Todo href="/admin/orders?status=new" icon={Inbox}>
+              {plural(counts.new, 'order', 'orders')} to confirm with the customer
+            </Todo>
+          )}
+          {showOrders && counts.confirmed > 0 && (
+            <Todo href="/admin/orders?status=confirmed" icon={Truck}>
+              {plural(counts.confirmed, 'order', 'orders')} ready to send out
+            </Todo>
+          )}
+          {showOrders && counts.out_for_delivery > 0 && (
+            <Todo href="/admin/orders?status=out_for_delivery" icon={Banknote}>
+              {plural(counts.out_for_delivery, 'order', 'orders')} out for delivery: mark delivered when the cash is collected
+            </Todo>
+          )}
+          {low.map((p) => (
+            <Todo key={p.name} href="/admin/inventory" icon={AlertTriangle} tone="critical">
+              Low stock: {p.name} has {p.stockUnits} left
+            </Todo>
+          ))}
+          {!todos && low.length === 0 && (
+            <li className="flex items-center gap-3 px-4 py-3 text-[13px] text-[#616161]">
+              <CircleCheck className="size-4 text-[#0c5132]" aria-hidden /> All caught up. No orders are waiting on you.
+            </li>
+          )}
+        </ul>
+      </section>
+
+      <AdminCard className="mt-4" title="Sales per day">
         <SalesChart data={series} />
       </AdminCard>
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-2">
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <AdminCard title="Visitors to orders">
           <BarList
             empty="No visits recorded yet."
@@ -89,8 +136,8 @@ export default async function AdminHome({ searchParams }: PageProps<'/admin'>) {
               { label: 'Placed an order', value: steps.orders, display: String(steps.orders), note: pct(steps.orders, steps.checkout) },
             ].filter(() => steps.views > 0)}
           />
-          <p className="mt-4 text-sm text-slate-600">
-            Conversion: <strong className="text-navy">{steps.conversionPct}%</strong> of visitors ordered
+          <p className="mt-4 text-[13px] text-[#616161]">
+            Conversion: <strong className="text-[#303030]">{steps.conversionPct}%</strong> of visitors ordered
           </p>
         </AdminCard>
 
@@ -113,26 +160,27 @@ export default async function AdminHome({ searchParams }: PageProps<'/admin'>) {
         </AdminCard>
 
         <AdminCard
+          flush
           title="Latest orders"
           actions={
-            <Link href="/admin/orders" className="text-sm font-semibold text-blue hover:underline">
+            <Link href="/admin/orders" className="text-[13px] font-medium text-blue hover:underline">
               View all
             </Link>
           }
         >
-          <ul data-testid="latest-orders" className="divide-y divide-slate-100">
-            {latest.rows.slice(0, 10).map((o) => (
+          <ul data-testid="latest-orders" className="mt-2 divide-y divide-[#ebebeb] border-t border-[#ebebeb]">
+            {latest.rows.slice(0, 8).map((o) => (
               <li key={o.id}>
-                <Link href={`/admin/orders/${o.id}`} className="flex items-center gap-3 py-2.5 text-sm hover:bg-slate-50">
-                  <span className="font-bold text-navy">#{o.number}</span>
-                  <span className="min-w-0 flex-1 truncate text-ink">{o.name}</span>
+                <Link href={`/admin/orders/${o.id}`} className="flex items-center gap-3 px-4 py-2.5 text-[13px] hover:bg-[#f7f7f7]">
+                  <span className="font-semibold">#{o.number}</span>
+                  <span className="min-w-0 flex-1 truncate">{o.name}</span>
                   <StatusBadge status={o.status} />
-                  <span className="w-14 text-end font-semibold tabular-nums text-navy">{formatUsd(o.totalCents)}</span>
-                  <span className="hidden w-32 text-end text-xs text-slate-500 sm:block">{formatBeirut(new Date(o.createdAt), 'datetime')}</span>
+                  <span className="w-16 text-end tabular-nums">{formatUsd(o.totalCents)}</span>
+                  <span className="hidden w-28 text-end text-xs text-[#616161] sm:block">{formatBeirut(new Date(o.createdAt), 'datetime')}</span>
                 </Link>
               </li>
             ))}
-            {latest.rows.length === 0 && <li className="py-6 text-center text-sm text-slate-500">No orders yet.</li>}
+            {latest.rows.length === 0 && <li className="px-4 py-6 text-center text-[13px] text-[#616161]">No orders yet.</li>}
           </ul>
         </AdminCard>
       </div>

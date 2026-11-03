@@ -39,23 +39,23 @@ export default async function ActivityPage({ searchParams }: PageProps<'/admin/a
             href={e ? `/admin/activity?entity=${e}` : '/admin/activity'}
             className={cn(
               'shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold',
-              (entity ?? '') === e ? 'bg-navy text-white' : 'bg-white text-slate-600 ring-1 ring-slate-200',
+              (entity ?? '') === e ? 'bg-[#e3e3e3] text-[#303030]' : 'bg-white text-[#616161] ring-1 ring-[#e3e3e3]',
             )}
           >
             {label}
           </Link>
         ))}
       </nav>
-      <ul className="divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+      <ul className="divide-y divide-[#ebebeb] overflow-hidden rounded-xl bg-white shadow-[0_0_0_1px_rgba(26,26,26,0.08),0_1px_2px_rgba(26,26,26,0.07)]">
         {rows.map((r) => (
           <li key={r.id} data-testid="audit-row" className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-4 py-3 text-sm">
-            <span className="w-36 shrink-0 text-xs text-slate-500">{formatBeirut(r.createdAt, 'datetime')}</span>
-            <span className="font-semibold text-navy">{r.actorName ?? 'System'}</span>
-            <span className="flex-1 text-ink/80">{r.summary}</span>
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[11px] text-slate-500">{r.action}</span>
+            <span className="w-36 shrink-0 text-xs text-[#616161]">{formatBeirut(r.createdAt, 'datetime')}</span>
+            <span className="font-semibold text-[#303030]">{r.actorName ?? 'System'}</span>
+            <span className="flex-1 text-[#303030]/80">{r.summary}</span>
+            <span className="rounded bg-[#f1f1f1] px-1.5 py-0.5 font-mono text-[11px] text-[#616161]">{r.action}</span>
           </li>
         ))}
-        {rows.length === 0 && <li className="p-10 text-center text-slate-500">Nothing yet.</li>}
+        {rows.length === 0 && <li className="p-10 text-center text-[#616161]">Nothing yet.</li>}
       </ul>
       {total > pageSize && (
         <nav className="mt-4 flex justify-between text-sm">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, type FormEvent } from 'react';
+import { useState, useTransition, type FormEvent, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { saveProductAction } from '@/app/admin/(dashboard)/products/actions';
 import { AdminButton, AdminCard, AdminField, AdminInput, AdminSelect, AdminTextarea } from '@/components/admin/ui';
@@ -38,12 +38,19 @@ export const EMPTY_PRODUCT: ProductFormValues = {
 };
 
 type Key = keyof ProductFormValues;
+const FORM_ID = 'product-form';
 
-export function ProductForm({ id, initial }: { id: string | null; initial: ProductFormValues }) {
+/**
+ * The product editor, laid out like Shopify's: details, photos, bundles and the search listing on the left,
+ * status and stock on the right. `main` and `side` hold the parts that save on their own (photos, bundles, stock).
+ */
+export function ProductForm({ id, initial, main, side }: { id: string | null; initial: ProductFormValues; main?: ReactNode; side?: ReactNode }) {
   const [v, setV] = useState(initial);
+  const [saved, setSaved] = useState(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pending, start] = useTransition();
   const set = (k: Key) => (e: { target: { value: string } }) => setV((s) => ({ ...s, [k]: e.target.value }));
+  const dirty = JSON.stringify(v) !== JSON.stringify(saved);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -52,6 +59,7 @@ export function ProductForm({ id, initial }: { id: string | null; initial: Produ
       if (!r) return; // created → redirected
       if (r.ok) {
         setErrors({});
+        setSaved(v);
         toast.success('Product saved');
       } else {
         setErrors(r.fieldErrors ?? {});
@@ -63,7 +71,7 @@ export function ProductForm({ id, initial }: { id: string | null; initial: Produ
   const pair = (label: string, en: Key, ar: Key, opts: { textarea?: boolean; hint?: string; max?: number } = {}) => {
     const Comp = opts.textarea ? AdminTextarea : AdminInput;
     return (
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2">
         <AdminField id={en} label={`${label} (English)`} hint={opts.hint} error={errors[en]}>
           <Comp id={en} value={String(v[en])} onChange={set(en)} maxLength={opts.max} rows={opts.textarea ? 6 : undefined} />
         </AdminField>
@@ -74,45 +82,93 @@ export function ProductForm({ id, initial }: { id: string | null; initial: Produ
     );
   };
 
+  const seoTitle = v.seoTitleEn || v.nameEn || 'Product title';
+  const seoDescription = v.seoDescriptionEn || v.taglineEn || v.descriptionEn.slice(0, 160);
+
   return (
-    <form onSubmit={submit} className="space-y-5">
-      <AdminCard title="Details">
+    <>
+      {dirty && (
+        <div
+          role="region"
+          aria-label="Unsaved changes"
+          className="fixed inset-x-0 top-0 z-50 flex h-14 items-center gap-2 bg-[#1a1a1a] px-4 text-white shadow-lg"
+        >
+          <span className="flex-1 text-[13px] font-semibold">Unsaved changes</span>
+          <AdminButton
+            type="button"
+            size="sm"
+            variant="ghost"
+            className="text-white hover:bg-white/10"
+            disabled={pending}
+            onClick={() => {
+              setV(saved);
+              setErrors({});
+            }}
+          >
+            Discard
+          </AdminButton>
+          <AdminButton type="submit" form={FORM_ID} size="sm" variant="secondary" disabled={pending}>
+            {pending ? 'Saving…' : 'Save'}
+          </AdminButton>
+        </div>
+      )}
+
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="min-w-0 space-y-4">
+          <AdminCard>
+            <div className="space-y-3">
+              {pair('Name', 'nameEn', 'nameAr', { max: 80 })}
+              {pair('Tagline', 'taglineEn', 'taglineAr', { max: 160, hint: 'One short sentence shown under the headline.' })}
+              {pair('Description', 'descriptionEn', 'descriptionAr', { textarea: true, max: 4000 })}
+            </div>
+          </AdminCard>
+
+          {main}
+
+          <AdminCard title="Search engine listing">
+            <div className="mb-4 rounded-lg border border-[#e3e3e3] p-3">
+              <p className="text-xs text-[#616161]">ibadashop.com › en › products › {v.slug || '…'}</p>
+              <p className="truncate text-[17px] leading-6 text-[#1a0dab]">{seoTitle}</p>
+              <p className="line-clamp-2 text-[13px] text-[#4d5156]">{seoDescription || 'Add a description to see how this product might appear in a search engine listing.'}</p>
+            </div>
+            <div className="space-y-3">
+              {pair('SEO title', 'seoTitleEn', 'seoTitleAr', { max: 70, hint: 'Up to 70 characters. Leave empty to use the name.' })}
+              {pair('SEO description', 'seoDescriptionEn', 'seoDescriptionAr', { textarea: true, max: 160 })}
+            </div>
+          </AdminCard>
+        </div>
+
         <div className="space-y-4">
-          {pair('Name', 'nameEn', 'nameAr', { max: 80 })}
-          {pair('Tagline', 'taglineEn', 'taglineAr', { max: 160, hint: 'One short sentence shown under the headline.' })}
-          {pair('Description', 'descriptionEn', 'descriptionAr', { textarea: true, max: 4000 })}
-        </div>
-      </AdminCard>
+          <AdminCard title="Status">
+            <AdminField id="status" label="Visibility" hint="Draft products are hidden from the shop.">
+              <AdminSelect id="status" value={v.status} onChange={set('status')}>
+                <option value="active">Active (visible)</option>
+                <option value="draft">Draft (hidden)</option>
+              </AdminSelect>
+            </AdminField>
+          </AdminCard>
 
-      <AdminCard title="Search engines">
-        <div className="space-y-4">
-          {pair('SEO title', 'seoTitleEn', 'seoTitleAr', { max: 70, hint: 'Up to 70 characters. Leave empty to use the name.' })}
-          {pair('SEO description', 'seoDescriptionEn', 'seoDescriptionAr', { textarea: true, max: 160 })}
-          <AdminField id="slug" label="Web address" hint={`ibadashop.com/en/products/${v.slug || '…'}`} error={errors.slug}>
-            <AdminInput id="slug" value={v.slug} onChange={(e) => setV((s) => ({ ...s, slug: e.target.value.toLowerCase() }))} maxLength={60} />
-          </AdminField>
-        </div>
-      </AdminCard>
+          {side}
 
-      <AdminCard title="Status & stock alerts">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <AdminField id="status" label="Status" hint="Draft products are hidden from the shop.">
-            <AdminSelect id="status" value={v.status} onChange={set('status')}>
-              <option value="active">Active (visible)</option>
-              <option value="draft">Draft (hidden)</option>
-            </AdminSelect>
-          </AdminField>
-          <AdminField id="lowStockThreshold" label="Low-stock alert at (devices)" error={errors.lowStockThreshold}>
-            <AdminInput id="lowStockThreshold" type="number" min={0} value={v.lowStockThreshold} onChange={set('lowStockThreshold')} />
-          </AdminField>
-        </div>
-      </AdminCard>
+          <AdminCard title="Stock alerts">
+            <AdminField id="lowStockThreshold" label="Low-stock alert at (devices)" error={errors.lowStockThreshold}>
+              <AdminInput id="lowStockThreshold" type="number" min={0} value={v.lowStockThreshold} onChange={set('lowStockThreshold')} />
+            </AdminField>
+          </AdminCard>
 
-      <div className="sticky bottom-20 z-30 flex justify-end rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-lg backdrop-blur lg:bottom-4">
-        <AdminButton type="submit" disabled={pending}>
+          <AdminCard title="Web address">
+            <AdminField id="slug" label="URL handle" hint={`ibadashop.com/en/products/${v.slug || '…'}`} error={errors.slug}>
+              <AdminInput id="slug" value={v.slug} onChange={(e) => setV((s) => ({ ...s, slug: e.target.value.toLowerCase() }))} maxLength={60} />
+            </AdminField>
+          </AdminCard>
+        </div>
+      </div>
+
+      <form id={FORM_ID} onSubmit={submit} className="mt-4 flex justify-end border-t border-[#e3e3e3] pt-4">
+        <AdminButton type="submit" disabled={pending || (!!id && !dirty)}>
           {pending ? 'Saving…' : id ? 'Save product' : 'Create product'}
         </AdminButton>
-      </div>
-    </form>
+      </form>
+    </>
   );
 }

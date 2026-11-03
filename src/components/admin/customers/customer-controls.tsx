@@ -43,8 +43,8 @@ export function BlockControls({ customerId, blocked }: { customerId: string; blo
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent className="bg-white p-6 sm:max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-lg font-bold text-navy">Block this phone number?</AlertDialogTitle>
-            <AlertDialogDescription className="text-sm text-slate-600">
+            <AlertDialogTitle className="text-lg font-bold text-[#303030]">Block this phone number?</AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-[#616161]">
               They won&apos;t be able to place new orders. Use this for repeated fake orders.
             </AlertDialogDescription>
           </AlertDialogHeader>

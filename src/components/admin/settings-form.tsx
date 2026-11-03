@@ -42,7 +42,7 @@ export function SettingsForm({ initial }: { initial: SettingsFormValues }) {
 
       <AdminCard title="Announcement bar">
         <div className="space-y-4">
-          <label className="flex items-center gap-2 text-sm font-medium text-navy">
+          <label className="flex items-center gap-2 text-sm font-medium text-[#303030]">
             <input type="checkbox" className="size-4 accent-navy" checked={v.announcementEnabled} onChange={(e) => setV((s) => ({ ...s, announcementEnabled: e.target.checked }))} />
             Show the announcement bar
           </label>
@@ -71,7 +71,7 @@ export function SettingsForm({ initial }: { initial: SettingsFormValues }) {
         </div>
       </AdminCard>
 
-      <div className="sticky bottom-20 z-30 flex justify-end rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-lg backdrop-blur lg:bottom-4">
+      <div className="sticky bottom-20 z-30 flex justify-end rounded-xl border border-[#e3e3e3] bg-white/95 p-3 shadow-lg backdrop-blur lg:bottom-4">
         <AdminButton type="submit" disabled={pending}>
           {pending ? 'Saving…' : 'Save settings'}
         </AdminButton>

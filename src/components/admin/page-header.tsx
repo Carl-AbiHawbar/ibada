@@ -14,15 +14,22 @@ export function PageHeader({
   back?: { href: string; label: string };
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-      <div className="min-w-0">
+    <div className="mb-4 flex flex-wrap items-start justify-between gap-3 lg:mb-5">
+      <div className="flex min-w-0 items-start gap-2">
         {back && (
-          <Link href={back.href} className="mb-2 inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-navy">
-            <ArrowLeft className="size-4" aria-hidden /> {back.label}
+          <Link
+            href={back.href}
+            aria-label={back.label}
+            title={back.label}
+            className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg text-[#303030] hover:bg-black/5"
+          >
+            <ArrowLeft className="size-4" aria-hidden />
           </Link>
         )}
-        <h1 className="text-2xl font-extrabold tracking-tight text-navy">{title}</h1>
-        {description && <p className="mt-1 text-sm text-slate-500">{description}</p>}
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold leading-8 text-[#303030]">{title}</h1>
+          {description && <p className="text-[13px] text-[#616161]">{description}</p>}
+        </div>
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>

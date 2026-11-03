@@ -58,16 +58,16 @@ export function StaffManager({ me, staff, invites }: { me: string; staff: StaffR
         }
       >
         {inviting && (
-          <div className="mb-5 rounded-2xl border border-blue/30 bg-ice/40 p-4">
+          <div className="mb-5 rounded-xl border border-[#e3e3e3] bg-[#f7f7f7] p-4">
             {link ? (
               <div className="space-y-2">
-                <p className="text-sm font-semibold text-navy">Invite link for {email}</p>
-                <p data-testid="invite-link" className="break-all rounded-lg bg-white p-2 font-mono text-xs text-navy">
+                <p className="text-sm font-semibold text-[#303030]">Invite link for {email}</p>
+                <p data-testid="invite-link" className="break-all rounded-lg bg-white p-2 font-mono text-xs text-[#303030]">
                   {link}
                 </p>
                 <div className="flex items-center gap-2">
                   <CopyButton text={link} label="Copy link" />
-                  <span className="text-xs text-slate-500">Send this link privately. It works once and expires in 72 hours.</span>
+                  <span className="text-xs text-[#616161]">Send this link privately. It works once and expires in 72 hours.</span>
                 </div>
                 <AdminButton size="sm" variant="ghost" onClick={() => setInviting(false)}>
                   Done
@@ -95,14 +95,14 @@ export function StaffManager({ me, staff, invites }: { me: string; staff: StaffR
           </div>
         )}
 
-        <ul className="divide-y divide-slate-100">
+        <ul className="divide-y divide-[#ebebeb]">
           {staff.map((s) => (
             <li key={s.id} data-testid="staff-row" className={cn('flex flex-wrap items-center gap-3 py-3', !s.active && 'opacity-60')}>
               <div className="min-w-48 flex-1">
-                <p className="font-semibold text-navy">
-                  {s.name} {s.id === me && <span className="text-xs font-normal text-slate-500">(you)</span>}
+                <p className="font-semibold text-[#303030]">
+                  {s.name} {s.id === me && <span className="text-xs font-normal text-[#616161]">(you)</span>}
                 </p>
-                <p className="text-sm text-slate-500">{s.email}</p>
+                <p className="text-sm text-[#616161]">{s.email}</p>
               </div>
               <span className={cn('inline-flex items-center gap-1 text-xs font-semibold', s.twoFactorEnabled ? 'text-green-700' : 'text-amber-700')}>
                 {s.twoFactorEnabled ? <ShieldCheck className="size-4" /> : <ShieldOff className="size-4" />}
@@ -140,12 +140,12 @@ export function StaffManager({ me, staff, invites }: { me: string; staff: StaffR
 
       {invites.length > 0 && (
         <AdminCard title="Pending invites">
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-[#ebebeb]">
             {invites.map((i) => (
               <li key={i.id} className="flex flex-wrap items-center gap-3 py-3 text-sm">
-                <span className="flex-1 font-medium text-navy">{i.email}</span>
-                <span className="capitalize text-slate-500">{i.role}</span>
-                <span className="text-xs text-slate-500">expires {new Date(i.expiresAt).toLocaleString('en-GB', { timeZone: 'Asia/Beirut' })}</span>
+                <span className="flex-1 font-medium text-[#303030]">{i.email}</span>
+                <span className="capitalize text-[#616161]">{i.role}</span>
+                <span className="text-xs text-[#616161]">expires {new Date(i.expiresAt).toLocaleString('en-GB', { timeZone: 'Asia/Beirut' })}</span>
                 <AdminButton size="sm" variant="ghost" className="text-red-600" onClick={() => run(() => revokeInviteAction(i.id), 'Invite revoked')}>
                   Revoke
                 </AdminButton>

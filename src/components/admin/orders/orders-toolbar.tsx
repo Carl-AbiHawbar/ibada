@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Download, Search } from 'lucide-react';
-import { AdminInput, AdminSelect } from '@/components/admin/ui';
+import { adminButtonClass, AdminInput, AdminSelect } from '@/components/admin/ui';
 import { ORDER_STATUSES, STATUS_LABELS, type OrderStatus } from '@/lib/order-status';
 import { cn } from '@/lib/utils';
 
+/** Tabs, search, date filter and export: the top of the orders card. */
 export function OrdersToolbar({ counts }: { counts: Record<OrderStatus | 'all', number> }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -39,8 +40,8 @@ export function OrdersToolbar({ counts }: { counts: Record<OrderStatus | 'all', 
   exportParams.delete('page');
 
   return (
-    <div className="mb-4 space-y-3">
-      <nav aria-label="Order status" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">
+    <div className="border-b border-[#e3e3e3]">
+      <nav aria-label="Order status" role="tablist" className="flex gap-1 overflow-x-auto px-2 pt-2">
         {(['', ...ORDER_STATUSES] as const).map((s) => {
           const active = status === s;
           return (
@@ -50,19 +51,19 @@ export function OrdersToolbar({ counts }: { counts: Record<OrderStatus | 'all', 
               role="tab"
               aria-selected={active}
               className={cn(
-                'inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-semibold transition',
-                active ? 'bg-navy text-white' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:text-navy',
+                'inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg px-3 text-[13px] font-medium transition',
+                active ? 'bg-[#e3e3e3] font-semibold text-[#303030]' : 'text-[#616161] hover:bg-black/5 hover:text-[#1a1a1a]',
               )}
             >
               {s ? STATUS_LABELS[s] : 'All'}
-              <span className={cn('rounded-full px-1.5 text-xs', active ? 'bg-white/20' : 'bg-slate-100')}>{counts[s || 'all']}</span>
+              <span className="text-xs tabular-nums text-[#8a8a8a]">{counts[s || 'all']}</span>
             </Link>
           );
         })}
       </nav>
-      <div className="flex flex-wrap gap-2">
-        <div className="relative min-w-56 flex-1">
-          <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" aria-hidden />
+      <div className="flex flex-wrap gap-2 p-2">
+        <div className="relative min-w-48 flex-1">
+          <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-[#8a8a8a]" aria-hidden />
           <AdminInput
             aria-label="Search orders"
             placeholder="Search by order #, name or phone"
@@ -77,11 +78,8 @@ export function OrdersToolbar({ counts }: { counts: Record<OrderStatus | 'all', 
           <option value="7d">Last 7 days</option>
           <option value="30d">Last 30 days</option>
         </AdminSelect>
-        <a
-          href={`/admin/orders/export?${exportParams.toString()}`}
-          className="inline-flex h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-[15px] font-semibold text-navy hover:bg-slate-50"
-        >
-          <Download className="size-4" /> Export CSV
+        <a href={`/admin/orders/export?${exportParams.toString()}`} className={cn(adminButtonClass('secondary'), 'h-11 lg:h-9')}>
+          <Download /> Export CSV
         </a>
       </div>
     </div>

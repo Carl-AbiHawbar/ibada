@@ -33,41 +33,41 @@ export default async function CustomersPage({ searchParams }: PageProps<'/admin/
       <PageHeader title="Customers" description={`${total} customer${total === 1 ? '' : 's'} · created automatically from orders`} />
       <form className="mb-4 flex flex-wrap gap-2" action="/admin/customers">
         <div className="relative min-w-56 flex-1">
-          <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" aria-hidden />
+          <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-[#8a8a8a]" aria-hidden />
           <AdminInput name="q" defaultValue={q} aria-label="Search customers" placeholder="Search by name or phone" className="ps-9" />
           <input type="hidden" name="sort" value={sort} />
         </div>
-        <div className="flex gap-1 rounded-xl bg-white p-1 ring-1 ring-slate-200">
+        <div className="flex gap-1 rounded-xl bg-white p-1 ring-1 ring-[#e3e3e3]">
           {SORTS.map(([s, label]) => (
             <Link
               key={s}
               href={link({ sort: s })}
-              className={cn('rounded-lg px-3 py-2 text-sm font-semibold', s === sort ? 'bg-navy text-white' : 'text-slate-600 hover:text-navy')}
+              className={cn('rounded-lg px-3 py-2 text-sm font-semibold', s === sort ? 'bg-[#e3e3e3] text-[#303030]' : 'text-[#616161] hover:text-[#1a1a1a]')}
             >
               {label}
             </Link>
           ))}
         </div>
       </form>
-      <ul className="divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+      <ul className="divide-y divide-[#ebebeb] overflow-hidden rounded-xl bg-white shadow-[0_0_0_1px_rgba(26,26,26,0.08),0_1px_2px_rgba(26,26,26,0.07)]">
         {rows.map((c) => (
           <li key={c.id} data-testid="customer-row">
-            <Link href={`/admin/customers/${c.id}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 p-4 hover:bg-slate-50">
+            <Link href={`/admin/customers/${c.id}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 p-4 hover:bg-[#f7f7f7]">
               <span className="min-w-0 flex-1">
-                <span className="block font-semibold text-navy">
+                <span className="block font-semibold text-[#303030]">
                   {c.name} {c.blocked && <span className="ms-2 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700">Blocked</span>}
                 </span>
-                <span className="block text-sm text-slate-500">{formatLebanesePhone(c.phone)}</span>
+                <span className="block text-sm text-[#616161]">{formatLebanesePhone(c.phone)}</span>
               </span>
-              <span className="text-sm text-slate-600">
+              <span className="text-sm text-[#616161]">
                 {c.orderCount} order{c.orderCount === 1 ? '' : 's'}
               </span>
-              <span className="w-20 text-end font-bold text-navy">{formatUsd(c.totalSpentCents)}</span>
-              <span className="w-32 text-end text-xs text-slate-500">{c.lastOrderAt ? formatBeirut(c.lastOrderAt, 'date') : '—'}</span>
+              <span className="w-20 text-end font-bold text-[#303030]">{formatUsd(c.totalSpentCents)}</span>
+              <span className="w-32 text-end text-xs text-[#616161]">{c.lastOrderAt ? formatBeirut(c.lastOrderAt, 'date') : '—'}</span>
             </Link>
           </li>
         ))}
-        {rows.length === 0 && <li className="p-10 text-center text-slate-500">No customers found.</li>}
+        {rows.length === 0 && <li className="p-10 text-center text-[#616161]">No customers found.</li>}
       </ul>
       {total > pageSize && (
         <nav className="mt-4 flex justify-between text-sm">

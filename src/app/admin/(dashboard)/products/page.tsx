@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
+import { ImageIcon, Plus } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { AdminBadge, adminButtonClass, cardClass } from '@/components/admin/ui';
+import { cn } from '@/lib/utils';
 import { listProductsAdmin } from '@/server/admin/products';
 import { getDb } from '@/server/db/client';
 import { requireAdmin } from '@/server/next/admin-session';
 
 export const metadata: Metadata = { title: 'Products' };
+
+const GRID = 'sm:grid sm:grid-cols-[48px_minmax(0,1fr)_96px_150px_90px] sm:items-center sm:gap-4';
 
 export default async function ProductsPage() {
   await requireAdmin('products');
@@ -17,38 +21,46 @@ export default async function ProductsPage() {
       <PageHeader
         title="Products"
         actions={
-          <Link href="/admin/products/new" className="inline-flex h-11 items-center gap-2 rounded-xl bg-navy px-4 text-[15px] font-semibold text-white hover:bg-navy-700">
-            <Plus className="size-4" /> Add product
+          <Link href="/admin/products/new" className={adminButtonClass('primary')}>
+            <Plus /> Add product
           </Link>
         }
       />
-      <ul className="divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
-        {products.map((p) => {
-          const low = p.stockUnits <= p.lowStockThreshold;
-          return (
-            <li key={p.id}>
-              <Link href={`/admin/products/${p.id}`} className="flex items-center gap-4 p-4 hover:bg-slate-50">
-                <span className="relative size-14 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white">
-                  {p.imageUrl && <Image src={p.imageUrl} alt="" fill sizes="56px" className="object-contain p-1" />}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block font-semibold text-navy">{p.nameEn}</span>
-                  <span className="block text-sm text-slate-500">
-                    {p.bundleCount} bundle{p.bundleCount === 1 ? '' : 's'} · /{p.slug}
+      <section className={cn(cardClass, 'overflow-hidden')}>
+        <div className={cn('hidden border-b border-[#e3e3e3] bg-[#f7f7f7] px-4 py-2 text-xs font-medium text-[#616161]', GRID)}>
+          <span />
+          <span>Product</span>
+          <span>Status</span>
+          <span>Inventory</span>
+          <span>Bundles</span>
+        </div>
+        <ul className="divide-y divide-[#ebebeb]">
+          {products.map((p) => {
+            const low = p.stockUnits <= p.lowStockThreshold;
+            return (
+              <li key={p.id}>
+                <Link href={`/admin/products/${p.id}`} className={cn('flex items-center gap-3 px-4 py-2.5 text-[13px] hover:bg-[#f7f7f7]', GRID)}>
+                  <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#e3e3e3] bg-white text-[#b5b5b5]">
+                    {p.imageUrl ? <Image src={p.imageUrl} alt="" fill sizes="40px" className="object-contain p-0.5" /> : <ImageIcon className="size-4" />}
                   </span>
-                </span>
-                <span className={`text-sm font-semibold ${low ? 'text-red-600' : 'text-slate-600'}`}>{p.stockUnits} in stock</span>
-                <span
-                  className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${p.status === 'active' ? 'bg-green-50 text-green-700' : 'bg-slate-100 text-slate-600'}`}
-                >
-                  {p.status === 'active' ? 'Active' : 'Draft'}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-        {products.length === 0 && <li className="p-10 text-center text-slate-500">No products yet.</li>}
-      </ul>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-semibold text-[#303030]">{p.nameEn}</span>
+                    <span className="block truncate text-xs text-[#616161]">/{p.slug}</span>
+                  </span>
+                  <span>
+                    <AdminBadge tone={p.status === 'active' ? 'success' : 'info'}>{p.status === 'active' ? 'Active' : 'Draft'}</AdminBadge>
+                  </span>
+                  <span className={cn('hidden sm:block', low ? 'font-medium text-[#8e1f0b]' : 'text-[#616161]')}>{p.stockUnits} in stock</span>
+                  <span className="hidden text-[#616161] sm:block">
+                    {p.bundleCount} bundle{p.bundleCount === 1 ? '' : 's'}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+          {products.length === 0 && <li className="p-10 text-center text-[13px] text-[#616161]">No products yet.</li>}
+        </ul>
+      </section>
     </>
   );
 }

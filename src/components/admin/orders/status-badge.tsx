@@ -1,22 +1,37 @@
-import { STATUS_LABELS, type OrderStatus } from '@/lib/order-status';
-import { cn } from '@/lib/utils';
+import { AdminBadge, type BadgeTone } from '@/components/admin/ui';
+import { paymentLabel, STATUS_LABELS, type OrderStatus, type PaymentLabel } from '@/lib/order-status';
 
-const COLORS: Record<OrderStatus, string> = {
-  new: 'bg-blue/10 text-blue ring-blue/20',
-  confirmed: 'bg-indigo-50 text-indigo-700 ring-indigo-200',
-  out_for_delivery: 'bg-amber-50 text-amber-800 ring-amber-200',
-  delivered: 'bg-green-50 text-green-700 ring-green-200',
-  cancelled: 'bg-slate-100 text-slate-600 ring-slate-200',
-  returned: 'bg-rose-50 text-rose-700 ring-rose-200',
+const STATUS_TONES: Record<OrderStatus, { tone: BadgeTone; dot?: 'empty' | 'half' | 'full' }> = {
+  new: { tone: 'attention', dot: 'empty' },
+  confirmed: { tone: 'warning', dot: 'half' },
+  out_for_delivery: { tone: 'info', dot: 'half' },
+  delivered: { tone: 'success', dot: 'full' },
+  cancelled: { tone: 'neutral' },
+  returned: { tone: 'critical' },
 };
 
 export function StatusBadge({ status, className, testId }: { status: OrderStatus; className?: string; testId?: string }) {
+  const s = STATUS_TONES[status];
   return (
-    <span
-      data-testid={testId}
-      className={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset', COLORS[status], className)}
-    >
+    <AdminBadge tone={s.tone} dot={s.dot} className={className} testId={testId}>
       {STATUS_LABELS[status]}
-    </span>
+    </AdminBadge>
+  );
+}
+
+const PAYMENT_TONES: Record<PaymentLabel, { tone: BadgeTone; dot?: 'empty' | 'full' }> = {
+  'Payment pending': { tone: 'warning', dot: 'empty' },
+  Paid: { tone: 'neutral', dot: 'full' },
+  Voided: { tone: 'neutral' },
+  Refunded: { tone: 'neutral' },
+};
+
+export function PaymentBadge({ status, paymentStatus, className }: { status: OrderStatus; paymentStatus: 'pending' | 'paid'; className?: string }) {
+  const label = paymentLabel(status, paymentStatus);
+  const p = PAYMENT_TONES[label];
+  return (
+    <AdminBadge tone={p.tone} dot={p.dot} className={className}>
+      {label}
+    </AdminBadge>
   );
 }

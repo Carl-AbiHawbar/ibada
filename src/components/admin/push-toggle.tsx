@@ -83,10 +83,10 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
       else toast.error('No device received the test');
     });
 
-  if (state === 'loading') return <div className="h-11 w-64 animate-pulse rounded-xl bg-slate-100" />;
+  if (state === 'loading') return <div className="h-11 w-64 animate-pulse rounded-xl bg-[#f1f1f1]" />;
   if (state === 'unsupported')
     return (
-      <p className="flex items-start gap-2 text-sm text-slate-600">
+      <p className="flex items-start gap-2 text-sm text-[#616161]">
         <BellOff className="mt-0.5 size-4 shrink-0" />
         {vapidPublicKey
           ? 'This browser cannot receive notifications. On iPhone, add IBADA to your home screen first (Share → Add to Home Screen), then open it from there.'
@@ -95,7 +95,7 @@ export function PushToggle({ vapidPublicKey }: { vapidPublicKey: string | null }
     );
   if (state === 'denied')
     return (
-      <p className="flex items-start gap-2 text-sm text-slate-600">
+      <p className="flex items-start gap-2 text-sm text-[#616161]">
         <BellOff className="mt-0.5 size-4 shrink-0" />
         Notifications are blocked for this site. Allow them in your browser or phone settings, then reload this page.
       </p>

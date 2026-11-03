@@ -42,22 +42,22 @@ export default async function CustomerPage({ params }: PageProps<'/admin/custome
           ['Spent (delivered)', formatUsd(c.totalSpentCents)],
           ['Last order', c.lastOrderAt ? formatBeirut(c.lastOrderAt, 'date') : '—'],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-2xl border border-slate-200 bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
-            <p className="mt-1 text-xl font-extrabold text-navy">{value}</p>
+          <div key={label} className="rounded-xl bg-white shadow-[0_0_0_1px_rgba(26,26,26,0.08),0_1px_2px_rgba(26,26,26,0.07)] p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#616161]">{label}</p>
+            <p className="mt-1 text-xl font-extrabold text-[#303030]">{value}</p>
           </div>
         ))}
       </div>
       <div className="mt-5 grid gap-5 lg:grid-cols-[1.5fr_1fr]">
         <AdminCard title="Orders">
-          <ul data-testid="customer-orders" className="divide-y divide-slate-100">
+          <ul data-testid="customer-orders" className="divide-y divide-[#ebebeb]">
             {orders.map((o) => (
               <li key={o.id}>
-                <Link href={`/admin/orders/${o.id}`} className="flex items-center gap-3 py-3 text-sm hover:bg-slate-50">
-                  <span className="font-bold text-navy">#{o.number}</span>
-                  <span className="text-slate-500">{formatBeirut(o.createdAt, 'date')}</span>
+                <Link href={`/admin/orders/${o.id}`} className="flex items-center gap-3 py-3 text-sm hover:bg-[#f7f7f7]">
+                  <span className="font-bold text-[#303030]">#{o.number}</span>
+                  <span className="text-[#616161]">{formatBeirut(o.createdAt, 'date')}</span>
                   <StatusBadge status={o.status} />
-                  <span className="ms-auto font-semibold text-navy">{formatUsd(o.totalCents)}</span>
+                  <span className="ms-auto font-semibold text-[#303030]">{formatUsd(o.totalCents)}</span>
                 </Link>
               </li>
             ))}
@@ -66,7 +66,7 @@ export default async function CustomerPage({ params }: PageProps<'/admin/custome
         <div className="space-y-5">
           <AdminCard title="Contact">
             <div className="flex flex-wrap gap-2">
-              <a href={`tel:${c.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-navy">
+              <a href={`tel:${c.phone}`} className="inline-flex items-center gap-1.5 rounded-lg bg-[#f1f1f1] px-3 py-1.5 text-sm font-semibold text-[#303030]">
                 <Phone className="size-4" /> Call
               </a>
               <a

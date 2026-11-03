@@ -65,7 +65,7 @@ function BundleForm({ productId, bundle, images, onDone }: { productId: string; 
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4 rounded-2xl border border-blue/30 bg-ice/40 p-4">
+    <form onSubmit={submit} className="space-y-4 rounded-xl border border-[#e3e3e3] bg-[#f7f7f7] p-4">
       <div className="grid gap-3 sm:grid-cols-2">
         <AdminField id="b-nameEn" label="Name (English)" error={errors.nameEn}>
           <AdminInput id="b-nameEn" value={v.nameEn} onChange={set('nameEn')} maxLength={60} />
@@ -104,7 +104,7 @@ function BundleForm({ productId, bundle, images, onDone }: { productId: string; 
         {priceC > 0 ? `${save !== null ? `Save ${save}% · ` : ''}${formatUsd(perUnitCents(priceC, units))} per device` : 'Enter a price'}
       </p>
       <div>
-        <p className="mb-2 text-sm font-semibold text-navy">Photo</p>
+        <p className="mb-2 text-sm font-semibold text-[#303030]">Photo</p>
         <div className="flex flex-wrap gap-2">
           {images.map((img) => (
             <button
@@ -112,7 +112,7 @@ function BundleForm({ productId, bundle, images, onDone }: { productId: string; 
               type="button"
               aria-pressed={v.imageId === img.id}
               onClick={() => setV((s) => ({ ...s, imageId: img.id }))}
-              className={cn('relative size-16 overflow-hidden rounded-xl border-2 bg-white', v.imageId === img.id ? 'border-navy' : 'border-slate-200')}
+              className={cn('relative size-16 overflow-hidden rounded-xl border-2 bg-white', v.imageId === img.id ? 'border-navy' : 'border-[#e3e3e3]')}
             >
               <Image src={img.url} alt="" fill sizes="64px" className="object-contain p-1" />
             </button>
@@ -120,7 +120,7 @@ function BundleForm({ productId, bundle, images, onDone }: { productId: string; 
         </div>
         {errors.imageId && <p className="mt-1 text-sm text-red-600">{errors.imageId}</p>}
       </div>
-      <label className="flex items-center gap-2 text-sm font-medium text-navy">
+      <label className="flex items-center gap-2 text-sm font-medium text-[#303030]">
         <input type="checkbox" className="size-4 accent-navy" checked={v.active} onChange={(e) => setV((s) => ({ ...s, active: e.target.checked }))} />
         Visible in the shop
       </label>
@@ -172,23 +172,23 @@ export function BundlesEditor({ productId, bundles, images }: { productId: strin
             <li
               key={b.id}
               data-testid={`bundle-row-${b.nameEn}`}
-              className={cn('flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 p-3', !b.active && 'opacity-60')}
+              className={cn('flex flex-wrap items-center gap-3 rounded-lg border border-[#e3e3e3] p-3', !b.active && 'opacity-60')}
             >
-              <span className="relative size-12 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white">
+              <span className="relative size-12 shrink-0 overflow-hidden rounded-xl border border-[#e3e3e3] bg-white">
                 {imageUrl(b.imageId) && <Image src={imageUrl(b.imageId)!} alt="" fill sizes="48px" className="object-contain p-1" />}
               </span>
               <div className="min-w-40 flex-1">
-                <p className="font-semibold text-navy">
+                <p className="font-semibold text-[#303030]">
                   {b.nameEn}
                   {b.badge !== 'none' && <span className="ms-2 rounded-full bg-blue px-2 py-0.5 text-[10px] font-bold text-white">{BADGES[b.badge]}</span>}
-                  {!b.active && <span className="ms-2 text-xs text-slate-500">(hidden)</span>}
+                  {!b.active && <span className="ms-2 text-xs text-[#616161]">(hidden)</span>}
                 </p>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-[#616161]">
                   {b.units} device{b.units === 1 ? '' : 's'} · {formatUsd(b.priceCents)}
                   {b.compareAtCents ? ` (was ${formatUsd(b.compareAtCents)}, save ${savePercent(b.priceCents, b.compareAtCents)}%)` : ''} · {formatUsd(perUnitCents(b.priceCents, b.units))}/device
                 </p>
               </div>
-              <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
+              <label className="flex items-center gap-1.5 text-xs font-semibold text-[#616161]">
                 <input
                   type="radio"
                   name="default-bundle"
@@ -199,10 +199,10 @@ export function BundlesEditor({ productId, bundles, images }: { productId: strin
                 Pre-selected
               </label>
               <div className="flex items-center">
-                <button type="button" aria-label="Move up" disabled={i === 0 || pending} onClick={() => move(i, -1)} className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 disabled:opacity-30">
+                <button type="button" aria-label="Move up" disabled={i === 0 || pending} onClick={() => move(i, -1)} className="rounded-lg p-1.5 text-[#616161] hover:bg-[#f1f1f1] disabled:opacity-30">
                   <ArrowUp className="size-4" />
                 </button>
-                <button type="button" aria-label="Move down" disabled={i === bundles.length - 1 || pending} onClick={() => move(i, 1)} className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 disabled:opacity-30">
+                <button type="button" aria-label="Move down" disabled={i === bundles.length - 1 || pending} onClick={() => move(i, 1)} className="rounded-lg p-1.5 text-[#616161] hover:bg-[#f1f1f1] disabled:opacity-30">
                   <ArrowDown className="size-4" />
                 </button>
                 <AdminButton size="sm" variant="secondary" onClick={() => setEditing(b.id)} disabled={editing !== null}>
