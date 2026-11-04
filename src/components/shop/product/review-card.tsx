@@ -6,12 +6,10 @@ export function ReviewCard({
   review,
   starsLabel,
   locale,
-  sampleLabel,
 }: {
   review: ReviewView;
   starsLabel: string;
   locale: 'en' | 'ar';
-  sampleLabel?: string;
 }) {
   const date = new Intl.DateTimeFormat(locale === 'ar' ? 'ar-LB-u-nu-latn' : 'en-GB', {
     year: 'numeric',
@@ -36,11 +34,8 @@ export function ReviewCard({
           <Image src={review.photoUrl} alt="" fill sizes="(min-width: 768px) 30vw, 90vw" className="object-cover" />
         </span>
       )}
-      <p className="mt-auto flex items-center gap-2 text-sm font-bold text-navy" dir="auto">
+      <p className="mt-auto text-sm font-bold text-navy" dir="auto">
         {review.authorName}
-        {review.sample && sampleLabel && (
-          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">{sampleLabel}</span>
-        )}
       </p>
     </article>
   );

@@ -30,17 +30,13 @@ export async function RatingSummary({
   locale,
   summary,
   trustpilotUrl,
-  sample = false,
 }: {
   locale: Locale;
   summary: ReviewSummary;
   trustpilotUrl: string | null;
-  /** Private-preview sample data: labelled so it can never pass for real ratings. */
-  sample?: boolean;
 }) {
   if (summary.count === 0) return null;
   const t = await getTranslations({ locale, namespace: 'hero' });
-  const tc = await getTranslations({ locale, namespace: 'common' });
   const average = summary.average.toFixed(1);
   const word =
     summary.average >= 4.5 ? t('ratedExcellent') : summary.average >= 4 ? t('ratedGreat') : summary.average >= 3 ? t('ratedGood') : null;
@@ -53,7 +49,6 @@ export async function RatingSummary({
           {average}
           <span className="text-base font-bold text-white/70">/5.0</span>
         </span>
-        {sample && <span className="rounded-full bg-amber-300 px-2 py-0.5 text-xs font-bold text-navy">{tc('sample')}</span>}
       </span>
       <span className="text-sm leading-tight text-white/85">
         {word && <span className="font-bold text-white">{word}</span>}

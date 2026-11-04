@@ -56,7 +56,7 @@ export async function ProductTemplate({
           <Gallery
             header={
               shownSummary.count > 0 ? (
-                <RatingSummary locale={locale} summary={shownSummary} trustpilotUrl={settings.trustpilotUrl} sample={showSamples} />
+                <RatingSummary locale={locale} summary={shownSummary} trustpilotUrl={settings.trustpilotUrl} />
               ) : (
                 <TrustBadge locale={locale} />
               )

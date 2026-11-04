@@ -13,8 +13,10 @@ test('the admin preview link shows labelled sample reviews to that browser only'
   await expect(viewer.getByTestId('preview-banner')).toBeVisible();
   const badge = viewer.getByTestId('rating-summary');
   await expect(badge).toContainText('4.8');
-  await expect(badge).toContainText('Sample');
   await expect(viewer.locator('#reviews')).toContainText('Rania K.');
+  // The banner marks the preview; the badge and cards look exactly as they will with real reviews.
+  await expect(badge).not.toContainText('Sample');
+  await expect(viewer.locator('#reviews')).not.toContainText('Sample');
 
   // Everyone else sees the shop without samples.
   const shopper = await (await browser.newContext()).newPage();
