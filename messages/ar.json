@@ -56,11 +56,6 @@
     "ratingLabel": "{average} من 5",
     "reviewCount": "{count, plural, zero {لا تقييمات} one {تقييم واحد} two {تقييمان} few {# تقييمات} many {# تقييمًا} other {# تقييم}}",
     "onTrustpilot": "على Trustpilot",
-    "trustBadge": {
-      "cod": "الدفع عند الاستلام",
-      "guarantee": "استرداد المال خلال 30 يومًا",
-      "delivery": "توصيل إلى كل لبنان"
-    },
     "benefits": {
       "coverage": "تغطية حتى 50 م² لكل جهاز",
       "allDay": "حماية متواصلة على مدار الساعة",

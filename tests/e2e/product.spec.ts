@@ -19,21 +19,13 @@ test('bundle picker drives the price', async ({ page }) => {
   await expect(page.getByTestId('bundle-option').filter({ hasText: 'Full Home Protection' })).toContainText('BEST VALUE');
 });
 
-test('no rating block without reviews', async ({ page }) => {
-  await page.goto('/en');
-  await expect(page.getByTestId('rating-summary')).toHaveCount(0);
-  await expect(page.locator('#reviews')).toHaveCount(0);
-});
-
-test('without reviews the gallery shows a trust strip with no rating', async ({ page }) => {
-  await page.goto('/en');
-  const badge = page.getByTestId('gallery').getByTestId('trust-badge');
-  await expect(badge).toContainText('Cash on delivery');
-  await expect(badge).toContainText('30-day money-back');
-  await expect(badge).toContainText('Delivered all over Lebanon');
-  await expect(badge).not.toContainText(/\d\.\d|\/5|Trustpilot/);
-  await page.goto('/ar');
-  await expect(page.getByTestId('gallery').getByTestId('trust-badge')).toContainText('الدفع عند الاستلام');
+test('nothing sits above the gallery until there are reviews', async ({ page }) => {
+  for (const path of ['/en', '/ar']) {
+    await page.goto(path);
+    await expect(page.getByTestId('rating-summary')).toHaveCount(0);
+    await expect(page.getByTestId('trust-badge')).toHaveCount(0);
+    await expect(page.locator('#reviews')).toHaveCount(0);
+  }
 });
 
 test('sticky add-to-cart bar appears after scrolling past the button', async ({ page }) => {
