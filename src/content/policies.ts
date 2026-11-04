@@ -5,7 +5,7 @@ export type PolicySlug = (typeof POLICY_SLUGS)[number];
 type Section = { heading: string; paragraphs: string[] };
 export type Policy = { title: string; updated: string; sections: Section[] };
 
-const UPDATED = '2026-10-01';
+const UPDATED = '2026-11-04';
 
 export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
   shipping: {
@@ -59,12 +59,12 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
   },
   returns: {
     en: {
-      title: '60-day money-back guarantee',
+      title: '30-day money-back guarantee',
       updated: UPDATED,
       sections: [
         {
           heading: 'Our guarantee',
-          paragraphs: ["If IBADA isn't right for you, contact us within 60 days of delivery and we'll refund the price of the product."],
+          paragraphs: ["If IBADA isn't right for you, contact us within 30 days of delivery and we'll refund the price of the product."],
         },
         {
           heading: 'How to return',
@@ -79,12 +79,12 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
       ],
     },
     ar: {
-      title: 'ضمان استرداد المال لمدة 60 يومًا',
+      title: 'ضمان استرداد المال لمدة 30 يومًا',
       updated: UPDATED,
       sections: [
         {
           heading: 'ضماننا',
-          paragraphs: ['إذا لم يناسبك IBADA، تواصل معنا خلال 60 يومًا من الاستلام وسنعيد لك ثمن المنتج.'],
+          paragraphs: ['إذا لم يناسبك IBADA، تواصل معنا خلال 30 يومًا من الاستلام وسنعيد لك ثمن المنتج.'],
         },
         { heading: 'طريقة الإرجاع', paragraphs: ['تواصل معنا هاتفيًا أو عبر واتساب مع رقم طلبك، وسنرتّب الإرجاع معك.'] },
         { heading: 'حالة المنتج', paragraphs: ['يرجى إرجاع الأجهزة، ويُفضّل أن تكون في عبوتها الأصلية.'] },
@@ -190,7 +190,7 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
           heading: 'Using the product',
           paragraphs: ['IBADA devices are for indoor use on standard 220V sockets. Follow the instructions on the packaging. Results depend on your home and the pests present.'],
         },
-        { heading: 'Guarantee', paragraphs: ['Your purchase is covered by our 60-day money-back guarantee, described on its own page.'] },
+        { heading: 'Guarantee', paragraphs: ['Your purchase is covered by our 30-day money-back guarantee, described on its own page.'] },
         {
           heading: 'Liability',
           paragraphs: ['To the extent permitted by law, our liability is limited to the price you paid for the product.'],
@@ -215,7 +215,7 @@ export const POLICIES: Record<PolicySlug, Record<'en' | 'ar', Policy>> = {
           heading: 'استخدام المنتج',
           paragraphs: ['أجهزة IBADA مخصّصة للاستخدام الداخلي على مقابس 220 فولت العادية. اتبع التعليمات المرفقة على العبوة. تختلف النتائج بحسب المنزل ونوع الآفات.'],
         },
-        { heading: 'الضمان', paragraphs: ['مشترياتك مشمولة بضمان استرداد المال لمدة 60 يومًا، الموضّح في صفحته الخاصة.'] },
+        { heading: 'الضمان', paragraphs: ['مشترياتك مشمولة بضمان استرداد المال لمدة 30 يومًا، الموضّح في صفحته الخاصة.'] },
         {
           heading: 'المسؤولية',
           paragraphs: ['في الحدود التي يسمح بها القانون، تقتصر مسؤوليتنا على ثمن المنتج الذي دفعته.'],

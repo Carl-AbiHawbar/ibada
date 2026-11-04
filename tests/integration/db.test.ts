@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { afterEach, beforeEach, expect, test } from 'vitest';
 import { sql } from 'drizzle-orm';
 import { createTestDb, type TestDb } from '../helpers/db';
@@ -58,13 +59,45 @@ test('settings defaults', async () => {
   const rows = await t.db.select().from(settings);
   expect(rows).toHaveLength(1);
   expect(rows[0]).toMatchObject({
-    deliveryFeeCents: 0,
+    deliveryFeeCents: 400,
     freeDeliveryThresholdCents: null,
     announcementEnabled: true,
     trustpilotUrl: null,
     storeName: 'IBADA',
     social: {},
   });
+  expect(rows[0]?.announcementEn).toContain('30-day money-back guarantee');
+  expect(rows[0]?.announcementAr).toContain('30 يومًا');
+});
+
+/** Re-run one migration file, as the deploy would on a database created before it. */
+async function runMigration(name: string) {
+  const text = readFileSync(`drizzle/${name}.sql`, 'utf8');
+  for (const statement of text.split('--> statement-breakpoint')) await t.db.execute(sql.raw(statement));
+}
+
+test('stores that started with a $0 fee and the 60-day text get $4 and 30 days', async () => {
+  await seedSettings(t.db);
+  await t.db.update(settings).set({
+    deliveryFeeCents: 0,
+    announcementEn: 'Free delivery when you sign up · Cash on delivery · 60-day money-back guarantee',
+    announcementAr: 'توصيل مجاني عند التسجيل · الدفع عند الاستلام · ضمان استرداد المال لمدة 60 يومًا',
+  });
+  await runMigration('0006_fee_and_30_day_guarantee');
+  const [row] = await t.db.select().from(settings);
+  expect(row).toMatchObject({
+    deliveryFeeCents: 400,
+    announcementEn: 'Free delivery when you sign up · Cash on delivery · 30-day money-back guarantee',
+    announcementAr: 'توصيل مجاني عند التسجيل · الدفع عند الاستلام · ضمان استرداد المال لمدة 30 يومًا',
+  });
+});
+
+test('the 30-day migration keeps an owner’s own fee and announcement', async () => {
+  await seedSettings(t.db);
+  await t.db.update(settings).set({ deliveryFeeCents: 500, announcementEn: 'Eid sale', announcementAr: 'تخفيضات العيد' });
+  await runMigration('0006_fee_and_30_day_guarantee');
+  const [row] = await t.db.select().from(settings);
+  expect(row).toMatchObject({ deliveryFeeCents: 500, announcementEn: 'Eid sale', announcementAr: 'تخفيضات العيد' });
 });
 
 test('order numbers start at 1001', async () => {

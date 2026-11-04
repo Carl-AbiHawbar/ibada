@@ -12,7 +12,7 @@ export async function ShopHeader({ locale, actions }: { locale: Locale; actions?
   const nav = [
     { href: '/shop', label: t('shop') },
     { href: '/#how-it-works', label: t('howItWorks') },
-    { href: '/#reviews', label: t('reviews') },
+    { href: '/#why-ibada', label: t('whyIbada') },
   ];
 
   return (

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Download } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
+import { adminButtonClass } from '@/components/admin/ui';
 import { formatBeirut } from '@/lib/dates';
 import { PEST_LABELS, type PestKey } from '@/lib/pests';
 import { formatLebanesePhone } from '@/lib/phone';
@@ -9,7 +10,7 @@ import { getDb } from '@/server/db/client';
 import { countDeliverySignups, listDeliverySignups } from '@/server/delivery-signups';
 import { requireAdmin } from '@/server/next/admin-session';
 
-export const metadata: Metadata = { title: 'Subscribers' };
+export const metadata: Metadata = { title: 'Free delivery sign-ups' };
 
 const PAGE_SIZE = 50;
 
@@ -26,15 +27,11 @@ export default async function SubscribersPage({ searchParams }: PageProps<'/admi
   return (
     <>
       <PageHeader
-        title="Subscribers"
-        description={`People who filled in the free-delivery form (${total}). Only send WhatsApp offers to those marked “WhatsApp OK”.`}
+        title="Free delivery sign-ups"
+        description={`${total} ${total === 1 ? 'person has' : 'people have'} filled in the free-delivery form. Only send WhatsApp offers to those marked “WhatsApp OK”.`}
         actions={
-          <a
-            href="/admin/subscribers/export"
-            download
-            className="inline-flex h-10 items-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-[#303030] ring-1 ring-[#e3e3e3] hover:bg-[#f7f7f7]"
-          >
-            <Download className="size-4" aria-hidden /> Export CSV
+          <a href="/admin/subscribers/export" download className={adminButtonClass('secondary')}>
+            <Download aria-hidden /> Export CSV
           </a>
         }
       />
@@ -69,7 +66,7 @@ export default async function SubscribersPage({ searchParams }: PageProps<'/admi
             )}
           </li>
         ))}
-        {rows.length === 0 && <li className="p-10 text-center text-[#616161]">No signups yet.</li>}
+        {rows.length === 0 && <li className="p-10 text-center text-[#616161]">No sign-ups yet. They appear here as soon as someone fills in the free-delivery form.</li>}
       </ul>
       {total > PAGE_SIZE && (
         <nav className="mt-4 flex justify-between text-sm">

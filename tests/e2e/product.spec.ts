@@ -25,6 +25,17 @@ test('no rating block without reviews', async ({ page }) => {
   await expect(page.locator('#reviews')).toHaveCount(0);
 });
 
+test('without reviews the gallery shows a trust strip with no rating', async ({ page }) => {
+  await page.goto('/en');
+  const badge = page.getByTestId('gallery').getByTestId('trust-badge');
+  await expect(badge).toContainText('Cash on delivery');
+  await expect(badge).toContainText('30-day money-back');
+  await expect(badge).toContainText('Delivered all over Lebanon');
+  await expect(badge).not.toContainText(/\d\.\d|\/5|Trustpilot/);
+  await page.goto('/ar');
+  await expect(page.getByTestId('gallery').getByTestId('trust-badge')).toContainText('الدفع عند الاستلام');
+});
+
 test('sticky add-to-cart bar appears after scrolling past the button', async ({ page }) => {
   await page.goto('/en');
   const sticky = page.getByTestId('sticky-atc');
@@ -114,4 +125,21 @@ test('arabic gallery, steps and comparison use the client images', async ({ page
   await expect(page.locator('img[src*="step1-plug-in"]').first()).toBeAttached();
   await expect(page.locator('img[src*="step2-relax"]').first()).toBeAttached();
   await expect(page.getByTestId('comparison-others').locator('img')).toBeAttached();
+});
+
+test('the navbar "Why IBADA" link opens the comparison', async ({ page, isMobile }) => {
+  await page.goto('/en/shop');
+  if (isMobile) await page.locator('summary[aria-label="Menu"]').click();
+  await page.getByRole('link', { name: 'Why IBADA' }).filter({ visible: true }).first().click();
+  await expect(page).toHaveURL(/\/en#why-ibada$/);
+  await expect(page.locator('#why-ibada')).toContainText('IBADA vs other pesticide solutions');
+});
+
+test('the money-back guarantee is 30 days everywhere', async ({ page }) => {
+  for (const path of ['/en', '/ar', '/en/policies/returns', '/ar/policies/returns']) {
+    await page.goto(path);
+    await expect(page.locator('body')).not.toContainText(/60-day|60 days|60 يومًا/);
+  }
+  await page.goto('/en');
+  await expect(page.getByTestId('announcement')).toContainText('30-day money-back guarantee');
 });

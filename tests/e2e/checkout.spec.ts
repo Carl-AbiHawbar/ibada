@@ -118,7 +118,7 @@ test('policies and contact render in both languages', async ({ page }) => {
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   }
   await page.goto('/ar/policies/returns');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('60');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('30');
   await page.goto('/en/contact');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Contact');
   expect((await page.goto('/en/policies/nope'))?.status()).toBe(404);

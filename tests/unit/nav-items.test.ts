@@ -30,7 +30,13 @@ test('phone tab bar holds the four busiest areas', () => {
   ]);
 });
 
-test('inventory and reviews sit under products, subscribers under customers', () => {
+test('inventory and reviews sit under products', () => {
   const parents = Object.fromEntries(navItemsFor('owner').filter((i) => i.parent).map((i) => [i.area, i.parent]));
-  expect(parents).toEqual({ inventory: '/admin/products', reviews: '/admin/products', subscribers: '/admin/customers' });
+  expect(parents).toEqual({ inventory: '/admin/products', reviews: '/admin/products' });
+});
+
+test('free-delivery sign-ups have their own sidebar item', () => {
+  const item = navItemsFor('owner').find((i) => i.area === 'subscribers');
+  expect(item).toMatchObject({ label: 'Free delivery sign-ups', group: 'main', href: '/admin/subscribers' });
+  expect(item?.parent).toBeUndefined();
 });

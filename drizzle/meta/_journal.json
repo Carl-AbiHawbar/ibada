@@ -43,6 +43,13 @@
       "when": 1793373529385,
       "tag": "0005_signup_phone_default_single",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793781214049,
+      "tag": "0006_fee_and_30_day_guarantee",
+      "breakpoints": true
     }
   ]
 }

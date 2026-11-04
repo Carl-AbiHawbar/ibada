@@ -7,10 +7,10 @@ export async function seedSettings(db: Db): Promise<void> {
     .insert(settings)
     .values({
       storeName: 'IBADA',
-      announcementEn: 'Free delivery when you sign up · Cash on delivery · 60-day money-back guarantee',
-      announcementAr: 'توصيل مجاني عند التسجيل · الدفع عند الاستلام · ضمان استرداد المال لمدة 60 يومًا',
+      announcementEn: 'Free delivery when you sign up · Cash on delivery · 30-day money-back guarantee',
+      announcementAr: 'توصيل مجاني عند التسجيل · الدفع عند الاستلام · ضمان استرداد المال لمدة 30 يومًا',
       announcementEnabled: true,
-      deliveryFeeCents: 0,
+      deliveryFeeCents: 400,
       deliveryTimeEn: 'Orders are typically delivered in 2–4 business days',
       deliveryTimeAr: 'يتم توصيل الطلبات عادةً خلال 2–4 أيام عمل',
     })

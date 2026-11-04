@@ -36,7 +36,10 @@ test('the free-delivery form removes the delivery fee', async ({ browser }) => {
     await expect(shopper.getByTestId('summary-total')).toHaveText('$19.99');
     await expect(shopper.getByTestId('free-delivery-button')).toHaveCount(0);
 
+    await adminPage.goto('/admin');
+    await expect(adminPage.getByTestId('home-signups')).toContainText('Rana Test');
     await adminPage.goto('/admin/subscribers');
+    await expect(adminPage.getByRole('heading', { level: 1, name: 'Free delivery sign-ups' })).toBeVisible();
     await expect(adminPage.getByTestId('subscriber-row').filter({ hasText: 'Rana Test' }).first()).toContainText('WhatsApp OK');
     await expect(adminPage.getByTestId('subscriber-row').filter({ hasText: 'Rana Test' }).first()).toContainText('Pests: Cockroaches');
   } finally {

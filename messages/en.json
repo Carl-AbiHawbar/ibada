@@ -14,7 +14,7 @@
   "header": {
     "shop": "Shop",
     "howItWorks": "How it works",
-    "reviews": "Reviews",
+    "whyIbada": "Why IBADA",
     "menu": "Menu",
     "switchLanguage": "عربي",
     "switchLanguageLabel": "Switch to Arabic",
@@ -27,7 +27,7 @@
     "trackOrder": "Track my order",
     "contact": "Contact us",
     "shipping": "Shipping & delivery",
-    "returns": "60-day money-back guarantee",
+    "returns": "30-day money-back guarantee",
     "privacy": "Privacy policy",
     "terms": "Terms of service",
     "codNote": "💵 Cash on delivery all over Lebanon",
@@ -57,6 +57,11 @@
     "ratingLabel": "{average} out of 5",
     "reviewCount": "{count, plural, one {# review} other {# reviews}}",
     "onTrustpilot": "on Trustpilot",
+    "trustBadge": {
+      "cod": "Cash on delivery",
+      "guarantee": "30-day money-back",
+      "delivery": "Delivered all over Lebanon"
+    },
     "benefits": {
       "coverage": "Up to 50m² coverage per device",
       "allDay": "24/7 continuous protection",
@@ -82,7 +87,7 @@
   "purchase": {
     "addToCart": "ADD TO CART",
     "soldOut": "SOLD OUT",
-    "guarantee": "60-day money back guarantee",
+    "guarantee": "30-day money back guarantee",
     "quantity": "Quantity",
     "decrease": "Decrease quantity",
     "increase": "Increase quantity",
@@ -93,7 +98,7 @@
     "cod": "Pay cash on delivery",
     "freeDelivery": "Free delivery in Lebanon",
     "delivery": "Delivery all over Lebanon",
-    "guarantee": "60-day money-back",
+    "guarantee": "30-day money-back",
     "chemicalFree": "100% chemical-free"
   },
   "steps": {
@@ -154,7 +159,7 @@
   },
   "cta": {
     "title": "Ready for a calmer home?",
-    "subtitle": "Pay cash on delivery · 60-day money-back guarantee",
+    "subtitle": "Pay cash on delivery · 30-day money-back guarantee",
     "button": "Choose your pack"
   },
   "faq": {
@@ -182,7 +187,7 @@
       },
       "guarantee": {
         "q": "What if it doesn't work for me?",
-        "a": "You're covered by our 60-day money-back guarantee. Contact us and we'll arrange the return and your refund."
+        "a": "You're covered by our 30-day money-back guarantee. Contact us and we'll arrange the return and your refund."
       },
       "power": {
         "q": "What does it plug into?",

@@ -10,7 +10,7 @@ const ROWS = ['r1', 'r2', 'r3', 'r4'] as const;
 export async function Comparison({ locale, imageUrl }: { locale: Locale; imageUrl: string | null }) {
   const t = await getTranslations({ locale, namespace: 'comparison' });
   return (
-    <section className="bg-linear-to-b from-white to-ice py-20">
+    <section id="why-ibada" className="scroll-mt-20 bg-linear-to-b from-white to-ice py-20">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <div className="text-center">
           <MosquitoLanding>

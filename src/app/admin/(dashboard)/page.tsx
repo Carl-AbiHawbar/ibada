@@ -7,15 +7,18 @@ import { RangePicker } from '@/components/admin/dashboard/range-picker';
 import { SalesChart } from '@/components/admin/dashboard/sales-chart';
 import { StatusBadge } from '@/components/admin/orders/status-badge';
 import { PageHeader } from '@/components/admin/page-header';
-import { AdminCard, cardClass } from '@/components/admin/ui';
+import { AdminBadge, AdminCard, cardClass } from '@/components/admin/ui';
 import { parseDashboardRange } from '@/lib/dashboard-range';
 import { beirutDateKey, formatBeirut } from '@/lib/dates';
 import { governorateName, type GovernorateId } from '@/lib/lebanon';
 import { formatUsd } from '@/lib/money';
 import { can } from '@/lib/permissions';
+import { PEST_LABELS, type PestKey } from '@/lib/pests';
+import { formatLebanesePhone } from '@/lib/phone';
 import { cn } from '@/lib/utils';
 import { dashboardSummary, funnel, lowStock, ordersByGovernorate, salesSeries, topBundles } from '@/server/analytics';
 import { getDb } from '@/server/db/client';
+import { countDeliverySignups, listDeliverySignups } from '@/server/delivery-signups';
 import { requireAdmin } from '@/server/next/admin-session';
 import { listOrders, orderStatusCounts } from '@/server/orders/admin-query';
 
@@ -54,7 +57,8 @@ export default async function AdminHome({ searchParams }: PageProps<'/admin'>) {
   const { user } = await requireAdmin('home');
   const range = parseDashboardRange(await searchParams);
   const db = getDb();
-  const [summary, series, steps, bundles, governorates, latest, low, counts] = await Promise.all([
+  const showSignups = can(user.role, 'subscribers');
+  const [summary, series, steps, bundles, governorates, latest, low, counts, signups, signupCount] = await Promise.all([
     dashboardSummary(db, range),
     salesSeries(db, range),
     funnel(db, range),
@@ -63,6 +67,8 @@ export default async function AdminHome({ searchParams }: PageProps<'/admin'>) {
     listOrders(db, { page: 1 }),
     lowStock(db),
     orderStatusCounts(db),
+    showSignups ? listDeliverySignups(db, { limit: 5, offset: 0 }) : [],
+    showSignups ? countDeliverySignups(db) : 0,
   ]);
   const pct = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : '—');
   const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
@@ -120,6 +126,36 @@ export default async function AdminHome({ searchParams }: PageProps<'/admin'>) {
           )}
         </ul>
       </section>
+
+      {showSignups && (
+        <AdminCard
+          flush
+          className="mt-4"
+          title={`Free delivery sign-ups (${signupCount})`}
+          actions={
+            <Link href="/admin/subscribers" className="text-[13px] font-medium text-blue hover:underline">
+              View all
+            </Link>
+          }
+        >
+          <ul data-testid="home-signups" className="mt-2 divide-y divide-[#ebebeb] border-t border-[#ebebeb]">
+            {signups.map((r) => (
+              <li key={r.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2.5 text-[13px]">
+                <span className="font-semibold">{r.name}</span>
+                <span className="tabular-nums text-[#616161]" dir="ltr">
+                  {formatLebanesePhone(r.phone)}
+                </span>
+                <AdminBadge tone={r.marketingOptIn ? 'success' : 'neutral'}>{r.marketingOptIn ? 'WhatsApp OK' : 'No offers'}</AdminBadge>
+                <span className="min-w-0 flex-1 truncate text-[#616161]">{r.pests.map((p) => PEST_LABELS[p as PestKey] ?? p).join(', ')}</span>
+                <span className="text-xs text-[#616161]">{formatBeirut(r.createdAt, 'datetime')}</span>
+              </li>
+            ))}
+            {signups.length === 0 && (
+              <li className="px-4 py-6 text-center text-[13px] text-[#616161]">No sign-ups yet. Everyone who fills in the free-delivery form appears here.</li>
+            )}
+          </ul>
+        </AdminCard>
+      )}
 
       <AdminCard className="mt-4" title="Sales per day">
         <SalesChart data={series} />
