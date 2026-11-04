@@ -56,6 +56,7 @@
     "ratingLabel": "{average} out of 5",
     "reviewCount": "{count, plural, one {# review} other {# reviews}}",
     "onTrustpilot": "on Trustpilot",
+    "reviewUsOn": "Review us on",
     "benefits": {
       "coverage": "Up to 50m² coverage per device",
       "allDay": "24/7 continuous protection",
