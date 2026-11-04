@@ -19,19 +19,12 @@ test('bundle picker drives the price', async ({ page }) => {
   await expect(page.getByTestId('bundle-option').filter({ hasText: 'Full Home Protection' })).toContainText('BEST VALUE');
 });
 
-test('until there are reviews, the gallery invites a Trustpilot review and shows no rating', async ({ page }) => {
-  for (const [path, text] of [
-    ['/en', 'Review us on'],
-    ['/ar', 'قيّمنا على'],
-  ] as const) {
+test('nothing sits above the gallery until there are reviews', async ({ page }) => {
+  for (const path of ['/en', '/ar']) {
     await page.goto(path);
     await expect(page.getByTestId('rating-summary')).toHaveCount(0);
+    await expect(page.getByTestId('trustpilot-invite')).toHaveCount(0);
     await expect(page.locator('#reviews')).toHaveCount(0);
-    const invite = page.getByTestId('gallery').getByTestId('trustpilot-invite');
-    await expect(invite).toContainText(text);
-    await expect(invite).toContainText('Trustpilot');
-    await expect(invite).not.toContainText(/\d/);
-    await expect(invite).toHaveAttribute('href', /^https:\/\/www\.trustpilot\.com\/evaluate\/localhost$/);
   }
 });
 
