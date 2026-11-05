@@ -9,12 +9,12 @@ export type Schema = typeof schema;
 export type Db = PgDatabase<PgQueryResultHKT, Schema>;
 
 /**
- * Pool settings for the Supabase transaction pooler: no prepared statements, and idle or old sockets
- * closed by us. A warm serverless instance otherwise reuses a socket the pooler already dropped,
- * and the query hangs until the platform times the request out.
+ * Pool settings for the Supabase transaction pooler: no prepared statements, no pipelining (one query in
+ * flight per connection; the rest queue), and idle or old sockets closed by us. A warm serverless instance
+ * otherwise reuses a socket the pooler already dropped, and the query hangs until the request times out.
  */
 export function poolOptions(max: number) {
-  return { prepare: false, max, idle_timeout: 20, max_lifetime: 60 * 5, connect_timeout: 10, onnotice: () => {} };
+  return { prepare: false, max, max_pipeline: 1, idle_timeout: 20, max_lifetime: 60 * 5, connect_timeout: 10, onnotice: () => {} };
 }
 
 /** Open a dedicated connection pool, e.g. for CLI scripts that must close it when done. */
