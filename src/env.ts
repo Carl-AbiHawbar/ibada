@@ -50,12 +50,17 @@ export type AppEnv = Env['APP_ENV'];
 /**
  * The Postgres URL: DATABASE_URL, or POSTGRES_URL as set by Vercel's Supabase integration.
  * The integration's `supa` query marker is dropped: postgres-js would send it to the server as a setting.
+ * A Supabase pooler address is switched from transaction mode (6543) to session mode (5432): postgres-js
+ * sends queries on a busy connection, and in transaction mode those never returned (admin timeouts).
  */
 export function databaseUrlFrom(raw: Record<string, string | undefined>): string | undefined {
   const value = raw.DATABASE_URL || raw.POSTGRES_URL;
-  if (!value?.includes('supa=')) return value || undefined;
+  if (!value) return undefined;
   const url = new URL(value);
+  const sessionPooler = url.hostname.endsWith('.pooler.supabase.com') && url.port === '6543';
+  if (!url.searchParams.has('supa') && !sessionPooler) return value;
   url.searchParams.delete('supa');
+  if (sessionPooler) url.port = '5432';
   return url.toString();
 }
 

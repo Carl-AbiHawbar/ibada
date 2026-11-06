@@ -74,6 +74,19 @@ describe('parseEnv', () => {
     expect(databaseUrlFrom({})).toBeUndefined();
   });
 
+  test('a Supabase pooler address uses session mode (5432), where stacked queries are safe', () => {
+    // Transaction mode (6543) drops queries postgres-js sends on a busy connection: the admin home hung.
+    expect(
+      databaseUrlFrom({ DATABASE_URL: 'postgresql://postgres.ref:pw@aws-1-eu-central-1.pooler.supabase.com:6543/postgres' }),
+    ).toBe('postgresql://postgres.ref:pw@aws-1-eu-central-1.pooler.supabase.com:5432/postgres');
+    expect(
+      databaseUrlFrom({ POSTGRES_URL: 'postgres://u:p@aws-0-eu-central-1.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x' }),
+    ).toBe('postgres://u:p@aws-0-eu-central-1.pooler.supabase.com:5432/postgres?sslmode=require');
+    // Other hosts and ports are left alone.
+    expect(databaseUrlFrom({ DATABASE_URL: 'postgres://u:p@localhost:6543/db' })).toBe('postgres://u:p@localhost:6543/db');
+    expect(databaseUrlFrom({ DATABASE_URL: 'postgres://u:p@db.ref.supabase.co:5432/postgres' })).toBe('postgres://u:p@db.ref.supabase.co:5432/postgres');
+  });
+
   test('missing DATABASE_URL is reported', () => {
     expect(() => parseEnv({ SITE_URL: base.SITE_URL, BETTER_AUTH_SECRET: base.BETTER_AUTH_SECRET })).toThrow(
       /DATABASE_URL/,
