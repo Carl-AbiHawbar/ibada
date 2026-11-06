@@ -3,11 +3,12 @@ import { InstallHint, ServiceWorkerRegistrar } from '@/components/admin/pwa';
 import { can } from '@/lib/permissions';
 import { getDb } from '@/server/db/client';
 import { requireAdmin } from '@/server/next/admin-session';
+import { traced } from '@/server/next/trace';
 import { orderStatusCounts } from '@/server/orders/admin-query';
 
 export default async function DashboardLayout({ children }: LayoutProps<'/admin'>) {
   const { user } = await requireAdmin('home');
-  const newOrders = can(user.role, 'orders') ? (await orderStatusCounts(getDb())).new : 0;
+  const newOrders = can(user.role, 'orders') ? (await traced('layout.orderStatusCounts', () => orderStatusCounts(getDb()))).new : 0;
   return (
     <div className="min-h-dvh bg-[#f1f1f1] text-[#303030]">
       <TopBar user={user} />

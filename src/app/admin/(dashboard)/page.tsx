@@ -20,6 +20,7 @@ import { dashboardSummary, funnel, lowStock, ordersByGovernorate, salesSeries, t
 import { getDb } from '@/server/db/client';
 import { countDeliverySignups, listDeliverySignups } from '@/server/delivery-signups';
 import { requireAdmin } from '@/server/next/admin-session';
+import { traced } from '@/server/next/trace';
 import { listOrders, orderStatusCounts } from '@/server/orders/admin-query';
 
 export const metadata: Metadata = { title: 'Home' };
@@ -59,16 +60,16 @@ export default async function AdminHome({ searchParams }: PageProps<'/admin'>) {
   const db = getDb();
   const showSignups = can(user.role, 'subscribers');
   const [summary, series, steps, bundles, governorates, latest, low, counts, signups, signupCount] = await Promise.all([
-    dashboardSummary(db, range),
-    salesSeries(db, range),
-    funnel(db, range),
-    topBundles(db, range),
-    ordersByGovernorate(db, range),
-    listOrders(db, { page: 1 }),
-    lowStock(db),
-    orderStatusCounts(db),
-    showSignups ? listDeliverySignups(db, { limit: 5, offset: 0 }) : [],
-    showSignups ? countDeliverySignups(db) : 0,
+    traced('home.summary', () => dashboardSummary(db, range)),
+    traced('home.series', () => salesSeries(db, range)),
+    traced('home.funnel', () => funnel(db, range)),
+    traced('home.topBundles', () => topBundles(db, range)),
+    traced('home.governorates', () => ordersByGovernorate(db, range)),
+    traced('home.latestOrders', () => listOrders(db, { page: 1 })),
+    traced('home.lowStock', () => lowStock(db)),
+    traced('home.statusCounts', () => orderStatusCounts(db)),
+    showSignups ? traced('home.signups', () => listDeliverySignups(db, { limit: 5, offset: 0 })) : [],
+    showSignups ? traced('home.signupCount', () => countDeliverySignups(db)) : 0,
   ]);
   const pct = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : '—');
   const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;

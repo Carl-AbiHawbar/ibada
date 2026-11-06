@@ -4,11 +4,13 @@ import { redirect } from 'next/navigation';
 import type { Area, StaffRole } from '@/lib/permissions';
 import { getAuth } from '../auth/auth';
 import { authorize } from '../auth/authorize';
+import { traced } from './trace';
 
 export type AdminUser = { id: string; email: string; name: string; role: StaffRole };
 
 async function currentSession() {
-  return getAuth().api.getSession({ headers: await headers() });
+  const h = await headers();
+  return traced('getSession', () => getAuth().api.getSession({ headers: h }));
 }
 
 /**
